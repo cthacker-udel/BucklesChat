@@ -15,7 +15,7 @@ describe("test1", () => {
     );
     expect(homePageDescription).not.toBeNull();
     expect(homePageDescription?.innerHTML).toEqual(
-      TextConstants.HOME_PAGE.DESCRIPTION
+      TextConstants.CONTENT.HOME_PAGE.DESCRIPTION
     );
   });
   it("click signup button", () => {

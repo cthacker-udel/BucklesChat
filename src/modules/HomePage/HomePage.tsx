@@ -15,13 +15,13 @@ export const HomePage = (): JSX.Element => {
     <div className={styles.home_page_content} id="homepage_main">
       <div className={styles.home_page_welcome_text} id="homepage_header">
         <div className={styles.home_page_title} id="homepage_header_title">
-          {TextConstants.HOME_PAGE.TITLE}
+          {TextConstants.CONTENT.HOME_PAGE.TITLE}
         </div>
         <div
           className={styles.home_page_description}
           id="homepage_header_description"
         >
-          {TextConstants.HOME_PAGE.DESCRIPTION}
+          {TextConstants.CONTENT.HOME_PAGE.DESCRIPTION}
         </div>
       </div>
       <div
@@ -35,10 +35,10 @@ export const HomePage = (): JSX.Element => {
           }}
           variant="primary"
         >
-          {TextConstants.HOME_PAGE.BUTTON_1_TEXT}
+          {TextConstants.CONTENT.HOME_PAGE.BUTTON_1_TEXT}
         </Button>
         <Button id="homepage_button_2" variant="success">
-          {TextConstants.HOME_PAGE.BUTTON_2_TEXT}
+          {TextConstants.CONTENT.HOME_PAGE.BUTTON_2_TEXT}
         </Button>
       </div>
     </div>

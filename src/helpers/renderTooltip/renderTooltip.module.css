@@ -1,0 +1,22 @@
+.tooltip_content {
+  display: flex;
+  flex-direction: column;
+  font-family: "DynaPuff", sans-serif !important;
+}
+
+.tooltip_title {
+  font-size: 1.05em;
+  font-family: "DynaPuff", sans-serif !important;
+}
+
+.tooltip_body {
+  font-size: 0.85em;
+  opacity: 0.75%;
+  font-family: "DynaPuff", sans-serif !important;
+}
+
+.tooltip_footer {
+  border-top: 1px solid white;
+  font-size: 0.75em;
+  font-family: "DynaPuff", sans-serif !important;
+}
