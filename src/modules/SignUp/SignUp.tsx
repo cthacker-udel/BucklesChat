@@ -72,7 +72,7 @@ export const SignUp = (): JSX.Element => {
                     />
                 </OverlayTrigger>
             </div>
-            <Form>
+            <Form className={styles.sign_up_form_content}>
                 <Form.Group controlId="first_name_form">
                     <Form.Label>
                         {TextConstants.CONTENT.SIGN_UP.FORM_1_LABEL}
@@ -94,21 +94,21 @@ export const SignUp = (): JSX.Element => {
                                 message:
                                     TextConstants.VALIDATION.INVALID.SIGN_UP
                                         .FORM_1.MAX_LENGTH,
-                                value: ValidationConstants.SIGN_UP.FORM_1
+                                value: ValidationConstants.SIGN_UP.FORM
                                     .FIRST_NAME.MAX_LENGTH,
                             },
                             pattern: {
                                 message:
                                     TextConstants.VALIDATION.INVALID.SIGN_UP
                                         .FORM_1.PATTERN,
-                                value: ValidationConstants.SIGN_UP.FORM_1
+                                value: ValidationConstants.SIGN_UP.FORM
                                     .FIRST_NAME.PATTERN,
                             },
                             required: {
                                 message:
                                     TextConstants.VALIDATION.INVALID.SIGN_UP
                                         .FORM_1.REQUIRED,
-                                value: ValidationConstants.SIGN_UP.FORM_1
+                                value: ValidationConstants.SIGN_UP.FORM
                                     .FIRST_NAME.REQUIRED,
                             },
                         })}
@@ -124,6 +124,52 @@ export const SignUp = (): JSX.Element => {
                                 {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_1}
                             </Form.Control.Feedback>
                         )}
+                </Form.Group>
+                <Form.Group controlId="last_name_form">
+                    <Form.Label>
+                        {TextConstants.CONTENT.SIGN_UP.FORM_2_LABEL}
+                    </Form.Label>
+                    <Form.Control
+                        isInvalid={Boolean(errors.lastName)}
+                        isValid={!errors.lastName && dirtyFields.lastName}
+                        placeholder={
+                            TextConstants.CONTENT.SIGN_UP.FORM_2_PLACEHOLDER
+                        }
+                        type="text"
+                        {...register("lastName", {
+                            maxLength: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_2.MAX_LENGTH,
+                                value: ValidationConstants.SIGN_UP.FORM
+                                    .LAST_NAME.MAX_LENGTH,
+                            },
+                            pattern: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_2.PATTERN,
+                                value: ValidationConstants.SIGN_UP.FORM
+                                    .LAST_NAME.PATTERN,
+                            },
+                            required: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_2.REQUIRED,
+                                value: ValidationConstants.SIGN_UP.FORM
+                                    .LAST_NAME.REQUIRED,
+                            },
+                        })}
+                    />
+                    {errors.lastName && (
+                        <Form.Control.Feedback type="invalid">
+                            {errors.lastName.message}
+                        </Form.Control.Feedback>
+                    )}
+                    {!errors.lastName && dirtyFields.lastName && (
+                        <Form.Control.Feedback type="valid">
+                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_2}
+                        </Form.Control.Feedback>
+                    )}
                 </Form.Group>
             </Form>
         </div>

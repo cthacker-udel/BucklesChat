@@ -12,6 +12,8 @@ export const TextConstants = {
         SIGN_UP: {
             FORM_1_LABEL: "First Name",
             FORM_1_PLACEHOLDER: "Enter your first name",
+            FORM_2_LABEL: "Last Name",
+            FORM_2_PLACEHOLDER: "Enter your last name",
             TITLE: "Sign Up",
         },
     },
@@ -19,16 +21,23 @@ export const TextConstants = {
         INVALID: {
             SIGN_UP: {
                 FORM_1: {
-                    MAX_LENGTH: `First Name cannot be more then ${ValidationConstants.SIGN_UP.FORM_1.FIRST_NAME.MAX_LENGTH} characters`,
+                    MAX_LENGTH: `First Name cannot be more then ${ValidationConstants.SIGN_UP.FORM.FIRST_NAME.MAX_LENGTH} characters`,
                     PATTERN:
-                        "First name cannot contain digits, underscores, or any space characters",
+                        "First Name cannot contain digits, underscores, or any space characters",
                     REQUIRED: "First Name is required",
+                },
+                FORM_2: {
+                    MAX_LENGTH: `Last Name cannot be more then ${ValidationConstants.SIGN_UP.FORM.LAST_NAME.MAX_LENGTH} characters`,
+                    PATTERN:
+                        "Last Name cannot contain digits, underscores, or any space characters",
+                    REQUIRED: "Last Name is required",
                 },
             },
         },
         VALID: {
             SIGN_UP: {
                 FORM_1: "First Name is valid!",
+                FORM_2: "Last Name is valid!",
             },
         },
     },
