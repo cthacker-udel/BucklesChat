@@ -10,7 +10,7 @@
     "install-linter": "npm i --save-dev eslint-config-intense eslint-config-prettier eslint-plugin-eslint-comments eslint-plugin-import eslint-plugin-no-secrets eslint-plugin-node eslint-plugin-prettier eslint-plugin-ramda eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort eslint-plugin-sonarjs eslint-plugin-unicorn prettier prettier-eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-next"
   },
   "dependencies": {
-    "@types/node": "18.14.2",
+    "@types/node": "^18.14.4",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "next": "13.2.3",
