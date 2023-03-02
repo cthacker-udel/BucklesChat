@@ -1,5 +1,5 @@
-import React from "react";
 import type { StaticImageData } from "next/image";
+import React from "react";
 
 import { setBackground, type SetBackgroundConfiguration } from "@/helpers";
 
@@ -9,12 +9,12 @@ import { setBackground, type SetBackgroundConfiguration } from "@/helpers";
  * @param image - The image to set as the background
  */
 export const useBackground = (
-  image: StaticImageData,
-  options?: SetBackgroundConfiguration
+    image: StaticImageData,
+    options?: SetBackgroundConfiguration,
 ): void => {
-  React.useEffect(() => {
-    if (document !== null) {
-      setBackground(document, image, options);
-    }
-  }, [image, options]);
+    React.useEffect(() => {
+        if (document !== null) {
+            setBackground(document, image, options);
+        }
+    }, [image, options]);
 };

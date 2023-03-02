@@ -1,28 +1,37 @@
+import "@testing-library/jest-dom";
+
+import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+
+import { TextConstants } from "@/assets/str/TextConstants";
 
 import { HomePage } from "../HomePage";
-import { TextConstants } from "@/assets/str/TextConstants";
-import "@testing-library/jest-dom";
 
 jest.mock("next/router", () => require("next-router-mock"));
 
 describe("test1", () => {
-  it("render", () => {
-    render(<HomePage />);
-    const homePageDescription = document.getElementById(
-      "homepage_header_description"
-    );
-    expect(homePageDescription).not.toBeNull();
-    expect(homePageDescription?.innerHTML).toEqual(
-      TextConstants.CONTENT.HOME_PAGE.DESCRIPTION
-    );
-  });
-  it("click signup button", () => {
-    render(<HomePage />);
-    const signUpButton = screen.getAllByRole("button")[0];
-    expect(signUpButton).not.toBeNull();
-    fireEvent.click(signUpButton);
-    waitFor(() => {});
-  });
+    test("render", () => {
+        expect.assertions(2);
+
+        render(<HomePage />);
+        const homePageDescription = document.querySelector(
+            "#homepage_header_description",
+        );
+
+        expect(homePageDescription).not.toBeNull();
+        expect(homePageDescription?.innerHTML).toStrictEqual(
+            TextConstants.CONTENT.HOME_PAGE.DESCRIPTION,
+        );
+    });
+
+    test("click signup button", () => {
+        expect.assertions(1);
+
+        render(<HomePage />);
+        const signUpButton = screen.getAllByRole("button")[0];
+
+        expect(signUpButton).not.toBeNull();
+
+        fireEvent.click(signUpButton);
+    });
 });

@@ -1,14 +1,14 @@
 import type { StaticImageData } from "next/image";
 
 type SetBackgroundConfiguration = {
-  backgroundSize?: string;
-  backgroundBlendMode?: string;
-  backgroundColor?: string;
-  backgroundRColor?: number;
-  backgroundGColor?: number;
-  backgroundBColor?: number;
-  backgroundOpacity?: number;
-  noOptions?: boolean;
+    backgroundSize?: string;
+    backgroundBlendMode?: string;
+    backgroundColor?: string;
+    backgroundRColor?: number;
+    backgroundGColor?: number;
+    backgroundBColor?: number;
+    backgroundOpacity?: number;
+    noOptions?: boolean;
 };
 
 /**
@@ -17,34 +17,34 @@ type SetBackgroundConfiguration = {
  * @param options - The background options supplied
  */
 const validateOptionsRGBValues = (
-  options?: SetBackgroundConfiguration
+    options?: SetBackgroundConfiguration,
 ): void => {
-  if (options !== undefined) {
-    const {
-      backgroundRColor: red,
-      backgroundGColor: green,
-      backgroundBColor: blue,
-      backgroundOpacity: opacity,
-    } = options;
+    if (options !== undefined) {
+        const {
+            backgroundRColor: red,
+            backgroundGColor: green,
+            backgroundBColor: blue,
+            backgroundOpacity: opacity,
+        } = options;
 
-    if (red !== undefined && (red < 0 || red > 255)) {
-      throw new Error(
-        "Invalid red value supplied in the options configuration"
-      );
-    } else if (blue !== undefined && (blue < 0 || blue > 255)) {
-      throw new Error(
-        "Invalid blue value supplied in the options configuration"
-      );
-    } else if (green !== undefined && (green < 0 || green > 255)) {
-      throw new Error(
-        "Invalid green value supplied in the options configuration"
-      );
-    } else if (opacity !== undefined && (opacity < 0 || opacity > 1)) {
-      throw new Error(
-        "Invalid opacity value supplied in the options configuration"
-      );
+        if (red !== undefined && (red < 0 || red > 255)) {
+            throw new Error(
+                "Invalid red value supplied in the options configuration",
+            );
+        } else if (blue !== undefined && (blue < 0 || blue > 255)) {
+            throw new Error(
+                "Invalid blue value supplied in the options configuration",
+            );
+        } else if (green !== undefined && (green < 0 || green > 255)) {
+            throw new Error(
+                "Invalid green value supplied in the options configuration",
+            );
+        } else if (opacity !== undefined && (opacity < 0 || opacity > 1)) {
+            throw new Error(
+                "Invalid opacity value supplied in the options configuration",
+            );
+        }
     }
-  }
 };
 
 /**
@@ -53,18 +53,18 @@ const validateOptionsRGBValues = (
  * @param options - The background color options supplied
  */
 const mutateOptions = (options: SetBackgroundConfiguration): void => {
-  const {
-    backgroundRColor: red,
-    backgroundGColor: green,
-    backgroundBColor: blue,
-    backgroundOpacity: opacity,
-  } = options;
+    const {
+        backgroundRColor: red,
+        backgroundGColor: green,
+        backgroundBColor: blue,
+        backgroundOpacity: opacity,
+    } = options;
 
-  const parsedColor = `rgba(${red ?? 128}, ${green ?? 128}, ${blue ?? 128}, ${
-    opacity ?? 0.35
-  })`;
+    const parsedColor = `rgba(${red ?? 128}, ${green ?? 128}, ${blue ?? 128}, ${
+        opacity ?? 0.35
+    })`;
 
-  options.backgroundColor = parsedColor;
+    options.backgroundColor = parsedColor;
 };
 
 /**
@@ -74,30 +74,31 @@ const mutateOptions = (options: SetBackgroundConfiguration): void => {
  * @param image - The image we are appending
  */
 const setBackground = (
-  _document: Document,
-  image: StaticImageData,
-  options?: SetBackgroundConfiguration
+    _document: Document,
+    image: StaticImageData,
+    options?: SetBackgroundConfiguration,
 ): void => {
-  const body = _document.querySelector("body");
-  if (options !== undefined && options.noOptions) {
-    if (body !== null) {
-      body.style.backgroundImage = `url(${image.src})`;
-      body.style.backgroundSize = options?.backgroundSize ?? "cover";
-    }
-  } else {
-    if (options !== undefined) {
-      validateOptionsRGBValues(options);
-      mutateOptions(options);
-    }
+    const body = _document.querySelector("body");
+    if (options?.noOptions) {
+        if (body !== null) {
+            body.style.backgroundImage = `url(${image.src})`;
+            body.style.backgroundSize = options?.backgroundSize ?? "cover";
+        }
+    } else {
+        if (options !== undefined) {
+            validateOptionsRGBValues(options);
+            mutateOptions(options);
+        }
 
-    if (body !== null) {
-      body.style.backgroundImage = `url(${image.src})`;
-      body.style.backgroundSize = options?.backgroundSize ?? "cover";
-      body.style.backgroundBlendMode = options?.backgroundBlendMode ?? "screen";
-      body.style.backgroundColor =
-        options?.backgroundColor ?? "rgba(128, 128, 128, 0.55)";
+        if (body !== null) {
+            body.style.backgroundImage = `url(${image.src})`;
+            body.style.backgroundSize = options?.backgroundSize ?? "cover";
+            body.style.backgroundBlendMode =
+                options?.backgroundBlendMode ?? "screen";
+            body.style.backgroundColor =
+                options?.backgroundColor ?? "rgba(128, 128, 128, 0.55)";
+        }
     }
-  }
 };
 
 export { setBackground, type SetBackgroundConfiguration };

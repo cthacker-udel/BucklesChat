@@ -1,17 +1,17 @@
-import React from "react";
-import { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { Tooltip } from "react-bootstrap";
+import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
+
 import styles from "./renderTooltip.module.css";
-import { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 
 type RenderTooltipOptions = {
-  id?: string;
-  title?: string | ReactNode;
-  titleClassNameOverride?: string;
-  body?: string | ReactNode;
-  bodyClassNameOverride?: string;
-  footer?: string | ReactNode;
-  footerClassNameOverride?: string;
+    id?: string;
+    title?: ReactNode | string;
+    titleClassNameOverride?: string;
+    body?: ReactNode | string;
+    bodyClassNameOverride?: string;
+    footer?: ReactNode | string;
+    footerClassNameOverride?: string;
 };
 
 /**
@@ -21,36 +21,39 @@ type RenderTooltipOptions = {
  * @returns The formatted tooltip
  */
 export const renderTooltip = (
-  properties: OverlayInjectedProps,
-  options?: RenderTooltipOptions
+    properties: OverlayInjectedProps,
+    options?: RenderTooltipOptions,
 ): JSX.Element => (
-  <Tooltip {...properties} id={options?.id ?? `${Date.now() + Math.random()}`}>
-    <div className={styles.tooltip_content}>
-      {options?.title && (
-        <div
-          className={`${styles.tooltip_title} ${
-            options.titleClassNameOverride ?? ""
-          }`}
-        >
-          {options.title}
+    <Tooltip
+        {...properties}
+        id={options?.id ?? `${Date.now() + Math.random()}`}
+    >
+        <div className={styles.tooltip_content}>
+            {Boolean(options?.title) && (
+                <div
+                    className={`${styles.tooltip_title} ${
+                        options?.titleClassNameOverride ?? ""
+                    }`}
+                >
+                    {options?.title}
+                </div>
+            )}
+            {Boolean(options?.body) && (
+                <div
+                    className={`${styles.tooltip_body} ${
+                        options?.bodyClassNameOverride ?? ""
+                    }`}
+                >
+                    {options?.body}
+                </div>
+            )}
+            {Boolean(options?.footer) && (
+                <div
+                    className={`${styles.tooltip_footer} ${options?.footerClassNameOverride}`}
+                >
+                    {options?.footer}
+                </div>
+            )}
         </div>
-      )}
-      {options?.body && (
-        <div
-          className={`${styles.tooltip_body} ${
-            options.bodyClassNameOverride ?? ""
-          }`}
-        >
-          {options.body}
-        </div>
-      )}
-      {options?.footer && (
-        <div
-          className={`${styles.tooltip_footer} ${options.footerClassNameOverride}`}
-        >
-          {options.footer}
-        </div>
-      )}
-    </div>
-  </Tooltip>
+    </Tooltip>
 );

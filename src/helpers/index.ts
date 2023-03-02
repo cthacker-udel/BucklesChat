@@ -1,2 +1,2 @@
-export * from "./setBackground";
 export * from "./renderTooltip";
+export * from "./setBackground";

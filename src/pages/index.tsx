@@ -1,20 +1,30 @@
-import React from "react";
 import Head from "next/head";
+import React from "react";
+
 import { HomePage } from "../modules/HomePage";
 
-export default function Home() {
-  return (
+/**
+ * The index page of the application, when the user starts up the website, it loads this page
+ * initially
+ *
+ * @returns The home page
+ */
+const Home = (): JSX.Element => (
     <>
-      <Head>
-        <title>{"Buckles Chat"}</title>
-        <meta
-          name="description"
-          content="Chatting app for everyone to talk about everything buckles related"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/icon.png" />
-      </Head>
-      <HomePage />
+        <Head>
+            <title>{"Buckles Chat"}</title>
+            <meta
+                content="Chatting app for everyone to talk about everything buckles related"
+                name="description"
+            />
+            <meta
+                content="width=device-width, initial-scale=1"
+                name="viewport"
+            />
+            <link href="/icon.png" rel="icon" />
+        </Head>
+        <HomePage />
     </>
-  );
-}
+);
+
+export { Home as default };
