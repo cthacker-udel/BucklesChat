@@ -22,6 +22,7 @@ describe("test1", () => {
     render(<HomePage />);
     const signUpButton = screen.getAllByRole("button")[0];
     expect(signUpButton).not.toBeNull();
-    // TODO: Figure out how to test for button onclick
+    fireEvent.click(signUpButton);
+    waitFor(() => {});
   });
 });

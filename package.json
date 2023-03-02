@@ -24,6 +24,7 @@
     "react": "18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.43.3",
     "react-spinners": "^0.13.8",
     "react-toastify": "^9.1.1",
     "ts-node": "^10.9.1",

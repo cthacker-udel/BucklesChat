@@ -8,6 +8,7 @@ type SetBackgroundConfiguration = {
   backgroundGColor?: number;
   backgroundBColor?: number;
   backgroundOpacity?: number;
+  noOptions?: boolean;
 };
 
 /**
@@ -59,7 +60,7 @@ const mutateOptions = (options: SetBackgroundConfiguration): void => {
     backgroundOpacity: opacity,
   } = options;
 
-  const parsedColor = `rgba(${red ?? 255}, ${green ?? 255}, ${blue ?? 255}, ${
+  const parsedColor = `rgba(${red ?? 128}, ${green ?? 128}, ${blue ?? 128}, ${
     opacity ?? 0.35
   })`;
 
@@ -77,18 +78,25 @@ const setBackground = (
   image: StaticImageData,
   options?: SetBackgroundConfiguration
 ): void => {
-  if (options !== undefined) {
-    validateOptionsRGBValues(options);
-    mutateOptions(options);
-  }
-
   const body = _document.querySelector("body");
-  if (body !== null) {
-    body.style.backgroundImage = `url(${image.src})`;
-    body.style.backgroundSize = options?.backgroundSize ?? "cover";
-    body.style.backgroundBlendMode = options?.backgroundBlendMode ?? "lighten";
-    body.style.backgroundColor =
-      options?.backgroundColor ?? "rgba(255, 255, 255, 0.35)";
+  if (options !== undefined && options.noOptions) {
+    if (body !== null) {
+      body.style.backgroundImage = `url(${image.src})`;
+      body.style.backgroundSize = options?.backgroundSize ?? "cover";
+    }
+  } else {
+    if (options !== undefined) {
+      validateOptionsRGBValues(options);
+      mutateOptions(options);
+    }
+
+    if (body !== null) {
+      body.style.backgroundImage = `url(${image.src})`;
+      body.style.backgroundSize = options?.backgroundSize ?? "cover";
+      body.style.backgroundBlendMode = options?.backgroundBlendMode ?? "screen";
+      body.style.backgroundColor =
+        options?.backgroundColor ?? "rgba(128, 128, 128, 0.55)";
+    }
   }
 };
 
