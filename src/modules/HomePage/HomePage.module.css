@@ -1,0 +1,56 @@
+@keyframes home_page_title_anim {
+  0% {
+    margin-right: 100vw;
+  }
+  100% {
+    margin-right: 0vw;
+  }
+}
+
+@keyframes skew_anim {
+  0% {
+    transform: skew(0);
+  }
+  50% {
+    transform: skew(-35deg, 0);
+  }
+  100% {
+    transform: skew(0);
+  }
+}
+
+.home_page_content {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  text-align: center;
+  width: 75%;
+}
+
+.home_page_welcome_text {
+  background-color: rgba(128, 128, 128, 0.85);
+  padding: 1em;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.home_page_title {
+  inline-size: auto;
+  font-size: 2em;
+  font-weight: 800;
+  width: max-content;
+  align-self: center;
+  animation: home_page_title_anim 1s ease-in-out, 3s ease-in-out 0.5s skew_anim;
+}
+
+.home_page_description {
+  font-size: 1.25em;
+}
+
+.home_page_option_buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  align-self: center;
+}
