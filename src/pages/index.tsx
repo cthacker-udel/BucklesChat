@@ -21,7 +21,7 @@ const Home = (): JSX.Element => (
                 content="width=device-width, initial-scale=1"
                 name="viewport"
             />
-            <link href="/icon.png" rel="icon" />
+            <link href="/icon.ico" rel="icon" />
         </Head>
         <HomePage />
     </>
