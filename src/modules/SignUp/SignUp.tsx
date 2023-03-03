@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { validate } from "email-validator";
 import React from "react";
 import { Form, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { useForm } from "react-hook-form";
 
+import { TextConstants, ValidationConstants } from "@/assets";
 import Background from "@/assets/background/signup/bg.gif";
-import { TextConstants } from "@/assets/str/TextConstants";
-import { ValidationConstants } from "@/assets/validation/ValidationConstants";
 import { renderTooltip } from "@/helpers";
 import { useBackground } from "@/hooks/useBackground";
 
@@ -78,10 +78,7 @@ export const SignUp = (): JSX.Element => {
                         {TextConstants.CONTENT.SIGN_UP.FORM_1_LABEL}
                     </Form.Label>
                     <Form.Control
-                        isInvalid={
-                            Boolean(dirtyFields.firstName) &&
-                            Boolean(errors.firstName)
-                        }
+                        isInvalid={Boolean(errors.firstName)}
                         isValid={
                             Boolean(dirtyFields.firstName) && !errors.firstName
                         }
@@ -113,7 +110,7 @@ export const SignUp = (): JSX.Element => {
                             },
                         })}
                     />
-                    {errors.firstName !== undefined && (
+                    {errors.firstName && (
                         <Form.Control.Feedback type="invalid">
                             {errors.firstName.message}
                         </Form.Control.Feedback>
@@ -168,6 +165,143 @@ export const SignUp = (): JSX.Element => {
                     {!errors.lastName && dirtyFields.lastName && (
                         <Form.Control.Feedback type="valid">
                             {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_2}
+                        </Form.Control.Feedback>
+                    )}
+                </Form.Group>
+                <Form.Group controlId="email_form">
+                    <Form.Label>
+                        {TextConstants.CONTENT.SIGN_UP.FORM_3_LABEL}
+                    </Form.Label>
+                    <Form.Control
+                        isInvalid={Boolean(errors.email)}
+                        isValid={!errors.email && dirtyFields.email}
+                        placeholder={
+                            TextConstants.CONTENT.SIGN_UP.FORM_3_PLACEHOLDER
+                        }
+                        type="email"
+                        {...register("email", {
+                            maxLength: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_3.MAX_LENGTH,
+                                value: ValidationConstants.SIGN_UP.FORM.EMAIL
+                                    .MAX_LENGTH,
+                            },
+                            required: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_3.REQUIRED,
+                                value: ValidationConstants.SIGN_UP.FORM.EMAIL
+                                    .REQUIRED,
+                            },
+                            validate: {
+                                isValidEmail: (email) =>
+                                    validate(email) ||
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_3.PATTERN,
+                            },
+                        })}
+                    />
+                    {errors.email && (
+                        <Form.Control.Feedback type="invalid">
+                            {errors.email.message}
+                        </Form.Control.Feedback>
+                    )}
+                    {!errors.email && dirtyFields.email && (
+                        <Form.Control.Feedback type="valid">
+                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_3}
+                        </Form.Control.Feedback>
+                    )}
+                </Form.Group>
+                <Form.Group controlId="username_form">
+                    <Form.Label>
+                        {TextConstants.CONTENT.SIGN_UP.FORM_4_LABEL}
+                    </Form.Label>
+                    <Form.Control
+                        isInvalid={Boolean(errors.username)}
+                        isValid={!errors.username && dirtyFields.username}
+                        placeholder={
+                            TextConstants.CONTENT.SIGN_UP.FORM_4_PLACEHOLDER
+                        }
+                        type="text"
+                        {...register("username", {
+                            maxLength: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_4.MAX_LENGTH,
+                                value: ValidationConstants.SIGN_UP.FORM.USERNAME
+                                    .MAX_LENGTH,
+                            },
+                            pattern: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_4.PATTERN,
+                                value: ValidationConstants.SIGN_UP.FORM.USERNAME
+                                    .PATTERN,
+                            },
+                            required: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_4.REQUIRED,
+                                value: ValidationConstants.SIGN_UP.FORM.USERNAME
+                                    .REQUIRED,
+                            },
+                        })}
+                    />
+                    {errors.username && (
+                        <Form.Control.Feedback type="invalid">
+                            {errors.username.message}
+                        </Form.Control.Feedback>
+                    )}
+                    {!errors.username && (
+                        <Form.Control.Feedback type="valid">
+                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_4}
+                        </Form.Control.Feedback>
+                    )}
+                </Form.Group>
+                <Form.Group controlId="handle_form">
+                    <Form.Label>
+                        {TextConstants.CONTENT.SIGN_UP.FORM_5_LABEL}
+                    </Form.Label>
+                    <Form.Control
+                        isInvalid={Boolean(errors.handle)}
+                        isValid={!errors.handle && dirtyFields.handle}
+                        placeholder={
+                            TextConstants.CONTENT.SIGN_UP.FORM_5_PLACEHOLDER
+                        }
+                        type="text"
+                        {...register("handle", {
+                            maxLength: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_5.MAX_LENGTH,
+                                value: ValidationConstants.SIGN_UP.FORM.HANDLE
+                                    .MAX_LENGTH,
+                            },
+                            pattern: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_5.PATTERN,
+                                value: ValidationConstants.SIGN_UP.FORM.HANDLE
+                                    .PATTERN,
+                            },
+                            required: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_5.REQUIRED,
+                                value: ValidationConstants.SIGN_UP.FORM.HANDLE
+                                    .REQUIRED,
+                            },
+                        })}
+                    />
+                    {errors.handle && (
+                        <Form.Control.Feedback type="invalid">
+                            {errors.handle.message}
+                        </Form.Control.Feedback>
+                    )}
+                    {!errors.handle && dirtyFields.handle && (
+                        <Form.Control.Feedback type="valid">
+                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_5}
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
