@@ -245,6 +245,7 @@ export const SignUp = (): JSX.Element => {
                                 TextConstants.CONTENT.SIGN_UP
                                     .CONFIRM_PASSWORD_LABEL
                             }
+                            <Required paddingLeft />
                         </Form.Label>
                         <Form.Control
                             isInvalid={Boolean(errors.confirmPassword)}
