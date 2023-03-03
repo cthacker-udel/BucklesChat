@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import React from "react";
 
-import Layout from "../common/layout";
+import { Layout } from "../common";
 
 /**
  * Used to initialize pages, control the page initialization and persist layouts between page

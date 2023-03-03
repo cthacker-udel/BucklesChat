@@ -20,6 +20,8 @@ export const TextConstants = {
             FORM_4_PLACEHOLDER: "Enter your username",
             FORM_5_LABEL: "Handle",
             FORM_5_PLACEHOLDER: "Enter your handle",
+            FORM_6_LABEL: "Date of Birth",
+            FORM_6_PLACEHOLDER: "Enter your date of birth",
             TITLE: "Sign Up",
         },
     },
@@ -53,6 +55,9 @@ export const TextConstants = {
                     PATTERN: "Handle cannot contain any symbols",
                     REQUIRED: "Handle is required",
                 },
+                FORM_6: {
+                    REQUIRED: "Date of Birth is required",
+                },
             },
         },
         VALID: {
@@ -62,6 +67,7 @@ export const TextConstants = {
                 FORM_3: "Email is valid!",
                 FORM_4: "Username is valid!",
                 FORM_5: "Handle is valid!",
+                FORM_6: "Date of Birth is valid!",
             },
         },
     },

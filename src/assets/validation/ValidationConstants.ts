@@ -3,6 +3,9 @@ import { RegexConstants } from "../regex";
 export const ValidationConstants = {
     SIGN_UP: {
         FORM: {
+            DATE_OF_BIRTH: {
+                REQUIRED: true,
+            },
             EMAIL: {
                 MAX_LENGTH: 120,
                 REQUIRED: true,

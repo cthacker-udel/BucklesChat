@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 
 import { TextConstants, ValidationConstants } from "@/assets";
 import Background from "@/assets/background/signup/bg.gif";
+import { Required } from "@/common";
 import { renderTooltip } from "@/helpers";
 import { useBackground } from "@/hooks/useBackground";
 
@@ -76,6 +77,7 @@ export const SignUp = (): JSX.Element => {
                 <Form.Group controlId="first_name_form">
                     <Form.Label>
                         {TextConstants.CONTENT.SIGN_UP.FORM_1_LABEL}
+                        <Required paddingLeft />
                     </Form.Label>
                     <Form.Control
                         isInvalid={Boolean(errors.firstName)}
@@ -125,6 +127,7 @@ export const SignUp = (): JSX.Element => {
                 <Form.Group controlId="last_name_form">
                     <Form.Label>
                         {TextConstants.CONTENT.SIGN_UP.FORM_2_LABEL}
+                        <Required paddingLeft />
                     </Form.Label>
                     <Form.Control
                         isInvalid={Boolean(errors.lastName)}
@@ -171,6 +174,7 @@ export const SignUp = (): JSX.Element => {
                 <Form.Group controlId="email_form">
                     <Form.Label>
                         {TextConstants.CONTENT.SIGN_UP.FORM_3_LABEL}
+                        <Required paddingLeft />
                     </Form.Label>
                     <Form.Control
                         isInvalid={Boolean(errors.email)}
@@ -216,6 +220,7 @@ export const SignUp = (): JSX.Element => {
                 <Form.Group controlId="username_form">
                     <Form.Label>
                         {TextConstants.CONTENT.SIGN_UP.FORM_4_LABEL}
+                        <Required paddingLeft />
                     </Form.Label>
                     <Form.Control
                         isInvalid={Boolean(errors.username)}
@@ -262,6 +267,7 @@ export const SignUp = (): JSX.Element => {
                 <Form.Group controlId="handle_form">
                     <Form.Label>
                         {TextConstants.CONTENT.SIGN_UP.FORM_5_LABEL}
+                        <Required paddingLeft />
                     </Form.Label>
                     <Form.Control
                         isInvalid={Boolean(errors.handle)}
@@ -302,6 +308,43 @@ export const SignUp = (): JSX.Element => {
                     {!errors.handle && dirtyFields.handle && (
                         <Form.Control.Feedback type="valid">
                             {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_5}
+                        </Form.Control.Feedback>
+                    )}
+                </Form.Group>
+                <Form.Group controlId="date_of_birth_form">
+                    <Form.Label>
+                        {TextConstants.CONTENT.SIGN_UP.FORM_6_LABEL}
+                        <Required paddingLeft />
+                    </Form.Label>
+                    <Form.Control
+                        isInvalid={Boolean(errors.dob)}
+                        isValid={!errors.dob && dirtyFields.dob}
+                        type="date"
+                        {...register("dob", {
+                            required: {
+                                message:
+                                    TextConstants.VALIDATION.INVALID.SIGN_UP
+                                        .FORM_6.REQUIRED,
+                                value: ValidationConstants.SIGN_UP.FORM
+                                    .DATE_OF_BIRTH.REQUIRED,
+                            },
+                            setValueAs: (enteredDate: Date | number) => {
+                                if (typeof enteredDate === "number") {
+                                    return enteredDate;
+                                }
+                                return enteredDate.getTime();
+                            },
+                            valueAsDate: true,
+                        })}
+                    />
+                    {errors.dob && (
+                        <Form.Control.Feedback type="invalid">
+                            {errors.dob.message}
+                        </Form.Control.Feedback>
+                    )}
+                    {!errors.dob && dirtyFields.dob && (
+                        <Form.Control.Feedback type="valid">
+                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_6}
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>

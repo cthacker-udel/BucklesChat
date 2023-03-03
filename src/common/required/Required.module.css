@@ -1,0 +1,8 @@
+.required_content {
+    color: red;
+    font-family: "DynaPuff", sans-serif !important;
+}
+
+.required_content_pad_left {
+    padding-left: 0.5em;
+}
