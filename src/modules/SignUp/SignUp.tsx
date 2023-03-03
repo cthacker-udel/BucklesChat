@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
-import { validate } from "email-validator";
 import React from "react";
 import { Form, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
@@ -11,28 +10,88 @@ import { Required } from "@/common";
 import { renderTooltip } from "@/helpers";
 import { useBackground } from "@/hooks/useBackground";
 
+import { PasswordRequirement } from "./PasswordRequirement";
 import styles from "./SignUp.module.css";
 
 type FormValues = {
-    firstName: string;
-    lastName: string;
-    email: string;
     username: string;
-    handle: string;
-    dob: number;
     password: string;
     confirmPassword: string;
 };
 
 const FORM_DEFAULT_VALUES: FormValues = {
     confirmPassword: "",
-    dob: Date.now(),
-    email: "",
-    firstName: "",
-    handle: "",
-    lastName: "",
     password: "",
     username: "",
+};
+
+type PASSWORD_STATES = {
+    containsErrors: boolean;
+    noSpaces: boolean;
+    greaterThanMinLength: boolean;
+    lessThanMaxLength: boolean;
+    containsSymbol: boolean;
+    containsLowercase: boolean;
+    containsUppercase: boolean;
+    containsDigits: boolean;
+};
+
+const DEFAULT_PASSWORD_STATE: PASSWORD_STATES = {
+    containsDigits: false,
+    containsErrors: false,
+    containsLowercase: false,
+    containsSymbol: false,
+    containsUppercase: false,
+    greaterThanMinLength: false,
+    lessThanMaxLength: false,
+    noSpaces: false,
+};
+
+/**
+ *
+ * @param password
+ */
+const validatePassword = (password: string): PASSWORD_STATES => {
+    const newState = { ...DEFAULT_PASSWORD_STATE };
+    newState.containsDigits = new RegExp(
+        ValidationConstants.SIGN_UP.FORM.PASSWORD.CONTAINS_DIGIT,
+        "u",
+    ).test(password);
+    newState.containsLowercase = new RegExp(
+        ValidationConstants.SIGN_UP.FORM.PASSWORD.CONTAINS_LOWERCASE,
+        "u",
+    ).test(password);
+    newState.containsUppercase = new RegExp(
+        ValidationConstants.SIGN_UP.FORM.PASSWORD.CONTAINS_UPPERCASE,
+        "u",
+    ).test(password);
+    newState.containsSymbol = new RegExp(
+        ValidationConstants.SIGN_UP.FORM.PASSWORD.CONTAINS_SYMBOL,
+        "u",
+    ).test(password);
+    newState.lessThanMaxLength =
+        password.length <
+            ValidationConstants.SIGN_UP.FORM.PASSWORD.MAX_LENGTH &&
+        password.length > 0;
+    newState.greaterThanMinLength =
+        password.length > ValidationConstants.SIGN_UP.FORM.PASSWORD.MIN_LENGTH;
+    newState.noSpaces =
+        !new RegExp(
+            ValidationConstants.SIGN_UP.FORM.PASSWORD.NO_SPACES,
+            "u",
+        ).test(password) && password.length > 0;
+
+    newState.containsErrors = !(
+        newState.containsDigits &&
+        newState.containsLowercase &&
+        newState.containsUppercase &&
+        newState.containsSymbol &&
+        newState.lessThanMaxLength &&
+        newState.greaterThanMinLength &&
+        newState.noSpaces
+    );
+
+    return newState;
 };
 
 /**
@@ -42,313 +101,238 @@ const FORM_DEFAULT_VALUES: FormValues = {
 export const SignUp = (): JSX.Element => {
     useBackground(Background);
 
-    const { formState, register } = useForm<FormValues>({
+    const { formState, register, watch } = useForm<FormValues>({
         criteriaMode: "all",
         defaultValues: FORM_DEFAULT_VALUES,
         mode: "all",
         reValidateMode: "onChange",
     });
 
-    const { errors, dirtyFields, isValid } = formState;
+    const [passwordState, setPasswordState] = React.useState<PASSWORD_STATES>(
+        DEFAULT_PASSWORD_STATE,
+    );
 
-    console.log(errors, isValid);
+    const { errors, dirtyFields } = formState;
+
+    console.log(errors);
+
+    const passwordValue = watch("password");
+
+    React.useEffect(() => {
+        setPasswordState(validatePassword(passwordValue));
+    }, [passwordValue]);
 
     return (
-        <div className={styles.sign_up_content}>
-            <div className={styles.sign_up_header}>
-                {TextConstants.CONTENT.SIGN_UP.TITLE}
-                <OverlayTrigger
-                    overlay={(properties: OverlayInjectedProps): JSX.Element =>
-                        renderTooltip(properties, {
-                            title: "Back to Home Page",
-                        })
-                    }
-                    placement="top"
-                >
-                    <i
-                        className={`fa-solid fa-circle-arrow-left ${styles.sign_up_back_button}`}
-                        onClick={(): void => {
-                            window.location.href = window.location.origin;
-                        }}
-                    />
-                </OverlayTrigger>
-            </div>
-            <Form className={styles.sign_up_form_content}>
-                <Form.Group controlId="first_name_form">
-                    <Form.Label>
-                        {TextConstants.CONTENT.SIGN_UP.FORM_1_LABEL}
-                        <Required paddingLeft />
-                    </Form.Label>
-                    <Form.Control
-                        isInvalid={Boolean(errors.firstName)}
-                        isValid={
-                            Boolean(dirtyFields.firstName) && !errors.firstName
+        <div className={styles.sign_up_layout}>
+            <div className={styles.sign_up_content}>
+                <div className={styles.sign_up_header}>
+                    {TextConstants.CONTENT.SIGN_UP.TITLE}
+                    <OverlayTrigger
+                        overlay={(
+                            properties: OverlayInjectedProps,
+                        ): JSX.Element =>
+                            renderTooltip(properties, {
+                                title: "Back to Home Page",
+                            })
                         }
-                        placeholder={
-                            TextConstants.CONTENT.SIGN_UP.FORM_1_PLACEHOLDER
-                        }
-                        type="text"
-                        {...register("firstName", {
-                            maxLength: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_1.MAX_LENGTH,
-                                value: ValidationConstants.SIGN_UP.FORM
-                                    .FIRST_NAME.MAX_LENGTH,
-                            },
-                            pattern: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_1.PATTERN,
-                                value: ValidationConstants.SIGN_UP.FORM
-                                    .FIRST_NAME.PATTERN,
-                            },
-                            required: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_1.REQUIRED,
-                                value: ValidationConstants.SIGN_UP.FORM
-                                    .FIRST_NAME.REQUIRED,
-                            },
-                        })}
-                    />
-                    {errors.firstName && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.firstName.message}
-                        </Form.Control.Feedback>
-                    )}
-                    {errors.firstName === undefined &&
-                        dirtyFields.firstName && (
-                            <Form.Control.Feedback type="valid">
-                                {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_1}
+                        placement="top"
+                    >
+                        <i
+                            className={`fa-solid fa-circle-arrow-left ${styles.sign_up_back_button}`}
+                            onClick={(): void => {
+                                window.location.href = window.location.origin;
+                            }}
+                        />
+                    </OverlayTrigger>
+                </div>
+                <Form className={styles.sign_up_form_content}>
+                    <Form.Group controlId="username_form">
+                        <Form.Label>
+                            {TextConstants.CONTENT.SIGN_UP.USERNAME_LABEL}
+                            <Required paddingLeft />
+                        </Form.Label>
+                        <Form.Control
+                            isInvalid={Boolean(errors.username)}
+                            isValid={!errors.username && dirtyFields.username}
+                            placeholder={
+                                TextConstants.CONTENT.SIGN_UP
+                                    .USERNAME_PLACEHOLDER
+                            }
+                            type="text"
+                            {...register("username", {
+                                maxLength: {
+                                    message:
+                                        TextConstants.VALIDATION.INVALID.SIGN_UP
+                                            .USERNAME.MAX_LENGTH,
+                                    value: ValidationConstants.SIGN_UP.FORM
+                                        .USERNAME.MAX_LENGTH,
+                                },
+                                pattern: {
+                                    message:
+                                        TextConstants.VALIDATION.INVALID.SIGN_UP
+                                            .USERNAME.PATTERN,
+                                    value: ValidationConstants.SIGN_UP.FORM
+                                        .USERNAME.PATTERN,
+                                },
+                                required: {
+                                    message:
+                                        TextConstants.VALIDATION.INVALID.SIGN_UP
+                                            .USERNAME.REQUIRED,
+                                    value: ValidationConstants.SIGN_UP.FORM
+                                        .USERNAME.REQUIRED,
+                                },
+                            })}
+                        />
+                        {errors.username && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.username.message}
                             </Form.Control.Feedback>
                         )}
-                </Form.Group>
-                <Form.Group controlId="last_name_form">
-                    <Form.Label>
-                        {TextConstants.CONTENT.SIGN_UP.FORM_2_LABEL}
-                        <Required paddingLeft />
-                    </Form.Label>
-                    <Form.Control
-                        isInvalid={Boolean(errors.lastName)}
-                        isValid={!errors.lastName && dirtyFields.lastName}
-                        placeholder={
-                            TextConstants.CONTENT.SIGN_UP.FORM_2_PLACEHOLDER
-                        }
-                        type="text"
-                        {...register("lastName", {
-                            maxLength: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_2.MAX_LENGTH,
-                                value: ValidationConstants.SIGN_UP.FORM
-                                    .LAST_NAME.MAX_LENGTH,
-                            },
-                            pattern: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_2.PATTERN,
-                                value: ValidationConstants.SIGN_UP.FORM
-                                    .LAST_NAME.PATTERN,
-                            },
-                            required: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_2.REQUIRED,
-                                value: ValidationConstants.SIGN_UP.FORM
-                                    .LAST_NAME.REQUIRED,
-                            },
-                        })}
-                    />
-                    {errors.lastName && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.lastName.message}
-                        </Form.Control.Feedback>
-                    )}
-                    {!errors.lastName && dirtyFields.lastName && (
-                        <Form.Control.Feedback type="valid">
-                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_2}
-                        </Form.Control.Feedback>
-                    )}
-                </Form.Group>
-                <Form.Group controlId="email_form">
-                    <Form.Label>
-                        {TextConstants.CONTENT.SIGN_UP.FORM_3_LABEL}
-                        <Required paddingLeft />
-                    </Form.Label>
-                    <Form.Control
-                        isInvalid={Boolean(errors.email)}
-                        isValid={!errors.email && dirtyFields.email}
-                        placeholder={
-                            TextConstants.CONTENT.SIGN_UP.FORM_3_PLACEHOLDER
-                        }
-                        type="email"
-                        {...register("email", {
-                            maxLength: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_3.MAX_LENGTH,
-                                value: ValidationConstants.SIGN_UP.FORM.EMAIL
-                                    .MAX_LENGTH,
-                            },
-                            required: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_3.REQUIRED,
-                                value: ValidationConstants.SIGN_UP.FORM.EMAIL
-                                    .REQUIRED,
-                            },
-                            validate: {
-                                isValidEmail: (email) =>
-                                    validate(email) ||
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_3.PATTERN,
-                            },
-                        })}
-                    />
-                    {errors.email && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.email.message}
-                        </Form.Control.Feedback>
-                    )}
-                    {!errors.email && dirtyFields.email && (
-                        <Form.Control.Feedback type="valid">
-                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_3}
-                        </Form.Control.Feedback>
-                    )}
-                </Form.Group>
-                <Form.Group controlId="username_form">
-                    <Form.Label>
-                        {TextConstants.CONTENT.SIGN_UP.FORM_4_LABEL}
-                        <Required paddingLeft />
-                    </Form.Label>
-                    <Form.Control
-                        isInvalid={Boolean(errors.username)}
-                        isValid={!errors.username && dirtyFields.username}
-                        placeholder={
-                            TextConstants.CONTENT.SIGN_UP.FORM_4_PLACEHOLDER
-                        }
-                        type="text"
-                        {...register("username", {
-                            maxLength: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_4.MAX_LENGTH,
-                                value: ValidationConstants.SIGN_UP.FORM.USERNAME
-                                    .MAX_LENGTH,
-                            },
-                            pattern: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_4.PATTERN,
-                                value: ValidationConstants.SIGN_UP.FORM.USERNAME
-                                    .PATTERN,
-                            },
-                            required: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_4.REQUIRED,
-                                value: ValidationConstants.SIGN_UP.FORM.USERNAME
-                                    .REQUIRED,
-                            },
-                        })}
-                    />
-                    {errors.username && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.username.message}
-                        </Form.Control.Feedback>
-                    )}
-                    {!errors.username && (
-                        <Form.Control.Feedback type="valid">
-                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_4}
-                        </Form.Control.Feedback>
-                    )}
-                </Form.Group>
-                <Form.Group controlId="handle_form">
-                    <Form.Label>
-                        {TextConstants.CONTENT.SIGN_UP.FORM_5_LABEL}
-                        <Required paddingLeft />
-                    </Form.Label>
-                    <Form.Control
-                        isInvalid={Boolean(errors.handle)}
-                        isValid={!errors.handle && dirtyFields.handle}
-                        placeholder={
-                            TextConstants.CONTENT.SIGN_UP.FORM_5_PLACEHOLDER
-                        }
-                        type="text"
-                        {...register("handle", {
-                            maxLength: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_5.MAX_LENGTH,
-                                value: ValidationConstants.SIGN_UP.FORM.HANDLE
-                                    .MAX_LENGTH,
-                            },
-                            pattern: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_5.PATTERN,
-                                value: ValidationConstants.SIGN_UP.FORM.HANDLE
-                                    .PATTERN,
-                            },
-                            required: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_5.REQUIRED,
-                                value: ValidationConstants.SIGN_UP.FORM.HANDLE
-                                    .REQUIRED,
-                            },
-                        })}
-                    />
-                    {errors.handle && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.handle.message}
-                        </Form.Control.Feedback>
-                    )}
-                    {!errors.handle && dirtyFields.handle && (
-                        <Form.Control.Feedback type="valid">
-                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_5}
-                        </Form.Control.Feedback>
-                    )}
-                </Form.Group>
-                <Form.Group controlId="date_of_birth_form">
-                    <Form.Label>
-                        {TextConstants.CONTENT.SIGN_UP.FORM_6_LABEL}
-                        <Required paddingLeft />
-                    </Form.Label>
-                    <Form.Control
-                        isInvalid={Boolean(errors.dob)}
-                        isValid={!errors.dob && dirtyFields.dob}
-                        type="date"
-                        {...register("dob", {
-                            required: {
-                                message:
-                                    TextConstants.VALIDATION.INVALID.SIGN_UP
-                                        .FORM_6.REQUIRED,
-                                value: ValidationConstants.SIGN_UP.FORM
-                                    .DATE_OF_BIRTH.REQUIRED,
-                            },
-                            setValueAs: (enteredDate: Date | number) => {
-                                if (typeof enteredDate === "number") {
-                                    return enteredDate;
+                        {!errors.username && (
+                            <Form.Control.Feedback type="valid">
+                                {
+                                    TextConstants.VALIDATION.VALID.SIGN_UP
+                                        .USERNAME
                                 }
-                                return enteredDate.getTime();
-                            },
-                            valueAsDate: true,
-                        })}
+                            </Form.Control.Feedback>
+                        )}
+                    </Form.Group>
+                    <Form.Group controlId="password_form">
+                        <Form.Label>
+                            {TextConstants.CONTENT.SIGN_UP.PASSWORD_LABEL}
+                            <Required paddingLeft />
+                        </Form.Label>
+                        <Form.Control
+                            placeholder={
+                                TextConstants.CONTENT.SIGN_UP
+                                    .PASSWORD_PLACEHOLDER
+                            }
+                            type="password"
+                            {...register("password", {
+                                required: {
+                                    message:
+                                        TextConstants.VALIDATION.INVALID.SIGN_UP
+                                            .PASSWORD.REQUIRED,
+                                    value: ValidationConstants.SIGN_UP.FORM
+                                        .PASSWORD.REQUIRED,
+                                },
+                            })}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="confirm_password_form">
+                        <Form.Label>
+                            {
+                                TextConstants.CONTENT.SIGN_UP
+                                    .CONFIRM_PASSWORD_LABEL
+                            }
+                        </Form.Label>
+                        <Form.Control
+                            isInvalid={Boolean(errors.confirmPassword)}
+                            isValid={
+                                !errors.confirmPassword &&
+                                dirtyFields.confirmPassword
+                            }
+                            placeholder={
+                                TextConstants.CONTENT.SIGN_UP
+                                    .CONFIRM_PASSWORD_PLACEHOLDER
+                            }
+                            type="password"
+                            {...register("confirmPassword", {
+                                required: {
+                                    message:
+                                        TextConstants.VALIDATION.INVALID.SIGN_UP
+                                            .CONFIRM_PASSWORD.REQUIRED,
+                                    value: ValidationConstants.SIGN_UP.FORM
+                                        .CONFIRM_PASSWORD.REQUIRED,
+                                },
+                                validate: {
+                                    samePasswords: (value: string) => {
+                                        if (value.length > 0) {
+                                            return (
+                                                value === passwordValue ||
+                                                TextConstants.VALIDATION.INVALID
+                                                    .SIGN_UP.CONFIRM_PASSWORD
+                                                    .MATCHING
+                                            );
+                                        }
+                                        return true;
+                                    },
+                                },
+                            })}
+                        />
+                        {errors.confirmPassword && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.confirmPassword.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.confirmPassword &&
+                            dirtyFields.confirmPassword && (
+                                <Form.Control.Feedback type="valid">
+                                    {
+                                        TextConstants.VALIDATION.VALID.SIGN_UP
+                                            .CONFIRM_PASSWORD
+                                    }
+                                </Form.Control.Feedback>
+                            )}
+                    </Form.Group>
+                </Form>
+            </div>
+            <div className={styles.sign_up_password_requirements}>
+                <div className={styles.sign_up_password_requirements_header}>
+                    {"Password Requirements"}
+                </div>
+                <div className={styles.sign_up_password_requirements_list}>
+                    <PasswordRequirement
+                        isValid={passwordState.lessThanMaxLength}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .MAX_LENGTH
+                        }
                     />
-                    {errors.dob && (
-                        <Form.Control.Feedback type="invalid">
-                            {errors.dob.message}
-                        </Form.Control.Feedback>
-                    )}
-                    {!errors.dob && dirtyFields.dob && (
-                        <Form.Control.Feedback type="valid">
-                            {TextConstants.VALIDATION.VALID.SIGN_UP.FORM_6}
-                        </Form.Control.Feedback>
-                    )}
-                </Form.Group>
-            </Form>
+                    <PasswordRequirement
+                        isValid={passwordState.greaterThanMinLength}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .MIN_LENGTH
+                        }
+                    />
+                    <PasswordRequirement
+                        isValid={passwordState.containsDigits}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .CONTAINS_DIGIT
+                        }
+                    />
+                    <PasswordRequirement
+                        isValid={passwordState.containsLowercase}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .CONTAINS_LOWERCASE
+                        }
+                    />
+                    <PasswordRequirement
+                        isValid={passwordState.containsUppercase}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .CONTAINS_UPPERCASE
+                        }
+                    />
+                    <PasswordRequirement
+                        isValid={passwordState.containsSymbol}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .CONTAINS_SYMBOL
+                        }
+                    />
+                    <PasswordRequirement
+                        isValid={passwordState.noSpaces}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .NO_SPACES
+                        }
+                    />
+                </div>
+            </div>
         </div>
     );
 };

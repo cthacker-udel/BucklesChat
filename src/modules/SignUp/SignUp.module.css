@@ -1,12 +1,19 @@
 .sign_up_content {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}
+
+.sign_up_layout {
+    display: flex;
+    flex-direction: row;
     padding: 1.5em;
     border: 1px solid black;
     border-radius: 1em;
-    display: flex;
-    flex-direction: column;
-    width: 45vw;
     background-color: rgba(0, 0, 0, 1);
+    width: 45vw;
     color: white;
+    gap: 1em;
 }
 
 .sign_up_header {
@@ -33,4 +40,26 @@
     display: flex;
     flex-direction: column;
     gap: 1em;
+}
+
+.sign_up_password_requirements {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85em;
+    background-color: gray;
+    width: 40%;
+    border-radius: 1em;
+    padding: 1em;
+}
+
+.sign_up_password_requirements_header {
+    text-align: center;
+    font-family: "DynaPuff", sans-serif;
+    letter-spacing: 0.1em;
+}
+
+.sign_up_password_requirements_list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
 }

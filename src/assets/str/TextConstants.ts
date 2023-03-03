@@ -10,64 +10,86 @@ export const TextConstants = {
             TITLE: "Welcome to Buckles Chat!",
         },
         SIGN_UP: {
-            FORM_1_LABEL: "First Name",
-            FORM_1_PLACEHOLDER: "Enter your first name",
-            FORM_2_LABEL: "Last Name",
-            FORM_2_PLACEHOLDER: "Enter your last name",
-            FORM_3_LABEL: "Email",
-            FORM_3_PLACEHOLDER: "Enter your email",
-            FORM_4_LABEL: "Username",
-            FORM_4_PLACEHOLDER: "Enter your username",
-            FORM_5_LABEL: "Handle",
-            FORM_5_PLACEHOLDER: "Enter your handle",
-            FORM_6_LABEL: "Date of Birth",
-            FORM_6_PLACEHOLDER: "Enter your date of birth",
+            CONFIRM_PASSWORD_LABEL: "Confirm Password",
+            CONFIRM_PASSWORD_PLACEHOLDER: "Type the same password again",
+            DATE_OF_BIRTH_LABEL: "Date of Birth",
+            DATE_OF_BIRTH_PLACEHOLDER: "Enter your date of birth",
+            EMAIL_LABEL: "Email",
+            EMAIL_PLACEHOLDER: "Enter your email",
+            FIRST_NAME_LABEL: "First Name",
+            FIRST_NAME_PLACEHOLDER: "Enter your first name",
+            HANDLE_LABEL: "Handle",
+            HANDLE_PLACEHOLDER: "Enter your handle",
+            LAST_NAME_LABEL: "Last Name",
+            LAST_NAME_PLACEHOLDER: "Enter your last name",
+            PASSWORD_LABEL: "Password",
+            PASSWORD_PLACEHOLDER: "Enter your password",
             TITLE: "Sign Up",
+            USERNAME_LABEL: "Username",
+            USERNAME_PLACEHOLDER: "Enter your username",
         },
     },
     VALIDATION: {
         INVALID: {
             SIGN_UP: {
-                FORM_1: {
+                CONFIRM_PASSWORD: {
+                    MATCHING: "Passwords must match",
+                    REQUIRED: "Confirmed Password is required",
+                },
+                DATE_OF_BIRTH: {
+                    REQUIRED: "Date of Birth is required",
+                },
+                EMAIL: {
+                    MAX_LENGTH: `Email cannot be more then ${ValidationConstants.SIGN_UP.FORM.EMAIL.MAX_LENGTH} characters`,
+                    PATTERN: "Email is invalid",
+                    REQUIRED: "Email is required",
+                },
+                FIRST_NAME: {
                     MAX_LENGTH: `First Name cannot be more then ${ValidationConstants.SIGN_UP.FORM.FIRST_NAME.MAX_LENGTH} characters`,
                     PATTERN:
                         "First Name cannot contain digits, underscores, or any space characters",
                     REQUIRED: "First Name is required",
                 },
-                FORM_2: {
+                HANDLE: {
+                    MAX_LENGTH: `Handle cannot be more than ${ValidationConstants.SIGN_UP.FORM.HANDLE.MAX_LENGTH} characters`,
+                    PATTERN: "Handle cannot contain any symbols",
+                    REQUIRED: "Handle is required",
+                },
+                LAST_NAME: {
                     MAX_LENGTH: `Last Name cannot be more then ${ValidationConstants.SIGN_UP.FORM.LAST_NAME.MAX_LENGTH} characters`,
                     PATTERN:
                         "Last Name cannot contain digits, underscores, or any space characters",
                     REQUIRED: "Last Name is required",
                 },
-                FORM_3: {
-                    MAX_LENGTH: `Email cannot be more then ${ValidationConstants.SIGN_UP.FORM.EMAIL.MAX_LENGTH} characters`,
-                    PATTERN: "Email is invalid",
-                    REQUIRED: "Email is required",
+                PASSWORD: {
+                    CONTAINS_DIGIT: "Password must contain at least 1 digit",
+                    CONTAINS_LOWERCASE:
+                        "Password must contain at least 1 lowercase letter",
+                    CONTAINS_SYMBOL: "Password must contain at least 1 symbol",
+                    CONTAINS_UPPERCASE:
+                        "Password must contain at least 1 uppercase letter",
+                    MAX_LENGTH: `Password must be at most ${ValidationConstants.SIGN_UP.FORM.PASSWORD.MAX_LENGTH} characters`,
+                    MIN_LENGTH: `Password must be at least ${ValidationConstants.SIGN_UP.FORM.PASSWORD.MIN_LENGTH} characters`,
+                    NO_SPACES: "Password cannot contain any spaces",
+                    REQUIRED: "Password is required",
                 },
-                FORM_4: {
+                USERNAME: {
                     MAX_LENGTH: `Username cannot be more then ${ValidationConstants.SIGN_UP.FORM.USERNAME.MAX_LENGTH} characters`,
                     PATTERN: "Username cannot contain any symbols",
                     REQUIRED: "Username is required",
-                },
-                FORM_5: {
-                    MAX_LENGTH: `Handle cannot be more than ${ValidationConstants.SIGN_UP.FORM.HANDLE.MAX_LENGTH} characters`,
-                    PATTERN: "Handle cannot contain any symbols",
-                    REQUIRED: "Handle is required",
-                },
-                FORM_6: {
-                    REQUIRED: "Date of Birth is required",
                 },
             },
         },
         VALID: {
             SIGN_UP: {
-                FORM_1: "First Name is valid!",
-                FORM_2: "Last Name is valid!",
-                FORM_3: "Email is valid!",
-                FORM_4: "Username is valid!",
-                FORM_5: "Handle is valid!",
-                FORM_6: "Date of Birth is valid!",
+                CONFIRM_PASSWORD: "Passwords match!",
+                DATE_OF_BIRTH: "Date of Birth is valid!",
+                EMAIL: "Email is valid!",
+                FIRST_NAME: "First Name is valid!",
+                HANDLE: "Handle is valid!",
+                LAST_NAME: "Last Name is valid!",
+                PASSWORD: "Password is valid!",
+                USERNAME: "Username is valid!",
             },
         },
     },
