@@ -18,6 +18,7 @@ export const TextConstants = {
             EMAIL_PLACEHOLDER: "Enter your email",
             FIRST_NAME_LABEL: "First Name",
             FIRST_NAME_PLACEHOLDER: "Enter your first name",
+            FORM_SUBMIT_BUTTON_TEXT: "Submit",
             HANDLE_LABEL: "Handle",
             HANDLE_PLACEHOLDER: "Enter your handle",
             LAST_NAME_LABEL: "Last Name",

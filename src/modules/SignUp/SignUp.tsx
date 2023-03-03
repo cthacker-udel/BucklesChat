@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React from "react";
-import { Form, OverlayTrigger } from "react-bootstrap";
+import { Button, Form, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
-import { useForm } from "react-hook-form";
+import {
+    type FieldErrors,
+    type SubmitErrorHandler,
+    type SubmitHandler,
+    useForm,
+} from "react-hook-form";
 
 import { TextConstants, ValidationConstants } from "@/assets";
 import Background from "@/assets/background/signup/bg.gif";
@@ -101,20 +106,32 @@ const validatePassword = (password: string): PASSWORD_STATES => {
 export const SignUp = (): JSX.Element => {
     useBackground(Background);
 
-    const { formState, register, watch } = useForm<FormValues>({
+    const { formState, handleSubmit, register, watch } = useForm<FormValues>({
         criteriaMode: "all",
         defaultValues: FORM_DEFAULT_VALUES,
         mode: "all",
         reValidateMode: "onChange",
     });
 
+    const onSubmit: SubmitHandler<FormValues> = React.useCallback(
+        (data: FormValues, _event: unknown) => {
+            console.log(data);
+        },
+        [],
+    );
+
+    const onError: SubmitErrorHandler<FormValues> = React.useCallback(
+        (errors: FieldErrors<FormValues>, _event: unknown) => {
+            console.log(errors);
+        },
+        [],
+    );
+
     const [passwordState, setPasswordState] = React.useState<PASSWORD_STATES>(
         DEFAULT_PASSWORD_STATE,
     );
 
     const { errors, dirtyFields } = formState;
-
-    console.log(errors);
 
     const passwordValue = watch("password");
 
@@ -145,7 +162,10 @@ export const SignUp = (): JSX.Element => {
                         />
                     </OverlayTrigger>
                 </div>
-                <Form className={styles.sign_up_form_content}>
+                <Form
+                    className={styles.sign_up_form_content}
+                    onSubmit={handleSubmit(onSubmit, onError)}
+                >
                     <Form.Group controlId="username_form">
                         <Form.Label>
                             {TextConstants.CONTENT.SIGN_UP.USERNAME_LABEL}
@@ -275,6 +295,9 @@ export const SignUp = (): JSX.Element => {
                                 </Form.Control.Feedback>
                             )}
                     </Form.Group>
+                    <Button type="submit" variant="primary">
+                        {TextConstants.CONTENT.SIGN_UP.FORM_SUBMIT_BUTTON_TEXT}
+                    </Button>
                 </Form>
             </div>
             <div className={styles.sign_up_password_requirements}>
