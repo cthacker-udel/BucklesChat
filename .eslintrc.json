@@ -38,7 +38,7 @@
         "sonarjs",
         "unicorn"
     ],
-    "ignorePatterns": ["*.js"],
+    "ignorePatterns": ["*.js", "next-env.d.ts"],
     "overrides": [
         {
             "files": ["*.js"],
@@ -943,7 +943,6 @@
         "node/callback-return": "error",
         "node/exports-style": "error",
         "node/no-mixed-requires": "error",
-        "node/no-process-env": "error",
         "node/no-restricted-import": ["error", ["left-pad"]],
         "node/no-restricted-require": ["error", ["left-pad"]],
         "node/no-sync": "error",
