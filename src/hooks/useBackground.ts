@@ -1,6 +1,7 @@
 import type { StaticImageData } from "next/image";
 import React from "react";
 
+import type { _useBackground } from "@/@types";
 import { setBackground, type SetBackgroundConfiguration } from "@/helpers";
 
 /**
@@ -8,7 +9,7 @@ import { setBackground, type SetBackgroundConfiguration } from "@/helpers";
  *
  * @param image - The image to set as the background
  */
-export const useBackground = (
+export const useBackground: _useBackground = (
     image: StaticImageData,
     options?: SetBackgroundConfiguration,
 ): void => {

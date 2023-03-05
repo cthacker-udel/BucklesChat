@@ -9,7 +9,7 @@ import {
     useForm,
 } from "react-hook-form";
 
-import { TextConstants, ValidationConstants } from "@/assets";
+import { Endpoints, TextConstants, ValidationConstants } from "@/assets";
 import Background from "@/assets/background/signup/bg.gif";
 import { Required } from "@/common";
 import { renderTooltip } from "@/helpers";
@@ -17,6 +17,7 @@ import { useBackground } from "@/hooks/useBackground";
 
 import { PasswordRequirement } from "./PasswordRequirement";
 import styles from "./SignUp.module.css";
+import axios from "axios";
 
 type FormValues = {
     username: string;
@@ -113,11 +114,25 @@ export const SignUp = (): JSX.Element => {
         reValidateMode: "onChange",
     });
 
+    const { errors, dirtyFields, isValid, isValidating } = formState;
+
     const onSubmit: SubmitHandler<FormValues> = React.useCallback(
-        (data: FormValues, _event: unknown) => {
-            console.log(data);
+        async (data: FormValues, _event: unknown) => {
+            if (
+                !(Boolean(errors) || false) &&
+                isValid &&
+                !isValidating &&
+                Object.values(dirtyFields).length === 3
+            ) {
+                const result = await axios.post(
+                    `${process.env.SERVICE_URL}${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`,
+                    data,
+                );
+                if (result.status === 400) {
+                }
+            }
         },
-        [],
+        [dirtyFields, errors, isValid, isValidating],
     );
 
     const onError: SubmitErrorHandler<FormValues> = React.useCallback(
@@ -130,8 +145,6 @@ export const SignUp = (): JSX.Element => {
     const [passwordState, setPasswordState] = React.useState<PASSWORD_STATES>(
         DEFAULT_PASSWORD_STATE,
     );
-
-    const { errors, dirtyFields } = formState;
 
     const passwordValue = watch("password");
 
