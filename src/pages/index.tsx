@@ -28,7 +28,7 @@ const Home = (): JSX.Element => (
                 property="og:description"
             />
             <meta
-                content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
+                content="https://i.pinimg.com/736x/85/e0/5d/85e05d7acff2d8e11bb22f1fb869226e.jpg"
                 property="og:image"
             />
 
