@@ -33,6 +33,12 @@ const Home = (): JSX.Element => (
                 content="width=device-width, initial-scale=1"
                 name="viewport"
             />
+            <meta
+                content="https://buckles-chat.vercel.app/"
+                property="og:url"
+            />
+            <meta content="website" property="og:type" />
+            <meta content="Buckles Chat" property="og:title" />
             <link href="/icon.ico" rel="icon" />
         </Head>
         <HomePage />
