@@ -1,7 +1,9 @@
 import "@/styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import type { AppProps } from "next/app";
 import React from "react";
+import { ToastContainer } from "react-toastify";
 
 import { LoggerProvider } from "@/providers";
 
@@ -17,11 +19,24 @@ import { Layout } from "../common";
  * @returns The app component
  */
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
-    <LoggerProvider>
-        <Layout>
-            <Component {...pageProps} />
-        </Layout>
-    </LoggerProvider>
+    <>
+        <LoggerProvider>
+            <Layout>
+                <Component {...pageProps} />
+            </Layout>
+        </LoggerProvider>
+        <ToastContainer
+            autoClose={5000}
+            closeOnClick
+            draggable
+            hideProgressBar={false}
+            newestOnTop={false}
+            pauseOnHover
+            position="top-right"
+            rtl={false}
+            theme="light"
+        />
+    </>
 );
 
 export { App as default };

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import { Button, Form, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
@@ -8,6 +9,7 @@ import {
     type SubmitHandler,
     useForm,
 } from "react-hook-form";
+import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 import { ClientSideApi } from "@/@classes";
@@ -110,6 +112,7 @@ const validatePassword = (password: string): PASSWORD_STATES => {
 export const SignUp = (): JSX.Element => {
     useBackground(Background);
     const { ...loggerApi } = useLogger();
+    const router = useRouter();
 
     const { formState, handleSubmit, register, watch } = useForm<FormValues>({
         criteriaMode: "all",
@@ -129,22 +132,38 @@ export const SignUp = (): JSX.Element => {
                 Object.values(dirtyFields).length === 3
             ) {
                 try {
-                    const result = await ClientSideApi.post<
-                        ApiResponse<boolean>
-                    >(`${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`, data);
+                    const request = ClientSideApi.post<ApiResponse<boolean>>(
+                        `${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`,
+                        data,
+                    );
+
+                    const result = await toast.promise(request, {
+                        error: "Failed to signup",
+                        pending: "Signing up...",
+                        success: "Successfully signed up!",
+                    });
+
+                    const { data: signUpResult } = result;
+
+                    if (signUpResult) {
+                        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- disabled
+                        router.push("dashboard");
+                    }
                 } catch (error: unknown) {
                     await loggerApi.logException(error as Error, v4());
                 }
             }
         },
-        [dirtyFields, errors, isValid, isValidating, loggerApi],
+        [dirtyFields, errors, isValid, isValidating, loggerApi, router],
     );
 
     const onError: SubmitErrorHandler<FormValues> = React.useCallback(
-        (fieldErrors: FieldErrors<FormValues>, _event: unknown) => {
-            console.log(fieldErrors);
+        async (fieldErrors: FieldErrors<FormValues>, _event: unknown) => {
+            await loggerApi.logException(
+                new Error(JSON.stringify(fieldErrors)),
+            );
         },
-        [],
+        [loggerApi],
     );
 
     const [passwordState, setPasswordState] = React.useState<PASSWORD_STATES>(
