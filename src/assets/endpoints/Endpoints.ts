@@ -8,5 +8,6 @@ export const Endpoints = {
     USER: {
         BASE: "user/",
         CREATE: "create",
+        DOES_EXIST: "exists",
     },
 };

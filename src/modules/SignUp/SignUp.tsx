@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
-import axios from "axios";
 import React from "react";
 import { Button, Form, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
@@ -9,11 +8,15 @@ import {
     type SubmitHandler,
     useForm,
 } from "react-hook-form";
+import { v4 } from "uuid";
 
+import { ClientSideApi } from "@/@classes";
+import type { ApiResponse } from "@/@types";
 import { Endpoints, TextConstants, ValidationConstants } from "@/assets";
 import Background from "@/assets/background/signup/bg.gif";
 import { Required } from "@/common";
 import { renderTooltip } from "@/helpers";
+import { useLogger } from "@/hooks";
 import { useBackground } from "@/hooks/useBackground";
 
 import { PasswordRequirement } from "./PasswordRequirement";
@@ -106,6 +109,7 @@ const validatePassword = (password: string): PASSWORD_STATES => {
  */
 export const SignUp = (): JSX.Element => {
     useBackground(Background);
+    const { ...loggerApi } = useLogger();
 
     const { formState, handleSubmit, register, watch } = useForm<FormValues>({
         criteriaMode: "all",
@@ -119,21 +123,21 @@ export const SignUp = (): JSX.Element => {
     const onSubmit: SubmitHandler<FormValues> = React.useCallback(
         async (data: FormValues, _event: unknown) => {
             if (
-                !(Boolean(errors) || false) &&
+                Object.keys(errors).length === 0 &&
                 isValid &&
                 !isValidating &&
                 Object.values(dirtyFields).length === 3
             ) {
-                const result = await axios.post(
-                    `${process.env.NEXT_PUBLIC_SERVICE_URL}${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`,
-                    data,
-                );
-                if (result.status === 400) {
-                    console.log("oops");
+                try {
+                    const result = await ClientSideApi.post<
+                        ApiResponse<boolean>
+                    >(`${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`, data);
+                } catch (error: unknown) {
+                    await loggerApi.logException(error as Error, v4());
                 }
             }
         },
-        [dirtyFields, errors, isValid, isValidating],
+        [dirtyFields, errors, isValid, isValidating, loggerApi],
     );
 
     const onError: SubmitErrorHandler<FormValues> = React.useCallback(
@@ -186,6 +190,7 @@ export const SignUp = (): JSX.Element => {
                             <Required paddingLeft />
                         </Form.Label>
                         <Form.Control
+                            autoComplete="off"
                             isInvalid={Boolean(errors.username)}
                             isValid={!errors.username && dirtyFields.username}
                             placeholder={
@@ -215,6 +220,29 @@ export const SignUp = (): JSX.Element => {
                                     value: ValidationConstants.SIGN_UP.FORM
                                         .USERNAME.REQUIRED,
                                 },
+                                validate: {
+                                    doesUsernameExist: async (
+                                        username: string,
+                                    ): Promise<boolean | string> => {
+                                        if (username.length > 0) {
+                                            const response =
+                                                await ClientSideApi.get<
+                                                    ApiResponse<boolean>
+                                                >(
+                                                    `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${username}`,
+                                                );
+
+                                            const { data: isExisting } =
+                                                response;
+
+                                            return (
+                                                !isExisting ||
+                                                "Username already exists"
+                                            );
+                                        }
+                                        return true;
+                                    },
+                                },
                             })}
                         />
                         {errors.username && (
@@ -237,6 +265,7 @@ export const SignUp = (): JSX.Element => {
                             <Required paddingLeft />
                         </Form.Label>
                         <Form.Control
+                            autoComplete="off"
                             placeholder={
                                 TextConstants.CONTENT.SIGN_UP
                                     .PASSWORD_PLACEHOLDER
@@ -262,6 +291,7 @@ export const SignUp = (): JSX.Element => {
                             <Required paddingLeft />
                         </Form.Label>
                         <Form.Control
+                            autoComplete="off"
                             isInvalid={Boolean(errors.confirmPassword)}
                             isValid={
                                 !errors.confirmPassword &&

@@ -12,7 +12,7 @@ export class LoggerException {
 
     public stackTrace?: string;
 
-    public timestamp?: number;
+    public timestamp?: number = Date.now();
 
     /**
      *

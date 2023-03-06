@@ -12,16 +12,24 @@ export class LoggerEvent {
 
     public type?: string;
 
+    public timestamp?: number = Date.now();
+
     /**
      *
      * @param type
      * @param _message
      * @param _id
      */
-    public constructor(type: string, _message?: string, _id?: string) {
+    public constructor(
+        type: string,
+        _message?: string,
+        _id?: string,
+        _timestamp?: number,
+    ) {
         this.message = _message;
         this.type = type;
         this.id = _id ?? uuidv4();
+        this.timestamp = this.timestamp ?? _timestamp ?? Date.now();
     }
 
     public setType = (_type: string): this => {
@@ -36,6 +44,11 @@ export class LoggerEvent {
 
     public setId = (_id: string): this => {
         this.id = _id;
+        return this;
+    };
+
+    public setTimestamp = (_timestamp: number): this => {
+        this.timestamp = _timestamp;
         return this;
     };
 

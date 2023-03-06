@@ -3,6 +3,8 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import React from "react";
 
+import { LoggerProvider } from "@/providers";
+
 import { Layout } from "../common";
 
 /**
@@ -15,9 +17,11 @@ import { Layout } from "../common";
  * @returns The app component
  */
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
-    <Layout>
-        <Component {...pageProps} />
-    </Layout>
+    <LoggerProvider>
+        <Layout>
+            <Component {...pageProps} />
+        </Layout>
+    </LoggerProvider>
 );
 
 export { App as default };

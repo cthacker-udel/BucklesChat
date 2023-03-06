@@ -55,7 +55,10 @@ export const HomePage = (): JSX.Element => {
                     id="homepage_button_2"
                     onClick={(): void => {
                         loggerApi.logEvent(
-                            new LoggerEvent(LogTypes.LOG_IN, "User logged in"),
+                            new LoggerEvent(
+                                LogTypes.LOG_IN,
+                                "User logged in",
+                            ).toEventLog(),
                         );
                     }}
                     variant="success"

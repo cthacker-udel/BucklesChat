@@ -17,43 +17,31 @@ type LoggingProviderProperties = {
 export const LoggerProvider = ({
     children,
 }: LoggingProviderProperties): JSX.Element => {
-    const clientSideApi: ClientSideApi = React.useMemo(
-        () => new ClientSideApi(),
-        [],
-    );
-
     const functionalProperties: ILoggerContext = React.useMemo(
         (): ILoggerContext => ({
-            logEvent: async (_event: EventLog, _id?: number): Promise<void> => {
-                const postResult = await clientSideApi.post<
-                    ApiResponse<string>,
-                    EventLog
-                >(`${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EVENT}`, _event);
-
-                return postResult.data;
+            logEvent: async (_event: EventLog, _id?: string): Promise<void> => {
+                await ClientSideApi.post<ApiResponse<string>, EventLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EVENT}`,
+                    _event,
+                );
             },
             logException: async (
                 _exception: Error,
-                _id?: number,
+                _id?: string,
             ): Promise<void> => {
-                const postResult = await clientSideApi.post<
-                    ApiResponse<string>,
-                    LoggerException
-                >(
+                await ClientSideApi.post<ApiResponse<string>, LoggerException>(
                     `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                     new LoggerException(_exception),
                 );
-
-                return postResult.data;
             },
             logOnline: async (): Promise<boolean> => {
-                const statusResult = await clientSideApi.get<
+                const statusResult = await ClientSideApi.get<
                     ApiResponse<boolean>
                 >(`${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.STATUS}`);
                 return statusResult.data;
             },
         }),
-        [clientSideApi],
+        [],
     );
 
     const constructedProperties = React.useMemo(

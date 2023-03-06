@@ -1,22 +1,25 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 
 /**
  *
  */
 export class ClientSideApi {
-    public BASE_URL: string | undefined;
+    public static BASE_URL:
+        | string
+        | undefined = `${process.env.NEXT_PUBLIC_BASE_URL}api/`;
 
     /**
      *
      */
     public constructor() {
-        this.BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}api/`;
+        ClientSideApi.BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}api/`;
     }
 
     /**
      *
      */
-    public async get<T>(
+    public static async get<T>(
         endpoint: string,
         queryParameters?: { [key: string]: number | string },
     ): Promise<T> {
@@ -43,7 +46,7 @@ export class ClientSideApi {
      * @param body
      * @param queryParameters
      */
-    public async post<T, K = { [key: string]: number | string }>(
+    public static async post<T, K = { [key: string]: number | string }>(
         endpoint: string,
         body: K,
         queryParameters?: { [key: string]: number | string },
@@ -68,7 +71,7 @@ export class ClientSideApi {
      * @param endpoint
      * @param queryParameters
      */
-    public async delete<T>(
+    public static async delete<T>(
         endpoint: string,
         queryParameters?: { [key: string]: number | string },
     ): Promise<T> {
@@ -94,7 +97,7 @@ export class ClientSideApi {
      * @param queryParameters
      * @returns
      */
-    public async put<T, K = { [key: string]: number | string }>(
+    public static async put<T, K = { [key: string]: number | string }>(
         endpoint: string,
         body?: K,
         queryParameters?: { [key: string]: number | string },
