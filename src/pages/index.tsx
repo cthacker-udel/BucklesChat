@@ -14,10 +14,6 @@ const Home = (): JSX.Element => (
         <Head>
             <title>{"Buckles Chat"}</title>
             <meta
-                content="Chatting app for everyone to talk about everything buckles related."
-                name="description"
-            />
-            <meta
                 content="https://i.pinimg.com/736x/85/e0/5d/85e05d7acff2d8e11bb22f1fb869226e.jpg"
                 property="og:image"
             />
