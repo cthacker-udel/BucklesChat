@@ -26,7 +26,7 @@ export const renderTooltip = (
 ): JSX.Element => (
     <Tooltip
         {...properties}
-        id={options?.id ?? `${Date.now() + Math.random()}`}
+        id={options?.id ?? `${Math.round(Date.now() + Math.random())}`}
     >
         <div className={styles.tooltip_content}>
             {Boolean(options?.title) && (

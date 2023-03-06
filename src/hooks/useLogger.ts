@@ -7,7 +7,7 @@ import { LoggerContext } from "@/context";
  *
  * @returns
  */
-export const useLogger = (): ILoggerContext | undefined => {
+export const useLogger = (): ILoggerContext => {
     const loggingContext = React.useContext<ILoggerContext | undefined>(
         LoggerContext,
     );

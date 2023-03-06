@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import axios from "axios";
 import React from "react";
 import { Button, Form, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
@@ -17,7 +18,6 @@ import { useBackground } from "@/hooks/useBackground";
 
 import { PasswordRequirement } from "./PasswordRequirement";
 import styles from "./SignUp.module.css";
-import axios from "axios";
 
 type FormValues = {
     username: string;
@@ -125,10 +125,11 @@ export const SignUp = (): JSX.Element => {
                 Object.values(dirtyFields).length === 3
             ) {
                 const result = await axios.post(
-                    `${process.env.SERVICE_URL}${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`,
+                    `${process.env.NEXT_PUBLIC_SERVICE_URL}${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`,
                     data,
                 );
                 if (result.status === 400) {
+                    console.log("oops");
                 }
             }
         },
@@ -136,8 +137,8 @@ export const SignUp = (): JSX.Element => {
     );
 
     const onError: SubmitErrorHandler<FormValues> = React.useCallback(
-        (errors: FieldErrors<FormValues>, _event: unknown) => {
-            console.log(errors);
+        (fieldErrors: FieldErrors<FormValues>, _event: unknown) => {
+            console.log(fieldErrors);
         },
         [],
     );

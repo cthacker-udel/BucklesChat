@@ -1,6 +1,8 @@
 import Head from "next/head";
 import React from "react";
 
+import { LoggerProvider } from "@/providers";
+
 import { HomePage } from "../modules/HomePage";
 
 /**
@@ -23,7 +25,9 @@ const Home = (): JSX.Element => (
             />
             <link href="/icon.ico" rel="icon" />
         </Head>
-        <HomePage />
+        <LoggerProvider>
+            <HomePage />
+        </LoggerProvider>
     </>
 );
 

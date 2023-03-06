@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Button } from "react-bootstrap";
 
+import { LoggerEvent } from "@/@classes/logger/LoggerEvent";
+import { LogTypes } from "@/assets";
 import Background from "@/assets/background/homepage/bg.gif";
 import { TextConstants } from "@/assets/str/TextConstants";
+import { useLogger } from "@/hooks";
 import { useBackground } from "@/hooks/useBackground";
 
 import styles from "./HomePage.module.css";
@@ -17,6 +20,7 @@ import styles from "./HomePage.module.css";
 export const HomePage = (): JSX.Element => {
     useBackground(Background, { backgroundOpacity: 0.75 });
     const router = useRouter();
+    const { ...loggerApi } = useLogger();
 
     return (
         <div className={styles.home_page_content} id="homepage_main">
@@ -47,7 +51,15 @@ export const HomePage = (): JSX.Element => {
                 >
                     {TextConstants.CONTENT.HOME_PAGE.BUTTON_1_TEXT}
                 </Button>
-                <Button id="homepage_button_2" variant="success">
+                <Button
+                    id="homepage_button_2"
+                    onClick={(): void => {
+                        loggerApi.logEvent(
+                            new LoggerEvent(LogTypes.LOG_IN, "User logged in"),
+                        );
+                    }}
+                    variant="success"
+                >
                     {TextConstants.CONTENT.HOME_PAGE.BUTTON_2_TEXT}
                 </Button>
             </div>
