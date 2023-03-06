@@ -26,6 +26,10 @@ const Home = (): JSX.Element => (
                 property="og:title"
             />
             <meta
+                content="Chatting application where you can have a blast talking about black cats! Talk about buckles, or send funny shrek gifs to each-other, whichever floats your boat! We are not sponsored by Burger King."
+                property="og:description"
+            />
+            <meta
                 content="width=device-width, initial-scale=1"
                 name="viewport"
             />
