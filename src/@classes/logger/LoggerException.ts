@@ -1,8 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
+
+import type { ExceptionLog } from "@/@types";
+
 /**
  * Represents an exception being logged to the MongoDB database
  */
 export class LoggerException {
-    public id?: number;
+    public id?: string;
 
     public message?: string;
 
@@ -14,11 +18,11 @@ export class LoggerException {
      *
      * @param error - The exception being logged
      */
-    public constructor(error: Error, _id?: number) {
+    public constructor(error: Error, _id?: string) {
         this.message = error.message;
         this.stackTrace = error.stack;
         this.timestamp = Date.now();
-        this.id = _id ?? Math.round(Math.random() * 998);
+        this.id = _id ?? uuidv4();
     }
 
     public setMessage = (_message: string): this => {
@@ -35,4 +39,6 @@ export class LoggerException {
         this.timestamp = _timestamp;
         return this;
     };
+
+    public toExceptionLog = (): ExceptionLog => this as ExceptionLog;
 }

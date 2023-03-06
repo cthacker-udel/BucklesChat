@@ -1,10 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
+
 import type { EventLog } from "@/@types";
 
 /**
  *
  */
 export class LoggerEvent {
-    public id?: number;
+    public id?: string;
 
     public message?: string;
 
@@ -16,10 +18,10 @@ export class LoggerEvent {
      * @param _message
      * @param _id
      */
-    public constructor(type: string, _message?: string, _id?: number) {
+    public constructor(type: string, _message?: string, _id?: string) {
         this.message = _message;
         this.type = type;
-        this.id = _id ?? Math.round(Math.random() * 998);
+        this.id = _id ?? uuidv4();
     }
 
     public setType = (_type: string): this => {
@@ -32,7 +34,7 @@ export class LoggerEvent {
         return this;
     };
 
-    public setId = (_id: number): this => {
+    public setId = (_id: string): this => {
         this.id = _id;
         return this;
     };

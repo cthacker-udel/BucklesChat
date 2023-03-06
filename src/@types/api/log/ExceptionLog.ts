@@ -1,5 +1,5 @@
 export type ExceptionLog = {
-    id?: number;
+    id?: string;
     message?: string;
     stackTrace?: string;
     timestamp?: number;

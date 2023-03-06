@@ -1,5 +1,5 @@
 export type EventLog = {
-    id?: number;
+    id?: string;
     message?: string;
     type?: string;
 };
