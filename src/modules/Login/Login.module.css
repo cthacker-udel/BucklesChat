@@ -1,0 +1,52 @@
+.login_layout {
+    display: flex;
+    flex-direction: row;
+    gap: 10vw;
+    justify-content: space-around;
+    color: white;
+}
+
+.login_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+.login_stats {
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    padding: 1.5em;
+    border-radius: 1em;
+    gap: 0.5em;
+}
+
+.login_users_online_dot {
+    color: lightgreen;
+    padding-right: 0.25em;
+}
+
+.login_users_offline_dot {
+    color: red;
+    padding-right: 0.25em;
+}
+
+.login_users_online {
+    font-weight: bold;
+    padding-right: 0.5em;
+}
+
+.login_page_stat {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.login_users_messages_icon {
+    padding-right: 0.5em;
+    align-self: center;
+}
+
+.login_users_messages_count {
+    padding-right: 0.5em;
+}

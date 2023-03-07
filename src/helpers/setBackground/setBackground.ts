@@ -83,6 +83,8 @@ const setBackground = (
         if (body !== null) {
             body.style.backgroundImage = `url(${image.src})`;
             body.style.backgroundSize = options?.backgroundSize ?? "cover";
+            body.style.backgroundBlendMode = "";
+            body.style.backgroundColor = "";
         }
     } else {
         if (options !== undefined) {
