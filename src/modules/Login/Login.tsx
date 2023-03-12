@@ -1,12 +1,21 @@
+import { useRouter } from "next/router";
 import React from "react";
 import { Button, Form, InputGroup, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
-import { useForm } from "react-hook-form";
+import {
+    type FieldErrors,
+    type SubmitErrorHandler,
+    type SubmitHandler,
+    useForm,
+} from "react-hook-form";
+import { toast } from "react-toastify";
 
-import { TextConstants } from "@/assets";
+import { ClientSideApi } from "@/@classes";
+import type { ApiResponse } from "@/@types";
+import { Endpoints, TextConstants } from "@/assets";
 import LoginBackground from "@/assets/background/login/bg.gif";
 import { renderTooltip } from "@/helpers";
-import { useBackground } from "@/hooks";
+import { useBackground, useLogger } from "@/hooks";
 
 import styles from "./Login.module.css";
 
@@ -25,23 +34,63 @@ const LOGIN_FORM_DEFAULT_VALUES: LoginFormValues = {
  * @returns
  */
 export const Login = (): JSX.Element => {
+    const router = useRouter();
+    const { ...loggerApi } = useLogger();
     const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
     useBackground(LoginBackground, {
         noOptions: true,
     });
 
-    const { register } = useForm<LoginFormValues>({
+    const { handleSubmit, register } = useForm<LoginFormValues>({
         criteriaMode: "all",
         defaultValues: LOGIN_FORM_DEFAULT_VALUES,
         mode: "all",
         reValidateMode: "onChange",
     });
 
+    const onSubmit: SubmitHandler<LoginFormValues> = React.useCallback(
+        async (data: LoginFormValues, _event: unknown) => {
+            const request = toast.promise(
+                ClientSideApi.post<ApiResponse<boolean>>(
+                    `${Endpoints.USER.BASE}${Endpoints.USER.LOGIN}`,
+                    data,
+                ),
+                {
+                    error: "Login failed!",
+                    pending: "Logging in...",
+                    success: "Logged in successfully!",
+                },
+            );
+
+            const loginResult = await request;
+
+            const { data: isLoginSuccessful } = loginResult;
+
+            if (isLoginSuccessful) {
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises -- disabled
+                router.push("dashboard");
+            }
+        },
+        [router],
+    );
+
+    const onError: SubmitErrorHandler<LoginFormValues> = React.useCallback(
+        async (fieldErrors: FieldErrors<LoginFormValues>, _event: unknown) => {
+            await loggerApi.logException(
+                new Error(JSON.stringify(fieldErrors)),
+            );
+        },
+        [loggerApi],
+    );
+
     return (
         <div className={styles.login_layout}>
             <div>
-                <Form className={styles.login_form}>
+                <Form
+                    className={styles.login_form}
+                    onSubmit={handleSubmit(onSubmit, onError)}
+                >
                     <Form.Group controlId="username">
                         <Form.Label>
                             {TextConstants.CONTENT.LOGIN.USERNAME_TITLE}
@@ -96,7 +145,7 @@ export const Login = (): JSX.Element => {
                             </OverlayTrigger>
                         </InputGroup>
                     </Form.Group>
-                    <Button variant="outline-warning">
+                    <Button type="submit" variant="outline-warning">
                         {TextConstants.CONTENT.LOGIN.BUTTON_TEXT}
                     </Button>
                 </Form>
@@ -136,7 +185,12 @@ export const Login = (): JSX.Element => {
                         <span className={styles.login_users_messages_count}>
                             {"11"}
                         </span>
-                        {TextConstants.CONTENT.LOGIN.NUMBER_OF_MESSAGES_SENT}
+                        <span className={styles.login_users_messages_sent_text}>
+                            {
+                                TextConstants.CONTENT.LOGIN
+                                    .NUMBER_OF_MESSAGES_SENT
+                            }
+                        </span>
                     </div>
                 </div>
             </div>

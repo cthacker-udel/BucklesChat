@@ -4,6 +4,7 @@
     gap: 10vw;
     justify-content: space-around;
     color: white;
+    font-family: "DynaPuff", sans-serif;
 }
 
 .login_form {
@@ -49,4 +50,8 @@
 
 .login_users_messages_count {
     padding-right: 0.5em;
+}
+
+.login_users_messages_sent_text {
+    align-self: center;
 }

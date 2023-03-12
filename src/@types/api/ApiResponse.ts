@@ -3,7 +3,7 @@
 import type { ApiError } from "./ApiError";
 
 export type ApiResponse<T = any> = {
-    data: T;
     apiError?: ApiError;
+    data: T;
     id?: number;
 };
