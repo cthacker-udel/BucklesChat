@@ -43,7 +43,7 @@ export class UserApi extends ServerSideApi {
             } finally {
                 response.status(500);
                 response.json({
-                    apiError: { message: (error as Error).message },
+                    apiError: { code: 500, message: (error as Error).message },
                     data: false,
                 });
             }
@@ -81,7 +81,7 @@ export class UserApi extends ServerSideApi {
             } finally {
                 response.status(500);
                 response.json({
-                    apiError: { message: (error as Error).message },
+                    apiError: { code: 500, message: (error as Error).message },
                     data: false,
                 });
             }
@@ -114,7 +114,7 @@ export class UserApi extends ServerSideApi {
             } finally {
                 response.status(500);
                 response.json({
-                    apiError: { message: (error as Error).message },
+                    apiError: { code: 500, message: (error as Error).message },
                     data: false,
                 });
             }

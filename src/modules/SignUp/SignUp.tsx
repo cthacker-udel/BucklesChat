@@ -211,7 +211,11 @@ export const SignUp = (): JSX.Element => {
                         <Form.Control
                             autoComplete="off"
                             isInvalid={Boolean(errors.username)}
-                            isValid={!errors.username && dirtyFields.username}
+                            isValid={
+                                !errors.username &&
+                                dirtyFields.username &&
+                                !isValidating
+                            }
                             placeholder={
                                 TextConstants.CONTENT.SIGN_UP
                                     .USERNAME_PLACEHOLDER
@@ -251,10 +255,14 @@ export const SignUp = (): JSX.Element => {
                                                     `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${username}`,
                                                 );
 
-                                            const { data: isExisting } =
-                                                response;
+                                            const {
+                                                apiError,
+                                                data: isExisting,
+                                            } = response;
 
                                             return (
+                                                (apiError &&
+                                                    "Server error, please try again later") ||
                                                 !isExisting ||
                                                 "Username already exists"
                                             );

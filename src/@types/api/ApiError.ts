@@ -1,6 +1,6 @@
 export type ApiError = {
     id?: number;
     message?: string;
-    code?: number;
+    code: number;
     stack?: string;
 };
