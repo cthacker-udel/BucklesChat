@@ -17,7 +17,7 @@ import type { ApiResponse } from "@/@types";
 import { Endpoints, TextConstants, ValidationConstants } from "@/assets";
 import Background from "@/assets/background/signup/bg.gif";
 import { Required } from "@/common";
-import { renderTooltip } from "@/helpers";
+import { millisecondsConverter, renderTooltip } from "@/helpers";
 import { useLogger } from "@/hooks";
 import { useBackground } from "@/hooks/useBackground";
 
@@ -118,7 +118,8 @@ export const SignUp = (): JSX.Element => {
         useForm<FormValues>({
             criteriaMode: "all",
             defaultValues: FORM_DEFAULT_VALUES,
-            mode: "all",
+            delayError: millisecondsConverter(0, 3),
+            mode: "onSubmit",
             reValidateMode: "onChange",
         });
 
@@ -155,7 +156,6 @@ export const SignUp = (): JSX.Element => {
                         });
                     }
                 } catch (error: unknown) {
-                    console.log("logging in catch');");
                     await loggerApi.logException(error as Error, v4());
                 }
             }
@@ -174,7 +174,13 @@ export const SignUp = (): JSX.Element => {
     const onError: SubmitErrorHandler<FormValues> = React.useCallback(
         async (fieldErrors: FieldErrors<FormValues>, _event: unknown) => {
             await loggerApi.logException(
-                new Error(JSON.stringify(fieldErrors)),
+                new Error(
+                    JSON.stringify(
+                        Object.entries(fieldErrors)
+                            .map((element) => element[1].message)
+                            .join(", "),
+                    ),
+                ),
             );
         },
         [loggerApi],

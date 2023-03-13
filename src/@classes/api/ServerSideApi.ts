@@ -21,7 +21,9 @@ export class ServerSideApi {
         const getRequestResult = await fetch(
             `${process.env.SERVICE_URL}${endpoint}${queryString}`,
             {
+                credentials: "include",
                 method: "GET",
+                mode: "cors",
             },
         );
 
@@ -44,6 +46,7 @@ export class ServerSideApi {
     ): Promise<T> {
         const modifiedHeaders = {
             ...headers,
+            Accept: "application/json",
             "Content-Type": "application/json",
         };
         const queryString = queryParameters
@@ -58,8 +61,10 @@ export class ServerSideApi {
             `${process.env.SERVICE_URL}${endpoint}${queryString}`,
             {
                 body: stringifiedBody,
+                credentials: "include",
                 headers: modifiedHeaders ?? {},
                 method: "POST",
+                mode: "cors",
             },
         );
 
@@ -89,7 +94,12 @@ export class ServerSideApi {
             : "";
         const deleteRequestResult = await fetch(
             `${process.env.SERVICE_URL}${endpoint}${queryString}`,
-            { headers: modifiedHeaders, method: "DELETE" },
+            {
+                credentials: "include",
+                headers: modifiedHeaders,
+                method: "DELETE",
+                mode: "cors",
+            },
         );
 
         const parsedDeleteRequest = await deleteRequestResult.json();
@@ -123,8 +133,10 @@ export class ServerSideApi {
             `${process.env.SERVICE_URL}${endpoint}${queryString}`,
             {
                 body: JSON.stringify(body ?? {}),
+                credentials: "include",
                 headers: modifiedHeaders,
                 method: "PUT",
+                mode: "cors",
             },
         );
 

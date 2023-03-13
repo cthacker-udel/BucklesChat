@@ -67,6 +67,7 @@ export class UserApi extends ServerSideApi {
 
             response.json(getResult);
         } catch (error: unknown) {
+            console.log("error in doesUsernameExist = ", error);
             try {
                 const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent -- fixed */
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { ApiResponse, EventLog, ExceptionLog } from "@/@types";
@@ -14,12 +15,20 @@ export class LoggerApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const postedResult = await super.post<ExceptionLog>(
+            const postedResult = await super.post<
+                ApiResponse<string>,
+                ExceptionLog
+            >(
                 `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
-                JSON.parse(request.body) as ExceptionLog,
+                request.body as ExceptionLog,
             );
+
+            console.log(postedResult);
             response.json(postedResult);
-        } catch {}
+        } catch (error: unknown) {
+            console.log("error =", error);
+            response.json({});
+        }
     };
 
     public static logEvent = async (

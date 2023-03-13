@@ -20,7 +20,10 @@ export class LoggerException {
      */
     public constructor(error: Error, _id?: string) {
         this.message = error.message;
-        this.stackTrace = error.stack;
+        this.stackTrace = error.stack?.slice(
+            0,
+            error.stack.length <= 100 ? error.stack.length : 100,
+        );
         this.timestamp = Date.now();
         this.id = _id ?? uuidv4();
     }

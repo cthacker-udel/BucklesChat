@@ -31,8 +31,9 @@ export class ClientSideApi {
         const getRequestResult = await fetch(
             `${this.BASE_URL}${endpoint}${queryString}`,
             {
-                cache: "default",
+                credentials: "include",
                 method: "GET",
+                mode: "cors",
             },
         );
 
@@ -58,7 +59,12 @@ export class ClientSideApi {
             : "";
         const postRequestResult = await fetch(
             `${this.BASE_URL}${endpoint}${queryString}`,
-            { body: JSON.stringify(body ?? {}), method: "POST" },
+            {
+                body: JSON.stringify(body ?? {}),
+                credentials: "include",
+                method: "POST",
+                mode: "cors",
+            },
         );
 
         const parsedPostRequest = await postRequestResult.json();
@@ -82,7 +88,7 @@ export class ClientSideApi {
             : "";
         const deleteRequestResult = await fetch(
             `${this.BASE_URL}${endpoint}${queryString}`,
-            { method: "DELETE" },
+            { credentials: "include", method: "DELETE", mode: "cors" },
         );
 
         const parsedDeleteRequest = await deleteRequestResult.json();
@@ -109,7 +115,12 @@ export class ClientSideApi {
             : "";
         const putRequestResult = await fetch(
             `${this.BASE_URL}${endpoint}${queryString}`,
-            { body: JSON.stringify(body ?? {}), method: "PUT" },
+            {
+                body: JSON.stringify(body ?? {}),
+                credentials: "include",
+                method: "PUT",
+                mode: "cors",
+            },
         );
 
         const parsedPutRequest = await putRequestResult.json();
