@@ -114,12 +114,13 @@ export const SignUp = (): JSX.Element => {
     const { ...loggerApi } = useLogger();
     const router = useRouter();
 
-    const { formState, handleSubmit, register, watch } = useForm<FormValues>({
-        criteriaMode: "all",
-        defaultValues: FORM_DEFAULT_VALUES,
-        mode: "all",
-        reValidateMode: "onChange",
-    });
+    const { formState, handleSubmit, register, setError, watch } =
+        useForm<FormValues>({
+            criteriaMode: "all",
+            defaultValues: FORM_DEFAULT_VALUES,
+            mode: "all",
+            reValidateMode: "onChange",
+        });
 
     const { errors, dirtyFields, isValid, isValidating } = formState;
 
@@ -143,18 +144,31 @@ export const SignUp = (): JSX.Element => {
                         success: "Successfully signed up!",
                     });
 
-                    const { data: signUpResult } = result;
+                    const { apiError, data: signUpResult } = result;
 
-                    if (signUpResult) {
+                    if (signUpResult && !apiError) {
                         // eslint-disable-next-line @typescript-eslint/no-floating-promises -- disabled
                         router.push("dashboard");
+                    } else if (apiError && apiError.code === 500) {
+                        setError("root", {
+                            message: "Server error, please try again later",
+                        });
                     }
                 } catch (error: unknown) {
+                    console.log("logging in catch');");
                     await loggerApi.logException(error as Error, v4());
                 }
             }
         },
-        [dirtyFields, errors, isValid, isValidating, loggerApi, router],
+        [
+            dirtyFields,
+            errors,
+            isValid,
+            isValidating,
+            loggerApi,
+            setError,
+            router,
+        ],
     );
 
     const onError: SubmitErrorHandler<FormValues> = React.useCallback(
