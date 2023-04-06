@@ -17,7 +17,7 @@ import styles from "./HomePage.module.css";
 export const HomePage = (): JSX.Element => {
     useBackground(Background, {
         backgroundOpacity: 0.75,
-        backgroundSize: "2%",
+        backgroundSize: "3%",
     });
     const router = useRouter();
 

@@ -29,14 +29,19 @@ const LOGIN_FORM_DEFAULT_VALUES: LoginFormValues = {
     username: "",
 };
 
+type LoginProperties = {
+    numberOfUsersOnline?: number;
+};
+
 /**
  *
  * @returns
  */
-export const Login = (): JSX.Element => {
+export const Login = ({
+    numberOfUsersOnline,
+}: LoginProperties): JSX.Element => {
     const router = useRouter();
     const { ...loggerApi } = useLogger();
-    const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
     useBackground(LoginBackground, {
         noOptions: true,
@@ -48,6 +53,8 @@ export const Login = (): JSX.Element => {
         mode: "all",
         reValidateMode: "onChange",
     });
+
+    const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
     const onSubmit: SubmitHandler<LoginFormValues> = React.useCallback(
         async (data: LoginFormValues, _event: unknown) => {
@@ -157,7 +164,7 @@ export const Login = (): JSX.Element => {
                     </span>
                     <div>
                         <span className={styles.login_users_online}>
-                            {"11"}
+                            {numberOfUsersOnline}
                         </span>
                         {
                             TextConstants.CONTENT.LOGIN

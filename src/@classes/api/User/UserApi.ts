@@ -126,4 +126,32 @@ export class UserApi extends ServerSideApi {
             }
         }
     };
+
+    /**
+     * Returns the total number of active users online, by fetching the number of current keys in the redis session database
+     *
+     * @returns - The number of active users online
+     */
+    public static usersOnline = async (): Promise<ApiResponse<number>> => {
+        try {
+            const numberOfUsersOnline = await super.get<ApiResponse<number>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.USERS_ONLINE}`,
+            );
+            return numberOfUsersOnline;
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+            return { data: 0 };
+        }
+    };
 }

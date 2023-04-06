@@ -11,5 +11,6 @@ export const Endpoints = {
         LOGIN: "login",
         SIGNUP: "signup",
         STATUS: "status",
+        USERS_ONLINE: "usersOnline",
     },
 };
