@@ -154,4 +154,32 @@ export class UserApi extends ServerSideApi {
             return { data: 0 };
         }
     };
+
+    /**
+     * Returns the total # of users in the entire application
+     *
+     * @returns - The total number of users in the entire application
+     */
+    public static totalUsers = async (): Promise<ApiResponse<number>> => {
+        try {
+            const numberOfUsers = await super.get<ApiResponse<number>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.TOTAL_USERS}`,
+            );
+            return numberOfUsers;
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+            return { data: 0 };
+        }
+    };
 }

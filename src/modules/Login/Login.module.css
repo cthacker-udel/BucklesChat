@@ -27,11 +27,6 @@
     padding-right: 0.25em;
 }
 
-.login_users_offline_dot {
-    color: red;
-    padding-right: 0.25em;
-}
-
 .login_users_online {
     font-weight: bold;
     padding-right: 0.5em;
@@ -40,7 +35,8 @@
 .login_page_stat {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 1em;
 }
 
 .login_users_messages_icon {

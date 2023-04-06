@@ -6,6 +6,7 @@ import { UserApi } from "@/@classes";
 
 type PageProperties = {
     numberOfUsersOnline?: number;
+    numberOfUsers?: number;
 };
 
 /**
@@ -16,8 +17,9 @@ export const getServerSideProps: GetServerSideProps<
     PageProperties
 > = async () => {
     const { data: numberOfUsersOnline } = await UserApi.usersOnline();
+    const { data: numberOfUsers } = await UserApi.totalUsers();
 
-    return { props: { numberOfUsersOnline } };
+    return { props: { numberOfUsers, numberOfUsersOnline } };
 };
 
 export { Login as default } from "@/modules";

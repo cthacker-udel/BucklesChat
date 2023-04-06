@@ -31,6 +31,7 @@ const LOGIN_FORM_DEFAULT_VALUES: LoginFormValues = {
 
 type LoginProperties = {
     numberOfUsersOnline?: number;
+    numberOfUsers?: number;
 };
 
 /**
@@ -39,6 +40,7 @@ type LoginProperties = {
  */
 export const Login = ({
     numberOfUsersOnline,
+    numberOfUsers,
 }: LoginProperties): JSX.Element => {
     const router = useRouter();
     const { ...loggerApi } = useLogger();
@@ -173,15 +175,14 @@ export const Login = ({
                     </div>
                 </div>
                 <div className={styles.login_page_stat}>
-                    <span className={`${styles.login_users_offline_dot}`}>
-                        {"•"}
+                    <span className={styles.login_total_users_icon}>
+                        <i className="fa-solid fa-user fa-xs" />
                     </span>
                     <div>
-                        <span className={styles.login_users_online}>{"7"}</span>
-                        {
-                            TextConstants.CONTENT.LOGIN
-                                .NUMBER_OF_USERS_OFFLINE_TEXT
-                        }
+                        <span className={styles.login_users_online}>
+                            {numberOfUsers}
+                        </span>
+                        {TextConstants.CONTENT.LOGIN.NUMBER_OF_USERS}
                     </div>
                 </div>
                 <div className={styles.login_page_stat}>

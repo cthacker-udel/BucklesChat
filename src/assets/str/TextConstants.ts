@@ -11,9 +11,9 @@ export const TextConstants = {
         },
         LOGIN: {
             BUTTON_TEXT: "Login",
-            NUMBER_OF_MESSAGES_SENT: "messages sent",
-            NUMBER_OF_USERS_OFFLINE_TEXT: "users offline",
-            NUMBER_OF_USERS_ONLINE_TEXT: "users online",
+            NUMBER_OF_MESSAGES_SENT: "messages",
+            NUMBER_OF_USERS: "users",
+            NUMBER_OF_USERS_ONLINE_TEXT: "online",
             PASSWORD_PLACEHOLDER: "Enter your password",
             PASSWORD_TITLE: "Password",
             USERNAME_PLACEHOLDER: "Enter your username",
