@@ -8,6 +8,7 @@ import {
     type SubmitErrorHandler,
     type SubmitHandler,
     useForm,
+    type ValidateResult,
 } from "react-hook-form";
 import { toast } from "react-toastify";
 import { v4 } from "uuid";
@@ -37,14 +38,15 @@ const FORM_DEFAULT_VALUES: FormValues = {
 };
 
 type PASSWORD_STATES = {
+    containsDigits: boolean;
     containsErrors: boolean;
-    noSpaces: boolean;
+    containsLowercase: boolean;
+    containsSymbol: boolean;
+    containsUppercase: boolean;
     greaterThanMinLength: boolean;
     lessThanMaxLength: boolean;
-    containsSymbol: boolean;
-    containsLowercase: boolean;
-    containsUppercase: boolean;
-    containsDigits: boolean;
+    matches: boolean;
+    noSpaces: boolean;
 };
 
 const DEFAULT_PASSWORD_STATE: PASSWORD_STATES = {
@@ -55,14 +57,20 @@ const DEFAULT_PASSWORD_STATE: PASSWORD_STATES = {
     containsUppercase: false,
     greaterThanMinLength: false,
     lessThanMaxLength: false,
+    matches: false,
     noSpaces: false,
 };
 
 /**
+ * Validates the password entered in by the user
  *
- * @param password
+ * @param password - The current password entered in
+ * @param confirmPassword - The confirmation password entered in
  */
-const validatePassword = (password: string): PASSWORD_STATES => {
+const validatePassword = (
+    password: string,
+    confirmPassword: string,
+): PASSWORD_STATES => {
     const newState = { ...DEFAULT_PASSWORD_STATE };
     newState.containsDigits = new RegExp(
         ValidationConstants.SIGN_UP.FORM.PASSWORD.CONTAINS_DIGIT,
@@ -91,6 +99,10 @@ const validatePassword = (password: string): PASSWORD_STATES => {
             ValidationConstants.SIGN_UP.FORM.PASSWORD.NO_SPACES,
             "u",
         ).test(password) && password.length > 0;
+    newState.matches =
+        password.length > 0 &&
+        confirmPassword.length > 0 &&
+        password === confirmPassword;
 
     newState.containsErrors = !(
         newState.containsDigits &&
@@ -99,7 +111,8 @@ const validatePassword = (password: string): PASSWORD_STATES => {
         newState.containsSymbol &&
         newState.lessThanMaxLength &&
         newState.greaterThanMinLength &&
-        newState.noSpaces
+        newState.noSpaces &&
+        newState.matches
     );
 
     return newState;
@@ -114,19 +127,20 @@ export const SignUp = (): JSX.Element => {
     const { ...loggerApi } = useLogger();
     const router = useRouter();
 
-    const { formState, handleSubmit, register, setError, watch } =
+    const { formState, handleSubmit, register, setError, trigger, watch } =
         useForm<FormValues>({
             criteriaMode: "all",
             defaultValues: FORM_DEFAULT_VALUES,
-            delayError: millisecondsConverter(0, 3),
+            delayError: millisecondsConverter(500),
             mode: "onSubmit",
-            reValidateMode: "onChange",
+            reValidateMode: "onBlur",
         });
 
     const { errors, dirtyFields, isValid, isValidating } = formState;
 
     const onSubmit: SubmitHandler<FormValues> = React.useCallback(
         async (data: FormValues, _event: unknown) => {
+            await trigger();
             if (
                 Object.keys(errors).length === 0 &&
                 isValid &&
@@ -135,7 +149,7 @@ export const SignUp = (): JSX.Element => {
             ) {
                 try {
                     const request = ClientSideApi.post<ApiResponse<boolean>>(
-                        `${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`,
+                        `${Endpoints.USER.BASE}${Endpoints.USER.SIGNUP}`,
                         data,
                     );
 
@@ -190,11 +204,16 @@ export const SignUp = (): JSX.Element => {
         DEFAULT_PASSWORD_STATE,
     );
 
-    const passwordValue = watch("password");
+    const [passwordValue, confirmPasswordValue] = watch([
+        "password",
+        "confirmPassword",
+    ]);
 
     React.useEffect(() => {
-        setPasswordState(validatePassword(passwordValue));
-    }, [passwordValue]);
+        setPasswordState(
+            validatePassword(passwordValue.trim(), confirmPasswordValue.trim()),
+        );
+    }, [passwordValue, confirmPasswordValue]);
 
     return (
         <div className={styles.sign_up_layout}>
@@ -266,8 +285,11 @@ export const SignUp = (): JSX.Element => {
                                 validate: {
                                     doesUsernameExist: async (
                                         username: string,
-                                    ): Promise<boolean | string> => {
-                                        if (username.length > 0) {
+                                    ): Promise<ValidateResult> => {
+                                        if (
+                                            username.replace(/\W/gu, "").trim()
+                                                .length > 0
+                                        ) {
                                             const response =
                                                 await ClientSideApi.get<
                                                     ApiResponse<boolean>
@@ -339,11 +361,6 @@ export const SignUp = (): JSX.Element => {
                         </Form.Label>
                         <Form.Control
                             autoComplete="off"
-                            isInvalid={Boolean(errors.confirmPassword)}
-                            isValid={
-                                !errors.confirmPassword &&
-                                dirtyFields.confirmPassword
-                            }
                             placeholder={
                                 TextConstants.CONTENT.SIGN_UP
                                     .CONFIRM_PASSWORD_PLACEHOLDER
@@ -357,35 +374,8 @@ export const SignUp = (): JSX.Element => {
                                     value: ValidationConstants.SIGN_UP.FORM
                                         .CONFIRM_PASSWORD.REQUIRED,
                                 },
-                                validate: {
-                                    samePasswords: (value: string) => {
-                                        if (value.length > 0) {
-                                            return (
-                                                value === passwordValue ||
-                                                TextConstants.VALIDATION.INVALID
-                                                    .SIGN_UP.CONFIRM_PASSWORD
-                                                    .MATCHING
-                                            );
-                                        }
-                                        return true;
-                                    },
-                                },
                             })}
                         />
-                        {errors.confirmPassword && (
-                            <Form.Control.Feedback type="invalid">
-                                {errors.confirmPassword.message}
-                            </Form.Control.Feedback>
-                        )}
-                        {!errors.confirmPassword &&
-                            dirtyFields.confirmPassword && (
-                                <Form.Control.Feedback type="valid">
-                                    {
-                                        TextConstants.VALIDATION.VALID.SIGN_UP
-                                            .CONFIRM_PASSWORD
-                                    }
-                                </Form.Control.Feedback>
-                            )}
                     </Form.Group>
                     <Button type="submit" variant="primary">
                         {TextConstants.CONTENT.SIGN_UP.FORM_SUBMIT_BUTTON_TEXT}
@@ -444,6 +434,13 @@ export const SignUp = (): JSX.Element => {
                         message={
                             TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
                                 .NO_SPACES
+                        }
+                    />
+                    <PasswordRequirement
+                        isValid={passwordState.matches}
+                        message={
+                            TextConstants.VALIDATION.INVALID.SIGN_UP.PASSWORD
+                                .MATCHING
                         }
                     />
                 </div>

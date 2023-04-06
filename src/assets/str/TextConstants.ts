@@ -79,6 +79,7 @@ export const TextConstants = {
                     CONTAINS_SYMBOL: "Password must contain at least 1 symbol",
                     CONTAINS_UPPERCASE:
                         "Password must contain at least 1 uppercase letter",
+                    MATCHING: "Passwords must match",
                     MAX_LENGTH: `Password must be at most ${ValidationConstants.SIGN_UP.FORM.PASSWORD.MAX_LENGTH} characters`,
                     MIN_LENGTH: `Password must be at least ${ValidationConstants.SIGN_UP.FORM.PASSWORD.MIN_LENGTH} characters`,
                     NO_SPACES: "Password cannot contain any spaces",

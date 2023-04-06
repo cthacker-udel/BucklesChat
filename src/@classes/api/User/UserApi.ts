@@ -8,22 +8,22 @@ import { ClientSideApi } from "../ClientSideApi";
 import { ServerSideApi } from "../ServerSideApi";
 
 /**
- *
+ * All methods involving the user api
  */
 export class UserApi extends ServerSideApi {
     /**
-     * Creates a user in the database
+     * Signs a user up for the service
      *
      * @param request - The client-side request
      * @param response - The response back to the client
      */
-    public static createUser = async (
+    public static signUp = async (
         request: NextApiRequest,
         response: NextApiResponse,
     ): Promise<void> => {
         try {
             const postedResult = await super.post<User>(
-                `${Endpoints.USER.BASE}${Endpoints.USER.CREATE}`,
+                `${Endpoints.USER.BASE}${Endpoints.USER.SIGNUP}`,
                 JSON.parse(request.body) as User,
             );
 
@@ -67,7 +67,6 @@ export class UserApi extends ServerSideApi {
 
             response.json(getResult);
         } catch (error: unknown) {
-            console.log("error in doesUsernameExist = ", error);
             try {
                 const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
@@ -89,6 +88,12 @@ export class UserApi extends ServerSideApi {
         }
     };
 
+    /**
+     * Attempts to log the user into the database
+     *
+     * @param request - The client request
+     * @param response - The response from the backend
+     */
     public static login = async (
         request: NextApiRequest,
         response: NextApiResponse,

@@ -1,3 +1,3 @@
 import { UserApi } from "@/@classes";
 
-export default UserApi.createUser;
+export default UserApi.signUp;
