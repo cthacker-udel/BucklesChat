@@ -182,6 +182,7 @@ export const SignUp = (): JSX.Element => {
             loggerApi,
             setError,
             router,
+            trigger,
         ],
     );
 
