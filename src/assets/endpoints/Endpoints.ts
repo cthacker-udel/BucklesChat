@@ -7,8 +7,9 @@ export const Endpoints = {
     },
     USER: {
         BASE: "user/",
-        CREATE: "create",
-        DOES_EXIST: "exists",
+        DOES_EXIST: "doesUsernameExist",
         LOGIN: "login",
+        SIGNUP: "signup",
+        STATUS: "status",
     },
 };

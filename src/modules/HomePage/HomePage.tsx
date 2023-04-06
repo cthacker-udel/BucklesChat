@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Button } from "react-bootstrap";
 
-import Background from "@/assets/background/homepage/bg.gif";
+import Background from "@/assets/background/homepage/bg2.gif";
 import { TextConstants } from "@/assets/str/TextConstants";
 import { useBackground } from "@/hooks/useBackground";
 
@@ -15,7 +15,10 @@ import styles from "./HomePage.module.css";
  * @returns The home page
  */
 export const HomePage = (): JSX.Element => {
-    useBackground(Background, { backgroundOpacity: 0.75 });
+    useBackground(Background, {
+        backgroundOpacity: 0.75,
+        backgroundSize: "2%",
+    });
     const router = useRouter();
 
     return (

@@ -8,6 +8,7 @@ type SetBackgroundConfiguration = {
     backgroundGColor?: number;
     backgroundBColor?: number;
     backgroundOpacity?: number;
+    backgroundRepeat?: string;
     noOptions?: boolean;
 };
 
@@ -99,6 +100,7 @@ const setBackground = (
                 options?.backgroundBlendMode ?? "screen";
             body.style.backgroundColor =
                 options?.backgroundColor ?? "rgba(128, 128, 128, 0.55)";
+            body.style.backgroundRepeat = options?.backgroundRepeat ?? "";
         }
     }
 };

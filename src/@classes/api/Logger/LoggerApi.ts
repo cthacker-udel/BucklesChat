@@ -7,30 +7,40 @@ import { Endpoints } from "@/assets";
 import { ServerSideApi } from "../ServerSideApi";
 
 /**
- *
+ * The server-side api for sending requests to the backend to be logged
  */
 export class LoggerApi extends ServerSideApi {
+    /**
+     * Logs an exception to be stored in the mongo database
+     *
+     * @param request - The request from the client
+     * @param response - The response from the backend
+     */
     public static logException = async (
         request: NextApiRequest,
         response: NextApiResponse,
     ): Promise<void> => {
         try {
             const postedResult = await super.post<
-                ApiResponse<string>,
+                ApiResponse<boolean>,
                 ExceptionLog
             >(
                 `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                 request.body as ExceptionLog,
             );
-
-            console.log(postedResult);
             response.json(postedResult);
-        } catch (error: unknown) {
-            console.log("error =", error);
+        } catch {
+            response.status(500);
             response.json({});
         }
     };
 
+    /**
+     * Logs an event to be stored in the mongo database
+     *
+     * @param request - The client request
+     * @param response - The response from the backend
+     */
     public static logEvent = async (
         request: NextApiRequest,
         response: NextApiResponse,
@@ -41,14 +51,18 @@ export class LoggerApi extends ServerSideApi {
                 JSON.parse(request.body),
             );
             response.json(postedResult);
-        } catch (error: unknown) {
-            response.json({
-                apiError: { code: 500, message: (error as Error).message },
-                data: false,
-            });
+        } catch {
+            response.status(500);
+            response.json({});
         }
     };
 
+    /**
+     * Pings the status of the logger endpoint
+     *
+     * @param _request - The client request
+     * @param response - The response to the client
+     */
     public static logStatus = async (
         _request: NextApiRequest,
         response: NextApiResponse,
@@ -58,11 +72,9 @@ export class LoggerApi extends ServerSideApi {
                 `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.STATUS}`,
             );
             response.json(loggerStatus);
-        } catch (error: unknown) {
-            response.json({
-                apiError: { code: 500, message: (error as Error).message },
-                data: false,
-            });
+        } catch {
+            response.status(500);
+            response.send({});
         }
     };
 }
