@@ -207,7 +207,8 @@ export class UserApi extends ServerSideApi {
             return {
                 data: {
                     handle: undefined,
-                    profilePictureUrl: undefined,
+                    // eslint-disable-next-line camelcase -- disabled, due to psql casing
+                    profile_image_url: undefined,
                     username,
                 },
             };

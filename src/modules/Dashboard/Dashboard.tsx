@@ -4,6 +4,7 @@ import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { toast } from "react-toastify";
 
 import { ImageApi } from "@/@classes/api/client/Image";
+import { ClientUserApi } from "@/@classes/api/client/User";
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { renderTooltip } from "@/helpers";
@@ -11,9 +12,6 @@ import { useBackground } from "@/hooks";
 
 import styles from "./Dashboard.module.css";
 import { Friend } from "./Friend/Friend";
-import { ClientSideApi } from "@/@classes";
-import { Endpoints } from "@/assets";
-import { ClientUserApi } from "@/@classes/api/client/User";
 
 type DashboardProperties = {
     handle?: string;
@@ -90,16 +88,7 @@ export const Dashboard = ({
                         </OverlayTrigger>
                     </div>
                     <div className={styles.dashboard_user_info}>
-                        <div
-                            className={styles.dashboard_user_handle}
-                            onClick={async (): Promise<void> => {
-                                const editRequest =
-                                    await ClientUserApi.editUser({
-                                        handle: "dalizardking",
-                                        username: "a",
-                                    });
-                            }}
-                        >
+                        <div className={styles.dashboard_user_handle}>
                             {handle ?? "N/A"}
                         </div>
                         <div className={styles.dashboard_user_username}>
@@ -161,13 +150,36 @@ export const Dashboard = ({
                                                                     if (
                                                                         uploadResponse?.success
                                                                     ) {
-                                                                        const setProfilePictureUrl =
-                                                                            await ClientSideApi.post(
-                                                                                `${Endpoints.USER.BASE}${Endpoints.USER.EDIT}`,
+                                                                        const profilePictureSetResponse =
+                                                                            await ClientUserApi.editUser(
+                                                                                {
+                                                                                    profileImageRemovalUrl:
+                                                                                        uploadResponse
+                                                                                            .data
+                                                                                            .delete_url,
+                                                                                    profileImageUrl:
+                                                                                        uploadResponse
+                                                                                            .data
+                                                                                            .url,
+                                                                                    username,
+                                                                                },
                                                                             );
-                                                                        toast.success(
-                                                                            "Uploaded profile picture successfully!",
-                                                                        );
+                                                                        const {
+                                                                            data: result,
+                                                                        } =
+                                                                            profilePictureSetResponse;
+
+                                                                        if (
+                                                                            result
+                                                                        ) {
+                                                                            toast.success(
+                                                                                "Uploaded profile picture successfully!",
+                                                                            );
+                                                                        } else {
+                                                                            toast.error(
+                                                                                "Failed to upload profile picture",
+                                                                            );
+                                                                        }
                                                                     } else {
                                                                         toast.error(
                                                                             "Failed to upload profile picture.",

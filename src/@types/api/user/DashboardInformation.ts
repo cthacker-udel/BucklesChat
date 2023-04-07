@@ -1,5 +1,5 @@
 export type DashboardInformation = {
     handle?: string;
-    profilePictureUrl?: string;
+    profile_image_url?: string;
     username?: string;
 };

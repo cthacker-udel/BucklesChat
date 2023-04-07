@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps<
     PageProperties
 > = async () => {
     const { data } = await UserApi.getUserDashboardInformation("a");
-    return { props: { ...data } };
+    return { props: { ...data, profilePictureUrl: data.profile_image_url } };
 };
 
 export { Dashboard as default } from "@/modules";
