@@ -218,6 +218,47 @@ export class UserApi extends ServerSideApi {
     };
 
     /**
+     * Gets the user edit information from a client-side request
+     *
+     * @param request - The client request
+     * @param response - The response to the client
+     */
+    public static getUserDetails = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const username = request.query.username;
+            const getResult = await super.get<
+                ApiResponse<DashboardInformation>
+            >(
+                `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}?username=${username}`,
+            );
+            response.status(200);
+            response.send(getResult);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
      * Gets the user dashboard information, such as the profile picture url, the handle, and the username
      *
      * @param username - The username we are looking up
