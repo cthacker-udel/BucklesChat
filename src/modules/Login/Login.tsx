@@ -65,11 +65,7 @@ export const Login = ({
                     `${Endpoints.USER.BASE}${Endpoints.USER.LOGIN}`,
                     data,
                 ),
-                {
-                    error: "Login failed!",
-                    pending: "Logging in...",
-                    success: "Logged in successfully!",
-                },
+                { pending: "Logging in..." },
             );
 
             const loginResult = await request;
@@ -77,8 +73,11 @@ export const Login = ({
             const { data: isLoginSuccessful } = loginResult;
 
             if (isLoginSuccessful) {
+                toast.success("Login was a success!");
                 // eslint-disable-next-line @typescript-eslint/no-floating-promises -- disabled
                 router.push("dashboard");
+            } else {
+                toast.error("Login failed!");
             }
         },
         [router],
