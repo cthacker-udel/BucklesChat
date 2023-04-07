@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React, { type ChangeEvent } from "react";
-import { Image, OverlayTrigger } from "react-bootstrap";
+import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { toast } from "react-toastify";
 
@@ -36,6 +36,8 @@ export const Dashboard = ({
 
     const [hoveringOverProfilePicture, setHoveringOverProfilePicture] =
         React.useState<boolean>(false);
+    const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
+
     const fileInputReference = React.createRef<HTMLInputElement>();
 
     const friendsTemporaryData = Array.from({ length: 10 }).map((_, ind) => ({
@@ -89,6 +91,18 @@ export const Dashboard = ({
                                 />
                             </div>
                         </OverlayTrigger>
+                        <Button
+                            className={styles.dashboard_user_info_edit_user}
+                            style={{
+                                opacity: hoveringOverProfilePicture ? 1 : 0,
+                                right: hoveringOverProfilePicture
+                                    ? "-4vw"
+                                    : "1vw",
+                            }}
+                            variant="primary"
+                        >
+                            <i className="fa-solid fa-pencil fa-sm" />
+                        </Button>
                     </div>
                     <div className={styles.dashboard_user_info}>
                         <div className={styles.dashboard_user_handle}>

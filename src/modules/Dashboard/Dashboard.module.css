@@ -129,6 +129,15 @@
     visibility: hidden;
 }
 
+.dashboard_user_info_edit_user {
+    transition: right 1s ease-in-out, opacity 1s ease-in;
+    border-radius: 2em;
+    position: absolute;
+    right: 1vw;
+    top: 1vw;
+    opacity: 0%;
+}
+
 /* END USER INFO */
 
 /* BEGIN FRIENDS LIST */
