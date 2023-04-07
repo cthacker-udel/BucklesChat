@@ -29,6 +29,13 @@
     min-height: 20vh;
 }
 
+.dashboard_top_bar_user_pfp_container {
+    position: relative;
+    border-radius: 2em;
+    width: fit-content;
+    height: fit-content;
+}
+
 .dashboard_user_info_pfp {
     height: 5vw;
     width: 5vw;
@@ -36,6 +43,34 @@
     border-width: 0.25em;
     border-color: rgba(255, 255, 255, 0.25);
     border-style: outset;
+}
+
+.dashboard_user_pfp_upload {
+    transition: background-color 1s ease-in-out;
+    position: absolute;
+    height: 5vw;
+    width: 5vw;
+    border-radius: 2em;
+    bottom: 0%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.dashboard_user_pfp_upload:hover {
+    transition: background-color 1s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dashboard_user_pfp_upload > i {
+    transition: opacity 1s ease-in-out;
+    color: white;
+    align-self: center;
+}
+
+.dashboard_user_pfp_tooltip_title {
+    font-size: 1em;
 }
 
 .dashboard_user_info {
@@ -107,3 +142,14 @@
 }
 
 /* END FRIENDS LIST */
+
+/* ANIMATIONS */
+
+@keyframes appear_anim {
+    from {
+        opacity: 0%;
+    }
+    to {
+        opacity: 100%;
+    }
+}

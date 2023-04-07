@@ -1,4 +1,8 @@
 export const Endpoints = {
+    IMAGE: {
+        BASE: "https://api.imgbb.com/1/",
+        UPLOAD: "upload",
+    },
     LOGGER: {
         BASE: "logger/",
         EVENT: "event",
@@ -7,6 +11,7 @@ export const Endpoints = {
     },
     USER: {
         BASE: "user/",
+        DASHBOARD: "dashboardInformation",
         DOES_EXIST: "doesUsernameExist",
         LOGIN: "login",
         SIGNUP: "signup",

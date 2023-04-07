@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/indent -- disabled */
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 } from "uuid";
 
-import type { ApiResponse, ExceptionLog, User } from "@/@types";
+import type {
+    ApiResponse,
+    DashboardInformation,
+    ExceptionLog,
+    User,
+} from "@/@types";
 import { Endpoints } from "@/assets";
 
 import { ClientSideApi } from "../ClientSideApi";
@@ -124,6 +130,44 @@ export class UserApi extends ServerSideApi {
                     data: false,
                 });
             }
+        }
+    };
+
+    /**
+     * Gets the user dashboard information, such as the profile picture url, the handle, and the username
+     *
+     * @param username - The username we are looking up
+     */
+    public static getUserDashboardInformation = async (
+        username: string,
+    ): Promise<ApiResponse<DashboardInformation>> => {
+        try {
+            const getResult = await super.get<
+                ApiResponse<DashboardInformation>
+            >(
+                `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}?username=${username}`,
+            );
+            return getResult;
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+            return {
+                data: {
+                    handle: undefined,
+                    profilePictureUrl: undefined,
+                    username,
+                },
+            };
         }
     };
 
