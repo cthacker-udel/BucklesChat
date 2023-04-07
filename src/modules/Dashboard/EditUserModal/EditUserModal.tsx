@@ -86,6 +86,8 @@ export const EditUserModal = ({
                     <Form.Group controlId="first_name_form">
                         <Form.Label>{"First Name"}</Form.Label>
                         <Form.Control
+                            isInvalid={Boolean(errors.firstName)}
+                            isValid={dirtyFields.firstName && !errors.firstName}
                             type="text"
                             {...register("firstName", {
                                 maxLength: {
@@ -111,10 +113,25 @@ export const EditUserModal = ({
                                 },
                             })}
                         />
+                        {errors.firstName && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.firstName.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.firstName && dirtyFields.firstName && (
+                            <Form.Control.Feedback type="valid">
+                                {
+                                    TextConstants.VALIDATION.VALID.EDIT_MODAL
+                                        .FIRST_NAME
+                                }
+                            </Form.Control.Feedback>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="last_name_form">
                         <Form.Label>{"Last Name"}</Form.Label>
                         <Form.Control
+                            isInvalid={Boolean(errors.lastName)}
+                            isValid={dirtyFields.lastName && !errors.lastName}
                             type="text"
                             {...register("lastName", {
                                 maxLength: {
@@ -140,10 +157,25 @@ export const EditUserModal = ({
                                 },
                             })}
                         />
+                        {errors.lastName && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.lastName.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.lastName && dirtyFields.lastName && (
+                            <Form.Control.Feedback type="valid">
+                                {
+                                    TextConstants.VALIDATION.VALID.EDIT_MODAL
+                                        .LAST_NAME
+                                }
+                            </Form.Control.Feedback>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="email_form">
                         <Form.Label>{"Email"}</Form.Label>
                         <Form.Control
+                            isInvalid={Boolean(errors.email)}
+                            isValid={dirtyFields.email && !errors.email}
                             type="email"
                             {...register("email", {
                                 maxLength: {
@@ -162,10 +194,25 @@ export const EditUserModal = ({
                                 },
                             })}
                         />
+                        {errors.email && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.email.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.email && dirtyFields.email && (
+                            <Form.Control.Feedback type="valid">
+                                {
+                                    TextConstants.VALIDATION.VALID.EDIT_MODAL
+                                        .EMAIL
+                                }
+                            </Form.Control.Feedback>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="handle_form">
                         <Form.Label>{"Handle"}</Form.Label>
                         <Form.Control
+                            isInvalid={Boolean(errors.handle)}
+                            isValid={dirtyFields.handle && !errors.handle}
                             type="text"
                             {...register("handle", {
                                 maxLength: {
@@ -191,10 +238,25 @@ export const EditUserModal = ({
                                 },
                             })}
                         />
+                        {errors.handle && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.handle.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.handle && dirtyFields.handle && (
+                            <Form.Control.Feedback type="valid">
+                                {
+                                    TextConstants.VALIDATION.VALID.EDIT_MODAL
+                                        .HANDLE
+                                }
+                            </Form.Control.Feedback>
+                        )}
                     </Form.Group>
                     <Form.Group controlId="date_of_birth_form">
                         <Form.Label>{"Date of Birth"}</Form.Label>
                         <Form.Control
+                            isInvalid={Boolean(errors.dob)}
+                            isValid={dirtyFields.dob && !errors.dob}
                             type="date"
                             {...register("dob", {
                                 required: {
@@ -206,6 +268,19 @@ export const EditUserModal = ({
                                 },
                             })}
                         />
+                        {errors.dob && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.dob.message}
+                            </Form.Control.Feedback>
+                        )}
+                        {!errors.dob && dirtyFields.dob && (
+                            <Form.Control.Feedback type="valid">
+                                {
+                                    TextConstants.VALIDATION.VALID.EDIT_MODAL
+                                        .DATE_OF_BIRTH
+                                }
+                            </Form.Control.Feedback>
+                        )}
                     </Form.Group>
                 </Form>
             </Modal.Body>
