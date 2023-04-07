@@ -1,11 +1,14 @@
+/* eslint-disable unicorn/no-null -- disabled just for useSwr, would rather use undefined */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React, { type ChangeEvent } from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { toast } from "react-toastify";
+import useSWR from "swr";
 
 import { ImageApi } from "@/@classes/api/client/Image";
 import { ClientUserApi } from "@/@classes/api/client/User";
+import type { DashboardInformation } from "@/@types";
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { renderTooltip } from "@/helpers";
@@ -15,9 +18,6 @@ import styles from "./Dashboard.module.css";
 import { Friend } from "./Friend/Friend";
 
 type DashboardProperties = {
-    creationDate?: number;
-    handle?: string;
-    profilePictureUrl?: string;
     username?: string;
 };
 
@@ -26,13 +26,13 @@ type DashboardProperties = {
  *
  * @returns The dashboard component, which houses all of the features of this application
  */
-export const Dashboard = ({
-    creationDate,
-    handle,
-    profilePictureUrl,
-    username,
-}: DashboardProperties): JSX.Element => {
+export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
     useBackground(Background, { noOptions: true });
+    const { data } = useSWR<DashboardInformation, DashboardInformation, string>(
+        `user/dashboard?username=${username}`,
+        null,
+        { refreshInterval: 5000 },
+    );
 
     const [hoveringOverProfilePicture, setHoveringOverProfilePicture] =
         React.useState<boolean>(false);
@@ -45,6 +45,10 @@ export const Dashboard = ({
         profilePictureUrl: placeholderPfp.src,
         username: `Username ${ind + 1}`,
     }));
+
+    if (data === undefined) {
+        return <span />;
+    }
 
     return (
         <div className={styles.dashboard_layout}>
@@ -65,7 +69,7 @@ export const Dashboard = ({
                         <Image
                             alt="The profile picture of the user"
                             className={styles.dashboard_user_info_pfp}
-                            src={profilePictureUrl ?? placeholderPfp.src}
+                            src={data.profile_image_url ?? placeholderPfp.src}
                         />
                         <OverlayTrigger
                             delay={{ hide: 250, show: 250 }}
@@ -106,10 +110,10 @@ export const Dashboard = ({
                     </div>
                     <div className={styles.dashboard_user_info}>
                         <div className={styles.dashboard_user_handle}>
-                            {handle ?? "N/A"}
+                            {data.handle ?? "N/A"}
                         </div>
                         <div className={styles.dashboard_user_username}>
-                            {username}
+                            {data.username}
                         </div>
                         <div className={styles.dashboard_user_info_divider} />
                         <div className={styles.dashboard_user_stats}>
@@ -222,9 +226,11 @@ export const Dashboard = ({
                                         styles.dashboard_member_since_date
                                     }
                                 >
-                                    {creationDate === undefined
+                                    {data.creation_date === undefined
                                         ? "N/A"
-                                        : new Date(creationDate).toDateString()}
+                                        : new Date(
+                                              Number(data.creation_date),
+                                          ).toDateString()}
                                 </span>
                             </div>
                         </div>

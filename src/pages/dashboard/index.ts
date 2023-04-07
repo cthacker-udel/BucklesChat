@@ -5,9 +5,6 @@ import type { GetServerSideProps } from "next/types";
 import { UserApi } from "@/@classes";
 
 type PageProperties = {
-    creationDate?: number;
-    handle?: string;
-    profilePictureUrl?: string;
     username?: string;
 };
 
@@ -18,12 +15,10 @@ type PageProperties = {
 export const getServerSideProps: GetServerSideProps<
     PageProperties
 > = async () => {
-    const { data } = await UserApi.getUserDashboardInformation("a");
+    const { data } = await UserApi.ssGetUserDashboardInformation("a");
     return {
         props: {
-            ...data,
-            creationDate: Number(data.creation_date),
-            profilePictureUrl: data.profile_image_url,
+            username: data.username === undefined ? "" : data.username,
         },
     };
 };
