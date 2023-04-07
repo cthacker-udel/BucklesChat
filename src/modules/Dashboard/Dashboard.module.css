@@ -17,6 +17,8 @@
     justify-content: center;
 }
 
+/* BEGIN USER INFO */
+
 .dashboard_top_bar_user_info {
     padding: 1em;
     display: flex;
@@ -24,6 +26,7 @@
     background-color: rgba(128, 128, 128, 0.5);
     border-radius: 1em;
     gap: 1.5em;
+    min-height: 20vh;
 }
 
 .dashboard_user_info_pfp {
@@ -81,3 +84,26 @@
     font-size: 0.9em;
     opacity: 0.75;
 }
+
+/* END USER INFO */
+
+/* BEGIN FRIENDS LIST */
+
+.dashboard_top_bar_friends_list {
+    background-color: rgba(255, 255, 255, 0.25);
+    min-width: 30vw;
+    border-radius: 1em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    max-height: 25vh;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-scrollbar-track-color: transparent;
+    scrollbar-track-color: transparent;
+    min-height: 30vh;
+    scroll-behavior: smooth;
+}
+
+/* END FRIENDS LIST */

@@ -1,11 +1,12 @@
 import React from "react";
+import { Image } from "react-bootstrap";
 
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { useBackground } from "@/hooks";
 
 import styles from "./Dashboard.module.css";
-import { Image } from "react-bootstrap";
+import { Friend } from "./Friend/Friend";
 
 /**
  * Dashboard, which is the main hub for all of the features this application has to offer
@@ -14,6 +15,12 @@ import { Image } from "react-bootstrap";
  */
 export const Dashboard = (): JSX.Element => {
     useBackground(Background, { noOptions: true });
+
+    const friendsTemporaryData = Array.from({ length: 10 }).map((_, ind) => ({
+        handle: `Handle ${ind + 1}`,
+        profilePictureUrl: placeholderPfp.src,
+        username: `Username ${ind + 1}`,
+    }));
 
     return (
         <div className={styles.dashboard_layout}>
@@ -55,7 +62,12 @@ export const Dashboard = (): JSX.Element => {
                     </div>
                 </div>
                 <div className={styles.dashboard_top_bar_friends_list}>
-                    {"Friends"}
+                    {friendsTemporaryData.map((eachFriend) => (
+                        <Friend
+                            {...eachFriend}
+                            key={`friend ${eachFriend.username}`}
+                        />
+                    ))}
                 </div>
             </div>
             <div className={styles.dashboard_bottom_bar}>

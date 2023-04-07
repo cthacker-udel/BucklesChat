@@ -1,0 +1,35 @@
+.friend_info_container {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+.friend_pfp_container {
+    position: relative;
+    width: fit-content;
+}
+
+.friend_pfp {
+    height: 3.25vw;
+    width: 3.25vw;
+    border-radius: 2em;
+    border-width: 0.25em;
+    border-color: rgba(255, 255, 255, 0.25);
+    border-style: solid;
+}
+
+.online_indicator {
+    width: 1vw;
+    height: 1vw;
+    position: absolute;
+    border: 0.124em solid rgba(0, 0, 0, 0.5);
+    border-radius: 1em;
+    z-index: 1;
+    top: 65%;
+    right: 5%;
+}
+
+.friend_info_display {
+    align-self: center;
+    color: black;
+}
