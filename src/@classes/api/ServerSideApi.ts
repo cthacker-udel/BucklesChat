@@ -129,6 +129,8 @@ export class ServerSideApi {
                   .map((eachEntry) => `${eachEntry[0]}=${eachEntry[1]}`)
                   .join("")}`
             : "";
+
+        console.log(`${process.env.SERVICE_URL}${endpoint}${queryString}`);
         const putRequestResult = await fetch(
             `${process.env.SERVICE_URL}${endpoint}${queryString}`,
             {

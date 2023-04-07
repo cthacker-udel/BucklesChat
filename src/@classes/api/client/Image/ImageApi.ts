@@ -1,15 +1,10 @@
 import { v4 } from "uuid";
 
-import type {
-    ApiResponse,
-    ExceptionLog,
-    ImagePayload,
-    ImageResponse,
-} from "@/@types";
+import type { ApiResponse, ExceptionLog, ImageResponse } from "@/@types";
 import { Endpoints } from "@/assets";
 
-import { ClientSideApi } from "../ClientSideApi";
-import { ServerSideApi } from "../ServerSideApi";
+import { ClientSideApi } from "../../ClientSideApi";
+import { ServerSideApi } from "../../ServerSideApi";
 
 /**
  * All methods involving uploading images to image hosting service
@@ -23,24 +18,32 @@ export class ImageApi extends ServerSideApi {
      * @param expiration - (optional) the expiration time of the image
      * @returns The response from the api, or undefined if exception was thrown
      */
-    public static UploadImage = async (
+    public static uploadImage = async (
         image: string,
         name?: string,
         expiration?: number,
     ): Promise<ImageResponse | undefined> => {
         try {
+            const formData = new FormData();
+
+            formData.append("image", image);
+
+            if (name !== undefined) {
+                formData.append("name", name);
+            }
+
+            if (expiration !== undefined) {
+                formData.append("expiration", `${expiration}`);
+            }
+
             const uploadRequest = await fetch(
-                `${Endpoints.IMAGE.BASE}${Endpoints.IMAGE.UPLOAD}`,
+                `${Endpoints.IMAGE.BASE}${Endpoints.IMAGE.UPLOAD}?key=${process.env.NEXT_PUBLIC_IMGBB_KEY}`,
                 {
-                    body: JSON.stringify({
-                        expiration,
-                        image,
-                        key: process.env.IMGBB_KEY,
-                        name,
-                    } as ImagePayload),
+                    body: formData,
                     method: "POST",
                 },
             );
+
             const parsedResponse = await uploadRequest.json();
             return parsedResponse as ImageResponse;
         } catch (error: unknown) {

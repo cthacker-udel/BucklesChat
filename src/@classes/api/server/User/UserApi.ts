@@ -10,8 +10,8 @@ import type {
 } from "@/@types";
 import { Endpoints } from "@/assets";
 
-import { ClientSideApi } from "../ClientSideApi";
-import { ServerSideApi } from "../ServerSideApi";
+import { ClientSideApi } from "../../ClientSideApi";
+import { ServerSideApi } from "../../ServerSideApi";
 
 /**
  * All methods involving the user api
@@ -72,6 +72,49 @@ export class UserApi extends ServerSideApi {
             );
 
             response.json(getResult);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Edits the user specified by the username passed in the body with the specified payload
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static edit = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const partialUser = JSON.parse(request.body) as Partial<User>;
+            const updateResult = await super.put<
+                ApiResponse<boolean>,
+                Partial<User>
+            >(
+                `${Endpoints.USER.BASE}${Endpoints.USER.EDIT}?username=${partialUser?.username}`,
+                partialUser,
+            );
+            response.status(200);
+            response.send(updateResult);
         } catch (error: unknown) {
             try {
                 const convertedError = error as Error;

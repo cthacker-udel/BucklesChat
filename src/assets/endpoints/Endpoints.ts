@@ -13,6 +13,7 @@ export const Endpoints = {
         BASE: "user/",
         DASHBOARD: "dashboardInformation",
         DOES_EXIST: "doesUsernameExist",
+        EDIT: "edit",
         LOGIN: "login",
         SIGNUP: "signup",
         STATUS: "status",

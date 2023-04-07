@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { ApiResponse, EventLog, ExceptionLog } from "@/@types";
 import { Endpoints } from "@/assets";
 
-import { ServerSideApi } from "../ServerSideApi";
+import { ServerSideApi } from "../../ServerSideApi";
 
 /**
  * The server-side api for sending requests to the backend to be logged

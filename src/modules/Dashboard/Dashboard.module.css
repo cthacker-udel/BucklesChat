@@ -120,6 +120,15 @@
     opacity: 0.75;
 }
 
+.hidden_file_import {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    display: inline;
+    opacity: 0;
+    visibility: hidden;
+}
+
 /* END USER INFO */
 
 /* BEGIN FRIENDS LIST */
