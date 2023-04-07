@@ -5,6 +5,7 @@ import type { GetServerSideProps } from "next/types";
 import { UserApi } from "@/@classes";
 
 type PageProperties = {
+    creationDate?: number;
     handle?: string;
     profilePictureUrl?: string;
     username?: string;
@@ -18,7 +19,13 @@ export const getServerSideProps: GetServerSideProps<
     PageProperties
 > = async () => {
     const { data } = await UserApi.getUserDashboardInformation("a");
-    return { props: { ...data, profilePictureUrl: data.profile_image_url } };
+    return {
+        props: {
+            ...data,
+            creationDate: Number(data.creation_date),
+            profilePictureUrl: data.profile_image_url,
+        },
+    };
 };
 
 export { Dashboard as default } from "@/modules";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent -- disabled */
 import React, { type ChangeEvent } from "react";
 import { Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
@@ -14,6 +15,7 @@ import styles from "./Dashboard.module.css";
 import { Friend } from "./Friend/Friend";
 
 type DashboardProperties = {
+    creationDate?: number;
     handle?: string;
     profilePictureUrl?: string;
     username?: string;
@@ -25,6 +27,7 @@ type DashboardProperties = {
  * @returns The dashboard component, which houses all of the features of this application
  */
 export const Dashboard = ({
+    creationDate,
     handle,
     profilePictureUrl,
     username,
@@ -205,7 +208,9 @@ export const Dashboard = ({
                                         styles.dashboard_member_since_date
                                     }
                                 >
-                                    {"Aug 10 2021"}
+                                    {creationDate === undefined
+                                        ? "N/A"
+                                        : new Date(creationDate).toDateString()}
                                 </span>
                             </div>
                         </div>
