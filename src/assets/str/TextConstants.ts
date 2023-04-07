@@ -42,35 +42,37 @@ export const TextConstants = {
     },
     VALIDATION: {
         INVALID: {
-            SIGN_UP: {
-                CONFIRM_PASSWORD: {
-                    MATCHING: "Passwords must match",
-                    REQUIRED: "Confirmed Password is required",
-                },
+            EDIT_MODAL: {
                 DATE_OF_BIRTH: {
                     REQUIRED: "Date of Birth is required",
                 },
                 EMAIL: {
-                    MAX_LENGTH: `Email cannot be more then ${ValidationConstants.SIGN_UP.FORM.EMAIL.MAX_LENGTH} characters`,
+                    MAX_LENGTH: `Email cannot be more then ${ValidationConstants.EDIT_MODAL.EMAIL.MAX_LENGTH} characters`,
                     PATTERN: "Email is invalid",
                     REQUIRED: "Email is required",
                 },
                 FIRST_NAME: {
-                    MAX_LENGTH: `First Name cannot be more then ${ValidationConstants.SIGN_UP.FORM.FIRST_NAME.MAX_LENGTH} characters`,
+                    MAX_LENGTH: `First Name cannot be more then ${ValidationConstants.EDIT_MODAL.FIRST_NAME.MAX_LENGTH} characters`,
                     PATTERN:
                         "First Name cannot contain digits, underscores, or any space characters",
                     REQUIRED: "First Name is required",
                 },
                 HANDLE: {
-                    MAX_LENGTH: `Handle cannot be more than ${ValidationConstants.SIGN_UP.FORM.HANDLE.MAX_LENGTH} characters`,
+                    MAX_LENGTH: `Handle cannot be more than ${ValidationConstants.EDIT_MODAL.HANDLE.MAX_LENGTH} characters`,
                     PATTERN: "Handle cannot contain any symbols",
                     REQUIRED: "Handle is required",
                 },
                 LAST_NAME: {
-                    MAX_LENGTH: `Last Name cannot be more then ${ValidationConstants.SIGN_UP.FORM.LAST_NAME.MAX_LENGTH} characters`,
+                    MAX_LENGTH: `Last Name cannot be more then ${ValidationConstants.EDIT_MODAL.LAST_NAME.MAX_LENGTH} characters`,
                     PATTERN:
                         "Last Name cannot contain digits, underscores, or any space characters",
                     REQUIRED: "Last Name is required",
+                },
+            },
+            SIGN_UP: {
+                CONFIRM_PASSWORD: {
+                    MATCHING: "Passwords must match",
+                    REQUIRED: "Confirmed Password is required",
                 },
                 PASSWORD: {
                     CONTAINS_DIGIT: "Password must contain at least 1 digit",
@@ -93,13 +95,15 @@ export const TextConstants = {
             },
         },
         VALID: {
-            SIGN_UP: {
-                CONFIRM_PASSWORD: "Passwords match!",
+            EDIT_MODAL: {
                 DATE_OF_BIRTH: "Date of Birth is valid!",
                 EMAIL: "Email is valid!",
                 FIRST_NAME: "First Name is valid!",
                 HANDLE: "Handle is valid!",
                 LAST_NAME: "Last Name is valid!",
+            },
+            SIGN_UP: {
+                CONFIRM_PASSWORD: "Passwords match!",
                 PASSWORD: "Password is valid!",
                 USERNAME: "Username is valid!",
             },

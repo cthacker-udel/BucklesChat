@@ -1,3 +1,25 @@
 .username_form {
-    transition: background-color 0.5s ease-in;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+.edit_modal_title {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+.edit_modal_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.edit_modal_footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.edit_modal_footer > button {
+    width: max-content;
 }
