@@ -37,6 +37,8 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
     const [hoveringOverProfilePicture, setHoveringOverProfilePicture] =
         React.useState<boolean>(false);
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
+    const [showAddUserModal, setShowAddUserModal] =
+        React.useState<boolean>(false);
 
     const fileInputReference = React.createRef<HTMLInputElement>();
 
@@ -106,6 +108,26 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 variant="primary"
                             >
                                 <i className="fa-solid fa-pencil fa-sm" />
+                            </Button>
+                            <Button
+                                className={
+                                    styles.dashboard_user_info_add_friend
+                                }
+                                onClick={(): void => {
+                                    setShowAddUserModal(true);
+                                }}
+                                style={{
+                                    opacity: hoveringOverProfilePicture ? 1 : 0,
+                                    right: hoveringOverProfilePicture
+                                        ? "-4vw"
+                                        : "1vw",
+                                    top: hoveringOverProfilePicture
+                                        ? "-2vw"
+                                        : "1vw",
+                                }}
+                                variant="success"
+                            >
+                                <i className="fa-solid fa-user-plus fa-sm" />
                             </Button>
                         </div>
                         <div className={styles.dashboard_user_info}>

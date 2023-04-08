@@ -147,6 +147,24 @@
     align-self: center;
 }
 
+.dashboard_user_info_add_friend {
+    transition: top 1s ease-in-out, right 1s ease-in-out, opacity 1s ease-in;
+    border-radius: 2em;
+    position: absolute;
+    right: 1vw;
+    top: 1vw;
+    opacity: 0%;
+    height: 2.5vw;
+    width: 2.5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dashboard_user_info_add_friend > i {
+    align-self: center;
+}
+
 /* END USER INFO */
 
 /* BEGIN FRIENDS LIST */
