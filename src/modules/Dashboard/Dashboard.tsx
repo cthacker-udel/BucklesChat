@@ -125,6 +125,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                         </div>
                         <div className={styles.dashboard_user_info}>
                             <div className={styles.dashboard_user_handle}>
+                                {"@"}
                                 {data.handle ?? "N/A"}
                             </div>
                             <div className={styles.dashboard_user_username}>

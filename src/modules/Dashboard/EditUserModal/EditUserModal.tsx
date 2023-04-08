@@ -3,8 +3,10 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import useSWR from "swr";
 
+import { ClientUserApi } from "@/@classes/api/client/User";
 import type { User } from "@/@types";
 import { TextConstants, ValidationConstants } from "@/assets";
 
@@ -47,7 +49,7 @@ export const EditUserModal = ({
         `user/details?username=${username}`,
     );
 
-    const { formState, register, reset, watch } = useForm<FormValues>({
+    const { formState, getValues, register, reset } = useForm<FormValues>({
         criteriaMode: "all",
         defaultValues: FORM_DEFAULT_VALUES,
         delayError: 250,
@@ -61,9 +63,7 @@ export const EditUserModal = ({
         }
     }, [data, reset]);
 
-    const { dirtyFields, errors, isValidating } = formState;
-
-    console.log(dirtyFields, errors);
+    const { dirtyFields, errors, isValidating, isValid } = formState;
 
     return (
         <Modal onHide={editModalOnClose} show={showEditModal}>
@@ -328,7 +328,42 @@ export const EditUserModal = ({
             </Modal.Body>
             <Modal.Footer className={styles.edit_modal_footer}>
                 <Button variant="outline-secondary">{"Cancel"}</Button>
-                <Button variant="outline-success">{"Confirm"}</Button>
+                <Button
+                    disabled={!isValidating && !isValid}
+                    onClick={async (): Promise<void> => {
+                        const formValues =
+                            getValues() as unknown as FormValues & {
+                                [key: string]: string;
+                            };
+                        const values: { [key: string]: unknown } = {};
+
+                        for (const eachDirtyField of Object.keys(dirtyFields)) {
+                            values[eachDirtyField] = formValues[eachDirtyField];
+                        }
+
+                        if (Object.keys(values).length > 0) {
+                            const updateToast = toast.loading(
+                                "Updating profile...",
+                            );
+                            const { data: didUpdate } =
+                                await ClientUserApi.editUser({
+                                    ...values,
+                                    username,
+                                });
+                            toast.dismiss(updateToast);
+                            if (didUpdate) {
+                                toast.success("Updated profile!");
+                                editModalOnClose();
+                            } else {
+                                toast.error("Failed to update profile.");
+                                reset({ ...FORM_DEFAULT_VALUES });
+                            }
+                        }
+                    }}
+                    variant={!isValidating && isValid ? "success" : "secondary"}
+                >
+                    {"Confirm"}
+                </Button>
             </Modal.Footer>
         </Modal>
     );
