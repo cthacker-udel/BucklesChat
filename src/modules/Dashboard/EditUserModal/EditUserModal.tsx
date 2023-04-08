@@ -1,5 +1,3 @@
-/* eslint-disable no-extra-boolean-cast -- disabled */
-
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
