@@ -1,3 +1,4 @@
+/* eslint-disable camelcase -- disabled */
 /* eslint-disable unicorn/no-null -- disabled just for useSwr, would rather use undefined */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React, { type ChangeEvent } from "react";
@@ -27,11 +28,11 @@ type DashboardProperties = {
  */
 export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
     useBackground(Background, { noOptions: true });
-    const { data } = useSWR<DashboardInformation, DashboardInformation, string>(
-        `user/dashboard?username=${username}`,
-        null,
-        { refreshInterval: 5000 },
-    );
+    const { data, mutate } = useSWR<
+        DashboardInformation,
+        DashboardInformation,
+        string
+    >(`user/dashboard?username=${username}`, null, { refreshInterval: 2000 });
 
     const [hoveringOverProfilePicture, setHoveringOverProfilePicture] =
         React.useState<boolean>(false);
@@ -189,6 +190,15 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                                                                         username,
                                                                                     },
                                                                                 );
+                                                                            await mutate(
+                                                                                {
+                                                                                    ...data,
+                                                                                    profile_image_url:
+                                                                                        uploadResponse
+                                                                                            .data
+                                                                                            .url,
+                                                                                },
+                                                                            );
                                                                             const {
                                                                                 data: result,
                                                                             } =
@@ -257,6 +267,9 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
             </div>
             <EditUserModal
                 editModalOnClose={editModalOnClose}
+                mutateHandle={async (handleValue: string): Promise<void> => {
+                    await mutate({ ...data, handle: handleValue });
+                }}
                 showEditModal={showEditModal}
                 username={username ?? ""}
             />

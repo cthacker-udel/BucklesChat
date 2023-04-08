@@ -12,6 +12,7 @@ import styles from "./EditUserModal.module.css";
 
 type EditUserModalProperties = {
     editModalOnClose: () => void;
+    mutateHandle: (_handleValue: string) => Promise<void>;
     showEditModal: boolean;
     username: string;
 };
@@ -40,6 +41,7 @@ const FORM_DEFAULT_VALUES: Partial<User> = {
  */
 export const EditUserModal = ({
     editModalOnClose,
+    mutateHandle,
     showEditModal,
     username,
 }: EditUserModalProperties): JSX.Element => {
@@ -364,9 +366,8 @@ export const EditUserModal = ({
                 </Button>
                 <Button
                     disabled={
-                        !isValidating ||
-                        Object.keys(errors).length > 0 ||
-                        !isDirty
+                        !isValidating &&
+                        (Object.keys(errors).length > 0 || !isDirty)
                     }
                     onClick={async (): Promise<void> => {
                         const formValues =
@@ -374,6 +375,10 @@ export const EditUserModal = ({
                                 [key: string]: string;
                             };
                         const values: { [key: string]: unknown } = {};
+
+                        if (formValues.handle !== undefined) {
+                            await mutateHandle(formValues.handle);
+                        }
 
                         for (const eachDirtyField of Object.keys(dirtyFields)) {
                             values[eachDirtyField] = formValues[eachDirtyField];
