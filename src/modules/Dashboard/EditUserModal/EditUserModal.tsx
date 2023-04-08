@@ -57,11 +57,13 @@ export const EditUserModal = ({
 
     React.useEffect(() => {
         if (data !== undefined) {
-            reset({ ...data });
+            reset({ ...FORM_DEFAULT_VALUES, ...data });
         }
     }, [data, reset]);
 
     const { dirtyFields, errors, isValidating } = formState;
+
+    console.log(dirtyFields, errors);
 
     return (
         <Modal onHide={editModalOnClose} show={showEditModal}>
@@ -265,6 +267,46 @@ export const EditUserModal = ({
                                             .EDIT_MODAL.DATE_OF_BIRTH.REQUIRED,
                                     value: ValidationConstants.EDIT_MODAL
                                         .DATE_OF_BIRTH.REQUIRED,
+                                },
+                                validate: {
+                                    noFuture: (dateString: number | string) => {
+                                        if (
+                                            typeof dateString === "string" &&
+                                            dateString.length === 0
+                                        ) {
+                                            return true;
+                                        }
+
+                                        const parsedDate = new Date(dateString);
+                                        return (
+                                            parsedDate.getTime() < Date.now() ||
+                                            TextConstants.VALIDATION.INVALID
+                                                .EDIT_MODAL.DATE_OF_BIRTH
+                                                .NO_FUTURE
+                                        );
+                                    },
+                                    noOneHundredPlus: (
+                                        dateString: number | string,
+                                    ) => {
+                                        if (
+                                            typeof dateString === "string" &&
+                                            dateString.length === 0
+                                        ) {
+                                            return true;
+                                        }
+
+                                        const parsedDate = new Date(dateString);
+                                        return (
+                                            new Date(
+                                                Date.now(),
+                                            ).getUTCFullYear() -
+                                                parsedDate.getUTCFullYear() <
+                                                100 ||
+                                            TextConstants.VALIDATION.INVALID
+                                                .EDIT_MODAL.DATE_OF_BIRTH
+                                                .NO_100_PLUS
+                                        );
+                                    },
                                 },
                             })}
                         />

@@ -44,6 +44,9 @@ export const TextConstants = {
         INVALID: {
             EDIT_MODAL: {
                 DATE_OF_BIRTH: {
+                    NO_100_PLUS:
+                        "Date of Birth cannot be > 100 years in the past",
+                    NO_FUTURE: "Date of Birth cannot be in the future.",
                     REQUIRED: "Date of Birth is required",
                 },
                 EMAIL: {
