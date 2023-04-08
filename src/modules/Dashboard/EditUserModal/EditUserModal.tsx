@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/indent -- disabled */
-
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -49,13 +47,14 @@ export const EditUserModal = ({
         `user/details?username=${username}`,
     );
 
-    const { formState, getValues, register, reset } = useForm<FormValues>({
-        criteriaMode: "all",
-        defaultValues: FORM_DEFAULT_VALUES,
-        delayError: 250,
-        mode: "all",
-        reValidateMode: "onBlur",
-    });
+    const { formState, getValues, register, reset, resetField } =
+        useForm<FormValues>({
+            criteriaMode: "all",
+            defaultValues: FORM_DEFAULT_VALUES,
+            delayError: 250,
+            mode: "all",
+            reValidateMode: "onBlur",
+        });
 
     React.useEffect(() => {
         if (data !== undefined) {
@@ -327,7 +326,15 @@ export const EditUserModal = ({
                 </Form>
             </Modal.Body>
             <Modal.Footer className={styles.edit_modal_footer}>
-                <Button variant="outline-secondary">{"Cancel"}</Button>
+                <Button
+                    onClick={(): void => {
+                        toast.info("Closed Edit User");
+                        editModalOnClose();
+                    }}
+                    variant="outline-secondary"
+                >
+                    {"Cancel"}
+                </Button>
                 <Button
                     disabled={!isValidating && !isValid}
                     onClick={async (): Promise<void> => {
@@ -342,6 +349,20 @@ export const EditUserModal = ({
                         }
 
                         if (Object.keys(values).length > 0) {
+                            for (const eachKey of Object.keys(values)) {
+                                resetField(
+                                    eachKey as
+                                        | "dob"
+                                        | "email"
+                                        | "firstName"
+                                        | "handle"
+                                        | "lastName",
+                                    {
+                                        defaultValue: values[eachKey] as string,
+                                    },
+                                );
+                            }
+
                             const updateToast = toast.loading(
                                 "Updating profile...",
                             );
@@ -356,8 +377,9 @@ export const EditUserModal = ({
                                 editModalOnClose();
                             } else {
                                 toast.error("Failed to update profile.");
-                                reset({ ...FORM_DEFAULT_VALUES });
                             }
+                        } else {
+                            toast.info("No values were changed");
                         }
                     }}
                     variant={!isValidating && isValid ? "success" : "secondary"}
