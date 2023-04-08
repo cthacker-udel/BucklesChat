@@ -1,8 +1,7 @@
 /* eslint-disable unicorn/no-null -- disabled just for useSwr, would rather use undefined */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React, { type ChangeEvent } from "react";
-import { Button, Image, OverlayTrigger } from "react-bootstrap";
-import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
+import { Button, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
@@ -11,7 +10,6 @@ import { ClientUserApi } from "@/@classes/api/client/User";
 import type { DashboardInformation } from "@/@types";
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
-import { renderTooltip } from "@/helpers";
 import { useBackground } from "@/hooks";
 
 import styles from "./Dashboard.module.css";
@@ -78,35 +76,21 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                     data.profile_image_url ?? placeholderPfp.src
                                 }
                             />
-                            <OverlayTrigger
-                                delay={{ hide: 250, show: 250 }}
-                                overlay={(
-                                    overlayProperties: OverlayInjectedProps,
-                                ): JSX.Element =>
-                                    renderTooltip(overlayProperties, {
-                                        title: "Upload Profile Picture",
-                                        titleClassNameOverride:
-                                            styles.dashboard_user_pfp_tooltip_title,
-                                    })
-                                }
-                                placement="top"
+                            <div
+                                className={styles.dashboard_user_pfp_upload}
+                                onClick={(): void => {
+                                    fileInputReference.current?.click();
+                                }}
                             >
-                                <div
-                                    className={styles.dashboard_user_pfp_upload}
-                                    onClick={(): void => {
-                                        fileInputReference.current?.click();
+                                <i
+                                    className="fa-solid fa-cloud-arrow-up"
+                                    style={{
+                                        opacity: hoveringOverProfilePicture
+                                            ? 1
+                                            : 0,
                                     }}
-                                >
-                                    <i
-                                        className="fa-solid fa-cloud-arrow-up"
-                                        style={{
-                                            opacity: hoveringOverProfilePicture
-                                                ? 1
-                                                : 0,
-                                        }}
-                                    />
-                                </div>
-                            </OverlayTrigger>
+                                />
+                            </div>
                             <Button
                                 className={styles.dashboard_user_info_edit_user}
                                 onClick={(): void => {
