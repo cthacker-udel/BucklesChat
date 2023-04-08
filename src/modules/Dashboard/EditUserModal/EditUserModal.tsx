@@ -1,3 +1,5 @@
+/* eslint-disable no-extra-boolean-cast -- disabled */
+
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -56,13 +58,13 @@ export const EditUserModal = ({
             reValidateMode: "onBlur",
         });
 
+    const { dirtyFields, errors, isValidating, isDirty } = formState;
+
     React.useEffect(() => {
         if (data !== undefined) {
             reset({ ...FORM_DEFAULT_VALUES, ...data });
         }
     }, [data, reset]);
-
-    const { dirtyFields, errors, isValidating, isValid } = formState;
 
     return (
         <Modal onHide={editModalOnClose} show={showEditModal}>
@@ -363,7 +365,11 @@ export const EditUserModal = ({
                     {"Cancel"}
                 </Button>
                 <Button
-                    disabled={!isValidating && !isValid}
+                    disabled={
+                        !isValidating ||
+                        Object.keys(errors).length > 0 ||
+                        !isDirty
+                    }
                     onClick={async (): Promise<void> => {
                         const formValues =
                             getValues() as unknown as FormValues & {
@@ -417,7 +423,11 @@ export const EditUserModal = ({
                             toast.info("No values were changed");
                         }
                     }}
-                    variant={!isValidating && isValid ? "success" : "secondary"}
+                    variant={
+                        !isValidating && Object.keys(errors).length === 0
+                            ? "success"
+                            : "secondary"
+                    }
                 >
                     {"Confirm"}
                 </Button>
