@@ -13,6 +13,7 @@ import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { useBackground } from "@/hooks";
 
+import { AddUserModal } from "./AddUserModal";
 import styles from "./Dashboard.module.css";
 import { EditUserModal } from "./EditUserModal";
 import { Friend } from "./Friend/Friend";
@@ -44,6 +45,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
 
     const editModalOnClose = React.useCallback(() => {
         setShowEditModal(false);
+    }, []);
+
+    const addUserModalOnClose = React.useCallback(() => {
+        setShowAddUserModal(false);
     }, []);
 
     const friendsTemporaryData = Array.from({ length: 10 }).map((_, ind) => ({
@@ -293,6 +298,11 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                     await mutate({ ...data, handle: handleValue });
                 }}
                 showEditModal={showEditModal}
+                username={username ?? ""}
+            />
+            <AddUserModal
+                addUserModalOnClose={addUserModalOnClose}
+                showAddUserModal={showAddUserModal}
                 username={username ?? ""}
             />
         </>
