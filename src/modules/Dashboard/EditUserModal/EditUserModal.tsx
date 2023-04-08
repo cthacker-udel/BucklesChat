@@ -47,7 +47,7 @@ export const EditUserModal = ({
         `user/details?username=${username}`,
     );
 
-    const { formState, getValues, register, reset, resetField } =
+    const { clearErrors, formState, getValues, register, reset, resetField } =
         useForm<FormValues>({
             criteriaMode: "all",
             defaultValues: FORM_DEFAULT_VALUES,
@@ -329,6 +329,33 @@ export const EditUserModal = ({
                 <Button
                     onClick={(): void => {
                         toast.info("Closed Edit User");
+
+                        if (data !== undefined) {
+                            for (const eachKey of Object.keys(data)) {
+                                resetField(
+                                    eachKey as
+                                        | "dob"
+                                        | "email"
+                                        | "firstName"
+                                        | "handle"
+                                        | "lastName",
+                                    {
+                                        defaultValue: (
+                                            data as { [key: string]: string }
+                                        )[eachKey],
+                                    },
+                                );
+                                clearErrors(
+                                    eachKey as
+                                        | "dob"
+                                        | "email"
+                                        | "firstName"
+                                        | "handle"
+                                        | "lastName",
+                                );
+                            }
+                        }
+
                         editModalOnClose();
                     }}
                     variant="outline-secondary"
@@ -360,6 +387,14 @@ export const EditUserModal = ({
                                     {
                                         defaultValue: values[eachKey] as string,
                                     },
+                                );
+                                clearErrors(
+                                    eachKey as
+                                        | "dob"
+                                        | "email"
+                                        | "firstName"
+                                        | "handle"
+                                        | "lastName",
                                 );
                             }
 

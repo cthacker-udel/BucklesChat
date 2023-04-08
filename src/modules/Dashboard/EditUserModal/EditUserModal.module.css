@@ -2,6 +2,10 @@
     background-color: rgba(0, 0, 0, 0.25);
 }
 
+.username_form:focus {
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
 .edit_modal_title {
     display: flex;
     flex-direction: row;
