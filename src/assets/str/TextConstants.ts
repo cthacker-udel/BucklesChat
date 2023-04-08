@@ -91,6 +91,7 @@ export const TextConstants = {
                     REQUIRED: "Password is required",
                 },
                 USERNAME: {
+                    DOES_EXIST: "Username already exists",
                     MAX_LENGTH: `Username cannot be more then ${ValidationConstants.SIGN_UP.FORM.USERNAME.MAX_LENGTH} characters`,
                     PATTERN: "Username cannot contain any symbols",
                     REQUIRED: "Username is required",

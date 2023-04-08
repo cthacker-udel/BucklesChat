@@ -8,9 +8,10 @@ import {
     type SubmitErrorHandler,
     type SubmitHandler,
     useForm,
-    type ValidateResult,
+    useWatch,
 } from "react-hook-form";
 import { toast } from "react-toastify";
+import useSwr from "swr";
 import { v4 } from "uuid";
 
 import { ClientSideApi } from "@/@classes";
@@ -127,19 +128,94 @@ export const SignUp = (): JSX.Element => {
     const { ...loggerApi } = useLogger();
     const router = useRouter();
 
-    const { formState, handleSubmit, register, setError, trigger, watch } =
-        useForm<FormValues>({
-            criteriaMode: "all",
-            defaultValues: FORM_DEFAULT_VALUES,
-            delayError: millisecondsConverter(500),
-            mode: "onSubmit",
-            reValidateMode: "onBlur",
+    const {
+        clearErrors,
+        control,
+        formState,
+        handleSubmit,
+        register,
+        setError,
+        trigger,
+    } = useForm<FormValues>({
+        criteriaMode: "all",
+        defaultValues: FORM_DEFAULT_VALUES,
+        delayError: millisecondsConverter(500),
+        mode: "onSubmit",
+        reValidateMode: "onBlur",
+    });
+
+    const [passwordValue, confirmPasswordValue, usernameValue] =
+        useWatch<FormValues>({
+            control,
+            defaultValue: {
+                confirmPassword: "",
+                password: "",
+                username: "",
+            },
+            name: ["password", "confirmPassword", "username"],
         });
 
-    const { errors, dirtyFields, isValid, isValidating } = formState;
+    const { data: doesUsernameAlreadyExist } = useSwr<boolean, boolean, string>(
+        `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${usernameValue}`,
+    );
+
+    const { errors, dirtyFields, isValid, isValidating, touchedFields } =
+        formState;
+
+    const validateUsername = React.useCallback(() => {
+        if (dirtyFields.username && doesUsernameAlreadyExist) {
+            setError("username", {
+                message:
+                    TextConstants.VALIDATION.INVALID.SIGN_UP.USERNAME
+                        .DOES_EXIST,
+                type: "validate",
+            });
+        } else if (
+            dirtyFields.username &&
+            !ValidationConstants.SIGN_UP.FORM.USERNAME.PATTERN.test(
+                usernameValue,
+            )
+        ) {
+            setError("username", {
+                message:
+                    TextConstants.VALIDATION.INVALID.SIGN_UP.USERNAME.PATTERN,
+                type: "pattern",
+            });
+        } else if (
+            dirtyFields.username &&
+            usernameValue.length >
+                ValidationConstants.SIGN_UP.FORM.USERNAME.MAX_LENGTH
+        ) {
+            setError("username", {
+                message:
+                    TextConstants.VALIDATION.INVALID.SIGN_UP.USERNAME
+                        .MAX_LENGTH,
+                type: "maxLength",
+            });
+        } else if (
+            (touchedFields.username || dirtyFields.username) &&
+            usernameValue.length === 0
+        ) {
+            setError("username", {
+                message:
+                    TextConstants.VALIDATION.INVALID.SIGN_UP.USERNAME.REQUIRED,
+                type: "required",
+            });
+        } else {
+            clearErrors("username");
+        }
+    }, [
+        clearErrors,
+        dirtyFields.username,
+        doesUsernameAlreadyExist,
+        setError,
+        touchedFields.username,
+        usernameValue,
+    ]);
 
     const onSubmit: SubmitHandler<FormValues> = React.useCallback(
         async (data: FormValues, _event: unknown) => {
+            validateUsername();
             await trigger();
             if (
                 Object.keys(errors).length === 0 &&
@@ -183,6 +259,7 @@ export const SignUp = (): JSX.Element => {
             setError,
             router,
             trigger,
+            validateUsername,
         ],
     );
 
@@ -205,10 +282,11 @@ export const SignUp = (): JSX.Element => {
         DEFAULT_PASSWORD_STATE,
     );
 
-    const [passwordValue, confirmPasswordValue] = watch([
-        "password",
-        "confirmPassword",
-    ]);
+    React.useEffect(() => {
+        if (usernameValue !== undefined) {
+            validateUsername();
+        }
+    }, [usernameValue, validateUsername]);
 
     React.useEffect(() => {
         setPasswordState(
@@ -261,59 +339,7 @@ export const SignUp = (): JSX.Element => {
                                     .USERNAME_PLACEHOLDER
                             }
                             type="text"
-                            {...register("username", {
-                                maxLength: {
-                                    message:
-                                        TextConstants.VALIDATION.INVALID.SIGN_UP
-                                            .USERNAME.MAX_LENGTH,
-                                    value: ValidationConstants.SIGN_UP.FORM
-                                        .USERNAME.MAX_LENGTH,
-                                },
-                                pattern: {
-                                    message:
-                                        TextConstants.VALIDATION.INVALID.SIGN_UP
-                                            .USERNAME.PATTERN,
-                                    value: ValidationConstants.SIGN_UP.FORM
-                                        .USERNAME.PATTERN,
-                                },
-                                required: {
-                                    message:
-                                        TextConstants.VALIDATION.INVALID.SIGN_UP
-                                            .USERNAME.REQUIRED,
-                                    value: ValidationConstants.SIGN_UP.FORM
-                                        .USERNAME.REQUIRED,
-                                },
-                                validate: {
-                                    doesUsernameExist: async (
-                                        username: string,
-                                    ): Promise<ValidateResult> => {
-                                        if (
-                                            username.replace(/\W/gu, "").trim()
-                                                .length > 0
-                                        ) {
-                                            const response =
-                                                await ClientSideApi.get<
-                                                    ApiResponse<boolean>
-                                                >(
-                                                    `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${username}`,
-                                                );
-
-                                            const {
-                                                apiError,
-                                                data: isExisting,
-                                            } = response;
-
-                                            return (
-                                                (apiError &&
-                                                    "Server error, please try again later") ||
-                                                !isExisting ||
-                                                "Username already exists"
-                                            );
-                                        }
-                                        return true;
-                                    },
-                                },
-                            })}
+                            {...register("username")}
                         />
                         {errors.username && (
                             <Form.Control.Feedback type="invalid">
