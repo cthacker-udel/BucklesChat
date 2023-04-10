@@ -80,9 +80,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                             <Image
                                 alt="The profile picture of the user"
                                 className={styles.dashboard_user_info_pfp}
-                                src={
-                                    data.profile_image_url ?? placeholderPfp.src
-                                }
+                                src={data.profileImageUrl ?? placeholderPfp.src}
                             />
                             <div
                                 className={styles.dashboard_user_pfp_upload}
@@ -220,7 +218,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                                                             await mutate(
                                                                                 {
                                                                                     ...data,
-                                                                                    profile_image_url:
+                                                                                    profileImageUrl:
                                                                                         uploadResponse
                                                                                             .data
                                                                                             .url,
@@ -267,10 +265,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                             styles.dashboard_member_since_date
                                         }
                                     >
-                                        {data.creation_date === undefined
+                                        {data.createdAt === undefined
                                             ? "N/A"
                                             : new Date(
-                                                  Number(data.creation_date),
+                                                  data.createdAt,
                                               ).toDateString()}
                                     </span>
                                 </div>

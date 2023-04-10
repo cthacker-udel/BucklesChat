@@ -28,6 +28,8 @@ export class LoggerApi extends ServerSideApi {
                 `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                 request.body as ExceptionLog,
             );
+
+            response.status(postedResult.data ? 200 : 400);
             response.json(postedResult);
         } catch {
             response.status(500);
@@ -50,6 +52,8 @@ export class LoggerApi extends ServerSideApi {
                 `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EVENT}`,
                 JSON.parse(request.body),
             );
+
+            response.status(postedResult === undefined ? 400 : 200);
             response.json(postedResult);
         } catch {
             response.status(500);
@@ -71,6 +75,8 @@ export class LoggerApi extends ServerSideApi {
             const loggerStatus = await super.get<ApiResponse<boolean>>(
                 `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.STATUS}`,
             );
+
+            response.status(loggerStatus.data ? 200 : 400);
             response.json(loggerStatus);
         } catch {
             response.status(500);

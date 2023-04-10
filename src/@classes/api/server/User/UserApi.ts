@@ -33,6 +33,7 @@ export class UserApi extends ServerSideApi {
                 JSON.parse(request.body) as User,
             );
 
+            response.status(postedResult === undefined ? 400 : 200);
             response.json(postedResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -71,6 +72,7 @@ export class UserApi extends ServerSideApi {
                 `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${request.query.username}`,
             );
 
+            response.status(getResult.data ? 200 : 400);
             response.json(getResult);
         } catch (error: unknown) {
             try {
@@ -113,7 +115,7 @@ export class UserApi extends ServerSideApi {
                 `${Endpoints.USER.BASE}${Endpoints.USER.EDIT}?username=${partialUser?.username}`,
                 partialUser,
             );
-            response.status(200);
+            response.status(updateResult.data ? 200 : 400);
             response.send(updateResult);
         } catch (error: unknown) {
             try {
@@ -153,6 +155,7 @@ export class UserApi extends ServerSideApi {
                 JSON.parse(request.body) as Partial<User>,
             );
 
+            response.status(getResult.data ? 200 : 400);
             response.json(getResult);
         } catch (error: unknown) {
             try {
@@ -192,6 +195,45 @@ export class UserApi extends ServerSideApi {
                 ApiResponse<DashboardInformation>
             >(
                 `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}?username=${username}`,
+            );
+            response.status(getResult.apiError === undefined ? 200 : 400);
+            response.send(getResult);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Bulk fetches dashboard information for all usernames sent
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static bulkGetDashboardInformation = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const usernames = request.query.usernames as string;
+            const getResult = await super.get<ApiResponse<Partial<User>[]>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.BULK_DASHBOARD}?usernames=${usernames}`,
             );
             response.status(200);
             response.send(getResult);
@@ -234,7 +276,7 @@ export class UserApi extends ServerSideApi {
             >(
                 `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}?username=${username}`,
             );
-            response.status(200);
+            response.status(getResult.apiError === undefined ? 200 : 400);
             response.send(getResult);
         } catch (error: unknown) {
             try {
@@ -289,8 +331,7 @@ export class UserApi extends ServerSideApi {
             return {
                 data: {
                     handle: undefined,
-                    // eslint-disable-next-line camelcase -- disabled, due to psql casing
-                    profile_image_url: undefined,
+                    profileImageUrl: undefined,
                     username,
                 },
             };

@@ -9,4 +9,6 @@ export type User = {
     passwordSalt: string;
     profileImageUrl?: string;
     profileImageRemovalUrl?: string;
+    createdAt?: number | string;
+    updatedAt?: number | string;
 };

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent -- disabled */
 import { useRouter } from "next/router";
 import React from "react";
 import { Button, Form, OverlayTrigger } from "react-bootstrap";

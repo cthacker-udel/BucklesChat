@@ -1,4 +1,8 @@
 export const Endpoints = {
+    FRIEND: {
+        AVAILABLE_FRIENDS: "availableFriends",
+        BASE: "friend/",
+    },
     IMAGE: {
         BASE: "https://api.imgbb.com/1/",
         UPLOAD: "upload",
@@ -11,6 +15,7 @@ export const Endpoints = {
     },
     USER: {
         BASE: "user/",
+        BULK_DASHBOARD: "bulkDashboardInformation",
         DASHBOARD: "dashboardInformation",
         DETAILS: "details",
         DOES_EXIST: "doesUsernameExist",
