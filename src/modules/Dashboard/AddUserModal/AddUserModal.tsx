@@ -104,7 +104,7 @@ export const AddUserModal = ({
             </Modal.Body>
             <Modal.Footer className={styles.add_friend_modal_footer}>
                 <Button>{"Close"}</Button>
-                <Button variant="outline-success">{"Send 0 Requests"}</Button>
+                <Button variant="outline-success">{`Send ${selectedFriends.size} Requests`}</Button>
             </Modal.Footer>
         </Modal>
     );
