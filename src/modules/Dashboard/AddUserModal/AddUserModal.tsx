@@ -20,20 +20,92 @@ export const AddUserModal = ({
     addUserModalOnClose,
     showAddUserModal,
     username,
-}: FormValues): JSX.Element => (
-    <Modal onHide={addUserModalOnClose} show={showAddUserModal}>
-        <Modal.Header closeButton>
-            <Modal.Title>{"Add Friends"}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <FriendMultiSelect username={username} />
-            {
-                "Autocomplete text form goes here, search for user, if they  are connected, place check next to them, if not, place empty check, click on user to total selection, and make a button that's disabled at first, and counts up the total requests, and can be clicked to bulk send requests"
+}: FormValues): JSX.Element => {
+    const [selectedFriends, setSelectedFriends] = React.useState<Set<string>>(
+        new Set(),
+    );
+
+    const onSelectFriend = React.useCallback(
+        (selectedUsername: string): void => {
+            if (selectedUsername !== undefined) {
+                setSelectedFriends((oldSelectedFriends: Set<string>) => {
+                    const newSelectedFriends = new Set(oldSelectedFriends);
+                    if (newSelectedFriends.has(selectedUsername)) {
+                        newSelectedFriends.delete(selectedUsername);
+                    } else {
+                        newSelectedFriends.add(selectedUsername);
+                    }
+                    return newSelectedFriends;
+                });
             }
-        </Modal.Body>
-        <Modal.Footer className={styles.add_friend_modal_footer}>
-            <Button>{"Close"}</Button>
-            <Button variant="outline-success">{"Send 0 Requests"}</Button>
-        </Modal.Footer>
-    </Modal>
-);
+        },
+        [],
+    );
+
+    const onSearch = React.useCallback(
+        (handleOrUsername: string, handleLookup: Map<string, string>) => {
+            const friendList = document.querySelector("#friend_list");
+            if (handleLookup.has(handleOrUsername) && friendList !== null) {
+                const foundUsername = handleLookup.get(handleOrUsername);
+
+                const foundDocuments = document.querySelectorAll(
+                    `#username_${foundUsername}`,
+                );
+
+                if (foundDocuments.length > 0) {
+                    foundDocuments[0]?.scrollIntoView({ behavior: "smooth" });
+                    foundDocuments[0]?.animate(
+                        [
+                            { borderColor: "blue" },
+                            { borderColor: "rgba(0, 0, 0, 0.25)" },
+                        ],
+                        {
+                            duration: 1200,
+                            easing: "ease-in-out",
+                            fill: "forwards",
+                        },
+                    );
+                }
+            } else if (friendList !== null) {
+                const foundDocuments = document.querySelectorAll(
+                    `#username_${handleOrUsername}`,
+                );
+                if (foundDocuments.length > 0) {
+                    foundDocuments[0]?.scrollIntoView({ behavior: "smooth" });
+                    foundDocuments[0]?.animate(
+                        [
+                            { borderColor: "blue" },
+                            { borderColor: "rgba(0, 0, 0, 0.25)" },
+                        ],
+                        {
+                            duration: 1200,
+                            easing: "ease-in-out",
+                            fill: "forwards",
+                        },
+                    );
+                }
+            }
+        },
+        [],
+    );
+
+    return (
+        <Modal onHide={addUserModalOnClose} show={showAddUserModal}>
+            <Modal.Header closeButton>
+                <Modal.Title>{"Add Friends"}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <FriendMultiSelect
+                    onSearch={onSearch}
+                    onSelectFriend={onSelectFriend}
+                    selectedFriends={selectedFriends}
+                    username={username}
+                />
+            </Modal.Body>
+            <Modal.Footer className={styles.add_friend_modal_footer}>
+                <Button>{"Close"}</Button>
+                <Button variant="outline-success">{"Send 0 Requests"}</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+};
