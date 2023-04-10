@@ -1,3 +1,7 @@
+.add_user_modal {
+    opacity: 100%;
+}
+
 .add_friend_modal_footer {
     display: flex;
     flex-direction: row;

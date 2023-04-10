@@ -90,7 +90,11 @@ export const AddUserModal = ({
     );
 
     return (
-        <Modal onHide={addUserModalOnClose} show={showAddUserModal}>
+        <Modal
+            className={styles.add_user_modal}
+            onHide={addUserModalOnClose}
+            show={showAddUserModal}
+        >
             <Modal.Header closeButton>
                 <Modal.Title>{"Add Friends"}</Modal.Title>
             </Modal.Header>
