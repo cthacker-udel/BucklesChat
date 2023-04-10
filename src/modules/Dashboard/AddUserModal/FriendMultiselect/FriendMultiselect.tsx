@@ -3,6 +3,7 @@
 import React from "react";
 import { Form, Image, InputGroup } from "react-bootstrap";
 import useSWR from "swr";
+import { Key } from "ts-key-enum";
 
 import type { User } from "@/@types";
 import placeholderPFP from "@/assets/placeholder/pfp.jpg";
@@ -45,6 +46,71 @@ export const FriendMultiSelect = ({
         new Map(),
     );
 
+    const [currentKeyIndex, setCurrentKeyIndex] = React.useState<number>(0);
+
+    const onKeyPressed = React.useCallback(
+        (event: React.KeyboardEvent<HTMLDivElement>) => {
+            if (
+                (event.key === Key.ArrowDown || event.key === Key.ArrowUp) &&
+                availableFriendInformation !== undefined
+            ) {
+                const isKeyDown = event.key === Key.ArrowDown;
+                const modifiedKeyIndex = isKeyDown
+                    ? currentKeyIndex === availableFriendInformation.length - 1
+                        ? 0
+                        : currentKeyIndex + 1
+                    : currentKeyIndex === 0
+                    ? availableFriendInformation.length - 1
+                    : currentKeyIndex - 1;
+                const currentKeyIndexFriend =
+                    availableFriendInformation[modifiedKeyIndex];
+                const foundFriendDocuments = document.querySelectorAll(
+                    `#username_${
+                        currentKeyIndexFriend.username as unknown as string
+                    }`,
+                );
+                if (foundFriendDocuments.length > 0) {
+                    foundFriendDocuments[0]?.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                    foundFriendDocuments[0]?.animate(
+                        [
+                            { borderColor: "blue" },
+                            { borderColor: "rgba(0, 0, 0, 0.25)" },
+                        ],
+                        {
+                            duration: 1200,
+                            easing: "ease-in-out",
+                            fill: "forwards",
+                        },
+                    );
+                }
+                setCurrentKeyIndex(modifiedKeyIndex);
+            } else if (
+                event.key === Key.Enter &&
+                availableFriendInformation !== undefined
+            ) {
+                const currentKeyIndexFriend =
+                    availableFriendInformation[currentKeyIndex];
+                const foundFriendDocuments = document.querySelectorAll(
+                    `#username_${
+                        currentKeyIndexFriend.username as unknown as string
+                    }`,
+                );
+                if (foundFriendDocuments.length > 0) {
+                    const foundFriendDocument =
+                        foundFriendDocuments[0] as HTMLElement;
+                    const { username: foundFriendUsername } =
+                        foundFriendDocument.dataset;
+                    if (foundFriendUsername !== undefined) {
+                        onSelectFriend(foundFriendUsername);
+                    }
+                }
+            }
+        },
+        [availableFriendInformation, currentKeyIndex, onSelectFriend],
+    );
+
     React.useEffect(() => {
         if (availableFriendInformation !== undefined) {
             for (const eachFriendInformation of availableFriendInformation) {
@@ -76,7 +142,7 @@ export const FriendMultiSelect = ({
     }
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} onKeyDown={onKeyPressed} tabIndex={0}>
             <InputGroup>
                 <Form.Control
                     className={styles.multiselect_search}
@@ -101,6 +167,7 @@ export const FriendMultiSelect = ({
                     (eachFriendInformation: Partial<User>, _index: number) => (
                         <div
                             className={styles.multiselect_selection}
+                            data-username={eachFriendInformation.username}
                             id={`username_${
                                 eachFriendInformation.username as unknown as string
                             }`}
