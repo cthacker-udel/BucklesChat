@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 
 import { FriendService } from "@/@classes/api/client/Friend";
@@ -7,7 +8,6 @@ import type { ApiResponse } from "@/@types";
 
 import styles from "./AddUserModal.module.css";
 import { FriendMultiSelect } from "./FriendMultiselect";
-import { toast } from "react-toastify";
 
 type FormValues = {
     addUserModalOnClose: () => void;
