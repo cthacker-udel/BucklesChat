@@ -1,8 +1,13 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import { useSWRConfig } from "swr";
+
+import { FriendService } from "@/@classes/api/client/Friend";
+import type { ApiResponse } from "@/@types";
 
 import styles from "./AddUserModal.module.css";
 import { FriendMultiSelect } from "./FriendMultiselect";
+import { toast } from "react-toastify";
 
 type FormValues = {
     addUserModalOnClose: () => void;
@@ -21,6 +26,7 @@ export const AddUserModal = ({
     showAddUserModal,
     username,
 }: FormValues): JSX.Element => {
+    const { mutate } = useSWRConfig();
     const [selectedFriends, setSelectedFriends] = React.useState<Set<string>>(
         new Set(),
     );
@@ -89,6 +95,34 @@ export const AddUserModal = ({
         [],
     );
 
+    const sendRequestToSelectedFriends = React.useCallback(async () => {
+        const requests: Promise<ApiResponse<boolean>>[] = [];
+        for (const eachUsername of selectedFriends.values()) {
+            requests.push(
+                FriendService.sendFriendRequest(eachUsername, username),
+            );
+        }
+        const sendingRequestsToast = toast.loading("Sending friend requests");
+        const successfullySentRequests = await Promise.all(requests);
+        const usernames = [...selectedFriends.values()];
+
+        let index = 0;
+        for (const eachResult of successfullySentRequests) {
+            if (eachResult.data) {
+                toast.success(
+                    `Successfully sent a request to ${usernames[index]}`,
+                );
+            } else {
+                toast.error(
+                    `Failed to send a friend request to ${usernames[index]}`,
+                );
+            }
+            index += 1;
+        }
+        toast.dismiss(sendingRequestsToast);
+        await mutate(`friend/availableFriends?username=${username}`);
+    }, [mutate, selectedFriends, username]);
+
     return (
         <Modal
             className={styles.add_user_modal}
@@ -107,8 +141,23 @@ export const AddUserModal = ({
                 />
             </Modal.Body>
             <Modal.Footer className={styles.add_friend_modal_footer}>
-                <Button>{"Close"}</Button>
-                <Button variant="outline-success">{`Send ${selectedFriends.size} Requests`}</Button>
+                <Button
+                    onClick={(): void => {
+                        addUserModalOnClose();
+                    }}
+                >
+                    {"Close"}
+                </Button>
+                <Button
+                    onClick={async (): Promise<void> => {
+                        addUserModalOnClose();
+                        await sendRequestToSelectedFriends();
+                        selectedFriends.clear();
+                    }}
+                    variant="outline-success"
+                >
+                    {`Send ${selectedFriends.size} Requests`}
+                </Button>
             </Modal.Footer>
         </Modal>
     );

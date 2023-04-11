@@ -2,6 +2,7 @@ export const Endpoints = {
     FRIEND: {
         AVAILABLE_FRIENDS: "availableFriends",
         BASE: "friend/",
+        SEND_REQUEST: "sendRequest",
     },
     IMAGE: {
         BASE: "https://api.imgbb.com/1/",
