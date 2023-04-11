@@ -58,11 +58,6 @@
     cursor: pointer;
 }
 
-.dashboard_user_pfp_upload:hover {
-    transition: background-color 1s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
 .dashboard_user_pfp_upload > i {
     transition: opacity 1s ease-in-out;
     color: white;

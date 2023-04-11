@@ -78,9 +78,11 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 styles.dashboard_top_bar_user_pfp_container
                             }
                             onMouseLeave={(): void => {
+                                console.log("leaving");
                                 setHoveringOverProfilePicture(false);
                             }}
                             onMouseOver={(): void => {
+                                console.log("entering");
                                 setHoveringOverProfilePicture(true);
                             }}
                         >
@@ -93,6 +95,11 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 className={styles.dashboard_user_pfp_upload}
                                 onClick={(): void => {
                                     fileInputReference.current?.click();
+                                }}
+                                style={{
+                                    backgroundColor: hoveringOverProfilePicture
+                                        ? "rgba(0, 0, 0, 0.5)"
+                                        : "transparent",
                                 }}
                             >
                                 <i
