@@ -96,14 +96,6 @@ export const InboxOffcanvas = ({
                                                 convertedElement.offsetHeight >=
                                                 convertedElement.scrollHeight,
                                         );
-                                        console.log(
-                                            convertedElement.scrollTop,
-                                            convertedElement.offsetHeight,
-                                            convertedElement.scrollHeight,
-                                            convertedElement.scrollTop +
-                                                convertedElement.offsetHeight >=
-                                                convertedElement.scrollHeight,
-                                        );
                                     }}
                                 >
                                     {pendingFriendRequests.map(
