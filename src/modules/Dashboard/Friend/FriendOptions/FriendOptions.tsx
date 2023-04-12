@@ -13,8 +13,13 @@ type FriendOptionsProperties = {
 };
 
 /**
+ * The tools that display when the user clicks on the ellipsis by each friend's card, allows them to either remove the friend, block them, or message them.
  *
- * @param props - The overlay injected props
+ * @param props - The overlay injected props + custom ones sent from the dashboard
+ * @param props.handle - The handle of the user, if present is used in place of the username
+ * @param props.loggedInUsername - The username of the currently logged in user
+ * @param props.profileImageUrl - The profile image url of the friend being displayed in the card
+ * @param props.username - The username of the friend being displayed in the card
  */
 export const FriendOptions = ({
     handle,
