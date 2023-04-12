@@ -5,9 +5,9 @@ import useSWR from "swr";
 
 import type { FriendRequest } from "@/@types";
 import placeHolderPfp from "@/assets/placeholder/pfp.jpg";
+import { computeTodayDayDistance } from "@/helpers";
 
 import styles from "./InboxOffcanvas.module.css";
-import { computeTodayDayDistance } from "@/helpers";
 
 type InboxOffCanvasProperties = {
     onClose: () => void;
