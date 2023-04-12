@@ -34,7 +34,7 @@ export const InboxOffcanvas = ({
     >(`friend/pendingRequests?username=${username}`, { refreshInterval: 350 });
 
     const [scrolledToBottom, setScrolledToBottom] =
-        React.useState<boolean>(false);
+        React.useState<boolean>(true);
 
     return (
         <Offcanvas
