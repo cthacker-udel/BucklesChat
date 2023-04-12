@@ -158,11 +158,28 @@ export const InboxOffcanvas = ({
                                                             styles.friend_request_action
                                                         }
                                                         onClick={async (): Promise<void> => {
-                                                            await FriendService.processFriendRequest(
-                                                                eachFriendRequest.username,
-                                                                eachFriendRequest.sender,
-                                                                true,
+                                                            const acceptingToast =
+                                                                toast.loading(
+                                                                    `Accepting ${eachFriendRequest.sender}'s friend request...`,
+                                                                );
+                                                            const result =
+                                                                await FriendService.processFriendRequest(
+                                                                    eachFriendRequest.username,
+                                                                    eachFriendRequest.sender,
+                                                                    true,
+                                                                );
+                                                            toast.dismiss(
+                                                                acceptingToast,
                                                             );
+                                                            if (result.data) {
+                                                                toast.success(
+                                                                    `Accepted ${eachFriendRequest.sender}'s friend request!`,
+                                                                );
+                                                            } else {
+                                                                toast.error(
+                                                                    `Failed to accept ${eachFriendRequest.sender}'s friend request.`,
+                                                                );
+                                                            }
                                                         }}
                                                         variant="outline-success"
                                                     >
@@ -188,7 +205,7 @@ export const InboxOffcanvas = ({
                                                             );
                                                             if (result.data) {
                                                                 toast.success(
-                                                                    `Successfully rejected ${eachFriendRequest.sender}'s friend request!`,
+                                                                    `Rejected ${eachFriendRequest.sender}'s friend request!`,
                                                                 );
                                                             } else {
                                                                 toast.error(

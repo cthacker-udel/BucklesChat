@@ -8,7 +8,7 @@ import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import styles from "./Friend.module.css";
 
 type FriendProperties = {
-    profilePictureUrl?: string;
+    profileImageUrl?: string;
     handle?: string;
     username?: string;
 };
@@ -20,7 +20,7 @@ type FriendProperties = {
  */
 export const Friend = ({
     handle,
-    profilePictureUrl,
+    profileImageUrl,
     username,
 }: FriendProperties): JSX.Element => (
     <div className={styles.friend_info_container}>
@@ -28,7 +28,7 @@ export const Friend = ({
             <Image
                 alt="profile picture of friend of current user"
                 className={styles.friend_pfp}
-                src={profilePictureUrl ?? placeholderPfp.src}
+                src={profileImageUrl ?? placeholderPfp.src}
             />
             <Image
                 alt="Online Indicator, which shows if someone is online"

@@ -158,7 +158,9 @@ export class FriendApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const requestPayload = request.body as FriendRequestPayload;
+            const requestPayload = JSON.parse(
+                request.body,
+            ) as FriendRequestPayload;
 
             if (
                 requestPayload.usernameFrom === undefined ||

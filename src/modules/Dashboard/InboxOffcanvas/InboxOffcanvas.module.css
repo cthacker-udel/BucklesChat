@@ -58,7 +58,7 @@
     box-sizing: border-box;
     border-radius: 1em;
     background-color: rgba(128, 128, 128, 0.75);
-    transition: opacity 0.5s ease-in;
+    transition: opacity 0.5s ease-in, z-index 0.5s ease-in;
 }
 
 .friend_request_container_scroll_helper > i {
