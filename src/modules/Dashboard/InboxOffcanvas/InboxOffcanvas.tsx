@@ -140,6 +140,11 @@ export const InboxOffcanvas = ({
                                                         className={
                                                             styles.friend_request_action
                                                         }
+                                                        onClick={(): void => {
+                                                            console.log(
+                                                                "accept friend request here",
+                                                            );
+                                                        }}
                                                         variant="outline-success"
                                                     >
                                                         <i className="fa-solid fa-check fa-xs" />
@@ -148,6 +153,11 @@ export const InboxOffcanvas = ({
                                                         className={
                                                             styles.friend_request_action
                                                         }
+                                                        onClick={(): void => {
+                                                            console.log(
+                                                                "reject friend request here",
+                                                            );
+                                                        }}
                                                         variant="outline-danger"
                                                     >
                                                         <i className="fa-solid fa-xmark fa-xs" />

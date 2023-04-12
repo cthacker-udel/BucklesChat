@@ -6,7 +6,7 @@ import type {
     ApiResponse,
     ExceptionLog,
     FriendRequest,
-    SendFriendRequest,
+    FriendRequestPayload,
 } from "@/@types";
 import { Endpoints } from "@/assets";
 
@@ -68,10 +68,12 @@ export class FriendApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const requestData = JSON.parse(request.body) as SendFriendRequest;
+            const requestData = JSON.parse(
+                request.body,
+            ) as FriendRequestPayload;
             const sendFriendRequestResponse = await super.post<
                 ApiResponse<boolean>,
-                SendFriendRequest
+                FriendRequestPayload
             >(
                 `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.SEND_REQUEST}`,
                 requestData,
@@ -123,6 +125,112 @@ export class FriendApi extends ServerSideApi {
 
             response.status(200);
             response.send(result);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Accepts a friend request
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static acceptRequest = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const requestPayload = request.body as FriendRequestPayload;
+
+            if (
+                requestPayload.usernameFrom === undefined ||
+                requestPayload.usernameTo === undefined
+            ) {
+                throw new Error("Must send usernames to accept requests");
+            }
+
+            const { usernameTo, usernameFrom } = requestPayload;
+            const sendResult = await super.post<
+                ApiResponse<boolean>,
+                FriendRequestPayload
+            >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.ACCEPT_REQUEST}`, {
+                usernameFrom,
+                usernameTo,
+            });
+
+            response.status(sendResult.data === undefined ? 400 : 200);
+            response.send(sendResult);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Rejects a friend request
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static rejectRequest = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const requestPayload = request.body as FriendRequestPayload;
+
+            if (
+                requestPayload.usernameFrom === undefined ||
+                requestPayload.usernameTo === undefined
+            ) {
+                throw new Error("Must send usernames to reject requests");
+            }
+
+            const { usernameTo, usernameFrom } = requestPayload;
+            const sendResult = await super.post<
+                ApiResponse<boolean>,
+                FriendRequestPayload
+            >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REJECT_REQUEST}`, {
+                usernameFrom,
+                usernameTo,
+            });
+
+            response.status(sendResult.data === undefined ? 400 : 200);
+            response.send(sendResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {

@@ -1,8 +1,10 @@
 export const Endpoints = {
     FRIEND: {
+        ACCEPT_REQUEST: "acceptRequest",
         AVAILABLE_FRIENDS: "availableFriends",
         BASE: "friend/",
         PENDING_REQUESTS: "pendingRequests",
+        REJECT_REQUEST: "rejectRequest",
         SEND_REQUEST: "sendRequest",
     },
     IMAGE: {
