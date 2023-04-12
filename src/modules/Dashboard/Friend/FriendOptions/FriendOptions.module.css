@@ -1,0 +1,35 @@
+.friend_options_container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.2em;
+    gap: 0.5em;
+}
+
+.friend_options_container_button {
+    padding: 0.4em;
+    border-radius: 0.2em;
+    display: flex;
+    flex-direction: row;
+    transition: background-color 0.5s ease-in;
+    cursor: pointer;
+}
+
+.friend_options_container_button:hover {
+    background-color: rgb(71, 82, 196);
+}
+
+.friend_options_container_button > * {
+    font-size: 0.75em;
+}
+
+.friend_options_container_button_content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 3em;
+    width: 100%;
+}
+
+.friend_options_container_button_content > * {
+    align-self: center;
+}
