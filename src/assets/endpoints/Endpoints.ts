@@ -2,6 +2,7 @@ export const Endpoints = {
     FRIEND: {
         AVAILABLE_FRIENDS: "availableFriends",
         BASE: "friend/",
+        PENDING_REQUESTS: "pendingRequests",
         SEND_REQUEST: "sendRequest",
     },
     IMAGE: {

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
-import { ClientUserApi } from "@/@classes/api/client/User";
+import { ClientService } from "@/@classes/api/client/User";
 import type { User } from "@/@types";
 import { TextConstants, ValidationConstants } from "@/assets";
 
@@ -411,7 +411,7 @@ export const EditUserModal = ({
                                 "Updating profile...",
                             );
                             const { data: didUpdate } =
-                                await ClientUserApi.editUser({
+                                await ClientService.editUser({
                                     ...values,
                                     username,
                                 });

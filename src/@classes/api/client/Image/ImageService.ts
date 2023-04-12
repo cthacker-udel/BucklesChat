@@ -9,7 +9,7 @@ import { ServerSideApi } from "../../ServerSideApi";
 /**
  * All methods involving uploading images to image hosting service
  */
-export class ImageApi extends ServerSideApi {
+export class ImageService extends ServerSideApi {
     /**
      * Uploads an image to ImgBB, an image hosting service, via api request.
      *

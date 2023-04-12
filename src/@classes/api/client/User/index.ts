@@ -1,1 +1,1 @@
-export { ClientUserApi } from "./ClientUserApi";
+export { ClientService } from "./ClientService";

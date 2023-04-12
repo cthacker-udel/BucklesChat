@@ -1,1 +1,1 @@
-export { ImageApi } from "./ImageApi";
+export { ImageService } from "./ImageService";

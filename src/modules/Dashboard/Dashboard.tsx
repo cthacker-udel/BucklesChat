@@ -1,4 +1,3 @@
-/* eslint-disable camelcase -- disabled */
 /* eslint-disable unicorn/no-null -- disabled just for useSwr, would rather use undefined */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React, { type ChangeEvent } from "react";
@@ -6,8 +5,8 @@ import { Button, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
-import { ImageApi } from "@/@classes/api/client/Image";
-import { ClientUserApi } from "@/@classes/api/client/User";
+import { ImageService } from "@/@classes/api/client/Image";
+import { ClientService } from "@/@classes/api/client/User";
 import type { DashboardInformation } from "@/@types";
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
@@ -78,11 +77,9 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 styles.dashboard_top_bar_user_pfp_container
                             }
                             onMouseLeave={(): void => {
-                                console.log("leaving");
                                 setHoveringOverProfilePicture(false);
                             }}
                             onMouseOver={(): void => {
-                                console.log("entering");
                                 setHoveringOverProfilePicture(true);
                             }}
                         >
@@ -222,7 +219,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                                                                 "Uploading image...",
                                                                             );
                                                                         const uploadResponse =
-                                                                            await ImageApi.uploadImage(
+                                                                            await ImageService.uploadImage(
                                                                                 base64String,
                                                                                 `${username}_profile_picture`,
                                                                             );
@@ -234,7 +231,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                                                             uploadResponse?.success
                                                                         ) {
                                                                             const profilePictureSetResponse =
-                                                                                await ClientUserApi.editUser(
+                                                                                await ClientService.editUser(
                                                                                     {
                                                                                         profileImageRemovalUrl:
                                                                                             uploadResponse
@@ -338,6 +335,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
             <InboxOffcanvas
                 onClose={userInboxOffcanvasOnClose}
                 showUserInboxOffcanvas={showUserInboxOffcanvas}
+                username={username ?? ""}
             />
         </>
     );
