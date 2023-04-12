@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React from "react";
 import { Accordion, Button, Image, Offcanvas } from "react-bootstrap";
+import { toast } from "react-toastify";
 import useSWR from "swr";
 
+import { FriendService } from "@/@classes/api/client/Friend";
 import type { FriendRequest } from "@/@types";
 import placeHolderPfp from "@/assets/placeholder/pfp.jpg";
 import { computeTodayDayDistance } from "@/helpers";
@@ -29,9 +31,10 @@ export const InboxOffcanvas = ({
         FriendRequest[],
         FriendRequest[],
         string
-    >(`friend/pendingRequests?username=${username}`);
+    >(`friend/pendingRequests?username=${username}`, { refreshInterval: 350 });
 
-    console.log(pendingFriendRequests);
+    const [scrolledToBottom, setScrolledToBottom] =
+        React.useState<boolean>(false);
 
     return (
         <Offcanvas
@@ -74,12 +77,34 @@ export const InboxOffcanvas = ({
                                     )}
                             </div>
                         </Accordion.Header>
-                        <Accordion.Body>
+                        <Accordion.Body
+                            className={styles.inbox_offcanvas_accordion_body}
+                        >
                             {pendingFriendRequests === undefined ? (
                                 <div>{"No Friend Requests"}</div>
                             ) : (
                                 <div
                                     className={styles.friend_request_container}
+                                    onScroll={(
+                                        event: React.UIEvent<HTMLDivElement>,
+                                    ): void => {
+                                        const { target } = event;
+                                        const convertedElement =
+                                            target as HTMLDivElement;
+                                        setScrolledToBottom(
+                                            convertedElement.scrollTop +
+                                                convertedElement.offsetHeight >=
+                                                convertedElement.scrollHeight,
+                                        );
+                                        console.log(
+                                            convertedElement.scrollTop,
+                                            convertedElement.offsetHeight,
+                                            convertedElement.scrollHeight,
+                                            convertedElement.scrollTop +
+                                                convertedElement.offsetHeight >=
+                                                convertedElement.scrollHeight,
+                                        );
+                                    }}
                                 >
                                     {pendingFriendRequests.map(
                                         (eachFriendRequest) => (
@@ -140,9 +165,11 @@ export const InboxOffcanvas = ({
                                                         className={
                                                             styles.friend_request_action
                                                         }
-                                                        onClick={(): void => {
-                                                            console.log(
-                                                                "accept friend request here",
+                                                        onClick={async (): Promise<void> => {
+                                                            await FriendService.processFriendRequest(
+                                                                eachFriendRequest.username,
+                                                                eachFriendRequest.sender,
+                                                                true,
                                                             );
                                                         }}
                                                         variant="outline-success"
@@ -153,10 +180,29 @@ export const InboxOffcanvas = ({
                                                         className={
                                                             styles.friend_request_action
                                                         }
-                                                        onClick={(): void => {
-                                                            console.log(
-                                                                "reject friend request here",
+                                                        onClick={async (): Promise<void> => {
+                                                            const rejectingToast =
+                                                                toast.loading(
+                                                                    `Rejecting ${eachFriendRequest.sender}'s friend request...`,
+                                                                );
+                                                            const result =
+                                                                await FriendService.processFriendRequest(
+                                                                    eachFriendRequest.username,
+                                                                    eachFriendRequest.sender,
+                                                                    false,
+                                                                );
+                                                            toast.dismiss(
+                                                                rejectingToast,
                                                             );
+                                                            if (result.data) {
+                                                                toast.success(
+                                                                    `Successfully rejected ${eachFriendRequest.sender}'s friend request!`,
+                                                                );
+                                                            } else {
+                                                                toast.error(
+                                                                    `Failed to reject ${eachFriendRequest.sender}'s friend request.`,
+                                                                );
+                                                            }
                                                         }}
                                                         variant="outline-danger"
                                                     >
@@ -168,6 +214,17 @@ export const InboxOffcanvas = ({
                                     )}
                                 </div>
                             )}
+                            <div
+                                className={
+                                    styles.friend_request_container_scroll_helper
+                                }
+                                style={{
+                                    opacity: scrolledToBottom ? "0%" : "50%",
+                                    zIndex: scrolledToBottom ? "-1" : "0",
+                                }}
+                            >
+                                <i className="fa-solid fa-arrow-down fa-xl" />
+                            </div>
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>

@@ -16,7 +16,6 @@
     --bs-accordion-active-color: white;
     --bs-accordion-btn-color: white;
     --bs-accordion-color: white;
-    border-radius: 1em;
 }
 
 .inbox_offcanvas_accordion_header > button {
@@ -35,6 +34,10 @@
     color: rgba(255, 68, 51, 1);
 }
 
+.inbox_offcanvas_accordion_body {
+    position: relative;
+}
+
 .friend_request_container {
     display: flex;
     flex-direction: column;
@@ -44,7 +47,25 @@
     scrollbar-width: none;
 }
 
-.friend_request_item {
+.friend_request_container_scroll_helper {
+    position: absolute;
+    width: calc(100% - 2rem);
+    display: flex;
+    height: 2rem;
+    bottom: 5%;
+    flex-direction: row;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 1em;
+    background-color: rgba(128, 128, 128, 0.75);
+    transition: opacity 0.5s ease-in;
+}
+
+.friend_request_container_scroll_helper > i {
+    align-self: center;
+}
+
+.friend_request_container .friend_request_item {
     border: 1px solid rgba(128, 128, 128, 0.75);
     padding: 0.85em;
     border-radius: 1em;
