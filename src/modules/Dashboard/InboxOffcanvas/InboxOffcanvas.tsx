@@ -223,17 +223,24 @@ export const InboxOffcanvas = ({
                                     )}
                                 </div>
                             )}
-                            <div
-                                className={
-                                    styles.friend_request_container_scroll_helper
-                                }
-                                style={{
-                                    opacity: scrolledToBottom ? "0%" : "50%",
-                                    zIndex: scrolledToBottom ? "-1" : "0",
-                                }}
-                            >
-                                <i className="fa-solid fa-arrow-down fa-xl" />
-                            </div>
+                            {pendingFriendRequests &&
+                                pendingFriendRequests.length > 0 && (
+                                    <div
+                                        className={
+                                            styles.friend_request_container_scroll_helper
+                                        }
+                                        style={{
+                                            opacity: scrolledToBottom
+                                                ? "0%"
+                                                : "50%",
+                                            zIndex: scrolledToBottom
+                                                ? "-1"
+                                                : "0",
+                                        }}
+                                    >
+                                        <i className="fa-solid fa-arrow-down fa-xl" />
+                                    </div>
+                                )}
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
