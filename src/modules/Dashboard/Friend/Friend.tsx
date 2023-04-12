@@ -3,13 +3,14 @@ import { Image } from "react-bootstrap";
 
 import _OfflineIndicator from "@/assets/placeholder/offlineindicator.png";
 import OnlineIndicator from "@/assets/placeholder/onlineindicator.png";
+import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 
 import styles from "./Friend.module.css";
 
 type FriendProperties = {
-    profilePictureUrl: string;
+    profilePictureUrl?: string;
     handle?: string;
-    username: string;
+    username?: string;
 };
 
 /**
@@ -27,7 +28,7 @@ export const Friend = ({
             <Image
                 alt="profile picture of friend of current user"
                 className={styles.friend_pfp}
-                src={profilePictureUrl}
+                src={profilePictureUrl ?? placeholderPfp.src}
             />
             <Image
                 alt="Online Indicator, which shows if someone is online"

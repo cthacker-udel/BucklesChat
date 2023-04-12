@@ -57,12 +57,6 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
         setShowUserInboxOffcanvas(false);
     }, []);
 
-    const friendsTemporaryData = Array.from({ length: 10 }).map((_, ind) => ({
-        handle: `Handle ${ind + 1}`,
-        profilePictureUrl: placeholderPfp.src,
-        username: `Username ${ind + 1}`,
-    }));
-
     if (data === undefined) {
         return <span />;
     }
@@ -174,7 +168,9 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 className={styles.dashboard_user_info_divider}
                             />
                             <div className={styles.dashboard_user_stats}>
-                                <span>{"10 Friends"}</span>
+                                <span>
+                                    {`${data.numberOfFriends ?? 0} Friends`}
+                                </span>
                                 <span>{"10 messages sent"}</span>
                                 <div className={styles.dashboard_member_since}>
                                     <span
@@ -305,7 +301,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                         </div>
                     </div>
                     <div className={styles.dashboard_top_bar_friends_list}>
-                        {friendsTemporaryData.map((eachFriend) => (
+                        {data.friendsInformation?.map((eachFriend) => (
                             <Friend
                                 {...eachFriend}
                                 key={`friend ${eachFriend.username}`}
