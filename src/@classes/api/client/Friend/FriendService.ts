@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
-import type { ApiResponse, FriendRequestPayload } from "@/@types";
+import type {
+    ApiResponse,
+    FriendPayload,
+    FriendRequestPayload,
+} from "@/@types";
 import { Endpoints } from "@/assets";
 
 import { ClientSideApi } from "../../ClientSideApi";
@@ -67,5 +71,31 @@ export class FriendService extends ClientSideApi {
         );
 
         return processRequest;
+    };
+
+    /**
+     * Removes a friend from the database
+     *
+     * @param recipient - The recipient of the friend request
+     * @param sender - The sender of the friend request
+     * @returns Whether or not the friend was successfully removed
+     */
+    public static removeFriend = async (
+        recipient: string,
+        sender: string,
+    ): Promise<ApiResponse<boolean>> => {
+        if (recipient.length === 0 || sender.length === 0) {
+            return { data: false };
+        }
+
+        const removeFriendRequest = await super.post<
+            ApiResponse<boolean>,
+            FriendPayload
+        >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REMOVE_FRIEND}`, {
+            recipient,
+            sender,
+        });
+
+        return removeFriendRequest;
     };
 }

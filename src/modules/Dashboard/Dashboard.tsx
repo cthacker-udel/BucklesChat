@@ -303,6 +303,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                     <div className={styles.dashboard_top_bar_friends_list}>
                         {data.friendsInformation?.map((eachFriend) => (
                             <Friend
+                                loggedInUsername={username}
                                 {...eachFriend}
                                 key={`friend ${eachFriend.username}`}
                             />

@@ -5,6 +5,7 @@ export const Endpoints = {
         BASE: "friend/",
         PENDING_REQUESTS: "pendingRequests",
         REJECT_REQUEST: "rejectRequest",
+        REMOVE_FRIEND: "removeFriend",
         SEND_REQUEST: "sendRequest",
     },
     IMAGE: {

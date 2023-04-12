@@ -10,6 +10,7 @@ import styles from "./Friend.module.css";
 import { createFriendOptions } from "./FriendOptions/createFriendOption";
 
 type FriendProperties = {
+    loggedInUsername?: string;
     profileImageUrl?: string;
     handle?: string;
     username?: string;
@@ -21,6 +22,7 @@ type FriendProperties = {
  * @returns An individual friend in the friends list which displays when the user accesses the dashboard
  */
 export const Friend = ({
+    loggedInUsername,
     handle,
     profileImageUrl,
     username,
@@ -50,6 +52,7 @@ export const Friend = ({
                 <OverlayTrigger
                     overlay={(properties: OverlayInjectedProps): JSX.Element =>
                         createFriendOptions(
+                            loggedInUsername as unknown as string,
                             username as unknown as string,
                             properties,
                             handle,

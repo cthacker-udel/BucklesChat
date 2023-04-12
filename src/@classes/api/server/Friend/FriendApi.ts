@@ -5,6 +5,7 @@ import { v4 } from "uuid";
 import type {
     ApiResponse,
     ExceptionLog,
+    FriendPayload,
     FriendRequest,
     FriendRequestPayload,
 } from "@/@types";
@@ -235,6 +236,56 @@ export class FriendApi extends ServerSideApi {
 
             response.status(sendResult.data === undefined ? 400 : 200);
             response.send(sendResult);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    public static removeFriend = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const requestPayload = JSON.parse(request.body) as FriendPayload;
+
+            if (
+                requestPayload.recipient === undefined ||
+                requestPayload.sender === undefined
+            ) {
+                throw new Error(
+                    "Must supply both usernames to remove a friend",
+                );
+            }
+
+            const { recipient, sender } = requestPayload;
+
+            const removalRequest = await super.post<
+                ApiResponse<boolean>,
+                FriendPayload
+            >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REMOVE_FRIEND}`, {
+                recipient,
+                sender,
+            });
+
+            response.status(removalRequest.data ? 200 : 400);
+            response.send(removalRequest);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {
