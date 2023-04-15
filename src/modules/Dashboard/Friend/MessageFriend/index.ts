@@ -1,0 +1,1 @@
+export { MessageFriend } from "./MessageFriend";

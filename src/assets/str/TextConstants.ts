@@ -72,6 +72,12 @@ export const TextConstants = {
                     REQUIRED: "Last Name is required",
                 },
             },
+            SEND_MESSAGE_MODAL: {
+                CONTENT: {
+                    MAX_LENGTH: `Message cannot be more then ${ValidationConstants.SEND_MESSAGE_MODAL.CONTENT.MAX_LENGTH} characters`,
+                    REQUIRED: "Message is required",
+                },
+            },
             SIGN_UP: {
                 CONFIRM_PASSWORD: {
                     MATCHING: "Passwords must match",
@@ -105,6 +111,9 @@ export const TextConstants = {
                 FIRST_NAME: "First Name is valid!",
                 HANDLE: "Handle is valid!",
                 LAST_NAME: "Last Name is valid!",
+            },
+            SEND_MESSAGE_MODAL: {
+                CONTENT: "Message is valid!",
             },
             SIGN_UP: {
                 CONFIRM_PASSWORD: "Passwords match!",

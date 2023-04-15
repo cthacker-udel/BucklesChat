@@ -1,13 +1,14 @@
 import React from "react";
-import { Button, Tooltip } from "react-bootstrap";
+import { toast } from "react-toastify";
+
+import { FriendService } from "@/@classes/api/client/Friend";
 
 import styles from "./FriendOptions.module.css";
-import { toast } from "react-toastify";
-import { FriendService } from "@/@classes/api/client/Friend";
 
 type FriendOptionsProperties = {
     loggedInUsername: string;
     handle?: string;
+    onMessageFriendOptionCallback: () => void;
     profileImageUrl?: string;
     username: string;
 };
@@ -18,18 +19,23 @@ type FriendOptionsProperties = {
  * @param props - The overlay injected props + custom ones sent from the dashboard
  * @param props.handle - The handle of the user, if present is used in place of the username
  * @param props.loggedInUsername - The username of the currently logged in user
+ * @param props.onMessageFriendOptionCallback - The callback that is fired when the user clicks the `message` option when selecting options for the users
  * @param props.profileImageUrl - The profile image url of the friend being displayed in the card
  * @param props.username - The username of the friend being displayed in the card
  */
 export const FriendOptions = ({
-    handle,
+    handle: _handle,
     loggedInUsername,
-    profileImageUrl,
+    onMessageFriendOptionCallback,
+    profileImageUrl: _profileImageUrl,
     username,
 }: FriendOptionsProperties): JSX.Element => (
     <div className={styles.friend_options_container}>
         <div className={styles.friend_options_container_button}>
-            <div className={styles.friend_options_container_button_content}>
+            <div
+                className={styles.friend_options_container_button_content}
+                onClick={onMessageFriendOptionCallback}
+            >
                 <span>{"Message"}</span>
                 <i className="fa-regular fa-message fa-sm" />
             </div>

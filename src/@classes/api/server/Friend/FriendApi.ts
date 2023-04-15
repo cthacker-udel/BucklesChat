@@ -4,6 +4,7 @@ import { v4 } from "uuid";
 
 import type {
     ApiResponse,
+    DmPayload,
     ExceptionLog,
     FriendPayload,
     FriendRequest,
@@ -258,6 +259,13 @@ export class FriendApi extends ServerSideApi {
         }
     };
 
+    /**
+     * Removes a friend from the database and the application, taking in the recipient of the friend request, and the sender of the friend request.
+     * Removing both instances of (recipient) <--- sender and (sender) <--- recipient
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
     public static removeFriend = async (
         request: NextApiRequest,
         response: NextApiResponse,
@@ -286,6 +294,69 @@ export class FriendApi extends ServerSideApi {
 
             response.status(removalRequest.data ? 200 : 400);
             response.send(removalRequest);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Sends a direct message to a user in the application
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static sendDM = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const messagePayload = JSON.parse(request.body) as DmPayload;
+
+            if (
+                messagePayload.receiver === undefined ||
+                messagePayload.sender === undefined ||
+                messagePayload.content === undefined
+            ) {
+                throw new Error(
+                    "Must supply sender and receiver when sending direct message",
+                );
+            }
+
+            const { content, receiver, sender, senderProfilePicture } =
+                messagePayload;
+
+            const dmSendResponse = await super.post<
+                ApiResponse<boolean>,
+                DmPayload
+            >(
+                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.SEND_DIRECT_MESSAGE}`,
+                {
+                    content,
+                    receiver,
+                    sender,
+                    senderProfilePicture,
+                },
+            );
+
+            response.status(dmSendResponse.data ? 200 : 400);
+            response.send(dmSendResponse);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {

@@ -1,0 +1,25 @@
+.message_friend_modal {
+    background-color: transparent;
+}
+
+.message_friend_modal_dialog > * {
+    background-color: rgba(128, 128, 128, 0.35);
+    color: white;
+    --bs-modal-header-border-color: transparent;
+    --bs-modal-footer-border-color: transparent;
+}
+
+.message_receiver {
+    font-weight: bold;
+    color: lightblue;
+}
+
+.message_input {
+    background-color: transparent;
+    color: white;
+}
+
+.message_input:focus {
+    background-color: transparent;
+    color: white;
+}

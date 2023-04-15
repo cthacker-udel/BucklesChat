@@ -1,3 +1,9 @@
 * {
-  font-family: "Golos Text", sans-serif;
+    font-family: "Golos Text", sans-serif;
+}
+
+.tooltip {
+    top: 0;
+    left: 0;
+    position: absolute;
 }

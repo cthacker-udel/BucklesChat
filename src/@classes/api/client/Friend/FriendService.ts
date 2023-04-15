@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import type {
     ApiResponse,
+    DmPayload,
     FriendPayload,
     FriendRequestPayload,
 } from "@/@types";
@@ -97,5 +98,41 @@ export class FriendService extends ClientSideApi {
         });
 
         return removeFriendRequest;
+    };
+
+    /**
+     * Sends a direct message to the user specified by `receiver` from the user `sender` with content of `content`
+     *
+     * @param receiver - The person who is receiving the message
+     * @param sender - The person who is sending the message
+     * @param content - The content of the message
+     * @param senderProfilePicture - The profile picture of the person sending the message
+     * @returns Whether or not the DM was successfully sent
+     */
+    public static sendDM = async (
+        receiver: string,
+        sender: string,
+        content: string,
+        senderProfilePicture?: string,
+    ): Promise<ApiResponse<boolean>> => {
+        if (
+            receiver.length === 0 ||
+            sender.length === 0 ||
+            content.length === 0
+        ) {
+            return { data: false };
+        }
+
+        const sendDmRequest = await super.post<ApiResponse<boolean>, DmPayload>(
+            `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.SEND_DIRECT_MESSAGE}`,
+            {
+                content,
+                receiver,
+                sender,
+                senderProfilePicture,
+            },
+        );
+
+        return sendDmRequest;
     };
 }

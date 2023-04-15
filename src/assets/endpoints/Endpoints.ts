@@ -6,6 +6,7 @@ export const Endpoints = {
         PENDING_REQUESTS: "pendingRequests",
         REJECT_REQUEST: "rejectRequest",
         REMOVE_FRIEND: "removeFriend",
+        SEND_DIRECT_MESSAGE: "sendDirectMessage",
         SEND_REQUEST: "sendRequest",
     },
     IMAGE: {

@@ -25,6 +25,12 @@ export const ValidationConstants = {
             REQUIRED: false,
         },
     },
+    SEND_MESSAGE_MODAL: {
+        CONTENT: {
+            MAX_LENGTH: 512,
+            REQUIRED: true,
+        },
+    },
     SIGN_UP: {
         FORM: {
             CONFIRM_PASSWORD: {
