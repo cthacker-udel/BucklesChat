@@ -62,7 +62,7 @@ export const AddUserModal = ({
                     foundDocuments[0]?.scrollIntoView({ behavior: "smooth" });
                     foundDocuments[0]?.animate(
                         [
-                            { borderColor: "blue" },
+                            { borderColor: "green" },
                             { borderColor: "rgba(0, 0, 0, 0.25)" },
                         ],
                         {
@@ -80,7 +80,7 @@ export const AddUserModal = ({
                     foundDocuments[0]?.scrollIntoView({ behavior: "smooth" });
                     foundDocuments[0]?.animate(
                         [
-                            { borderColor: "blue" },
+                            { borderColor: "green" },
                             { borderColor: "rgba(0, 0, 0, 0.25)" },
                         ],
                         {
@@ -126,10 +126,14 @@ export const AddUserModal = ({
     return (
         <Modal
             className={styles.add_user_modal}
+            contentClassName={styles.add_friend_modal_content}
             onHide={addUserModalOnClose}
             show={showAddUserModal}
         >
-            <Modal.Header closeButton>
+            <Modal.Header
+                className={styles.add_friend_modal_header}
+                closeButton
+            >
                 <Modal.Title>{"Add Friends"}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -154,7 +158,7 @@ export const AddUserModal = ({
                         await sendRequestToSelectedFriends();
                         selectedFriends.clear();
                     }}
-                    variant="outline-success"
+                    variant="success"
                 >
                     {`Send ${selectedFriends.size} Requests`}
                 </Button>

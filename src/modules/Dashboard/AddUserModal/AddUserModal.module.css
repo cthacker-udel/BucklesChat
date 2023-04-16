@@ -5,4 +5,14 @@
 .add_friend_modal_footer {
     display: flex;
     flex-direction: row;
+    border-color: transparent;
+}
+
+.add_friend_modal_content {
+    background-color: black;
+    color: white;
+}
+
+.add_friend_modal_header {
+    border-color: transparent;
 }

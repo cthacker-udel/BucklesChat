@@ -75,7 +75,7 @@ export const FriendMultiSelect = ({
                     });
                     foundFriendDocuments[0]?.animate(
                         [
-                            { borderColor: "blue" },
+                            { borderColor: "green" },
                             { borderColor: "rgba(0, 0, 0, 0.25)" },
                         ],
                         {

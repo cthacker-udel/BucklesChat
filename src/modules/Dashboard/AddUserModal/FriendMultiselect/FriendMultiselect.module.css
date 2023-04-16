@@ -32,7 +32,7 @@
     display: flex;
     flex-direction: row;
     width: max-content;
-    justify-content: space-betwen;
+    justify-content: space-between;
 }
 
 .multiselect_profile_image {
@@ -64,6 +64,22 @@
     width: 100%;
 }
 
+.multiselect_search {
+    background-color: transparent;
+    color: white;
+    border-color: rgba(128, 128, 128, 0.25);
+}
+
+.multiselect_search:focus {
+    background-color: transparent;
+    color: white;
+    border-color: rgba(128, 128, 128, 0.25);
+}
+
+.multiselect_search::placeholder {
+    color: rgba(255, 255, 255, 0.75);
+}
+
 /* END User Information */
 
 /* START Selection Toggle */
@@ -74,7 +90,7 @@
 }
 
 .toggle_selected {
-    color: blue;
+    color: green;
 }
 
 .toggle_not_selected {
