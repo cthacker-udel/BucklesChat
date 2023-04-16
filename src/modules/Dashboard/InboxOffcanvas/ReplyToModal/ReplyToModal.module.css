@@ -1,0 +1,17 @@
+.reply_to_modal_content {
+    background-color: transparent;
+    border-color: transparent;
+    color: white;
+}
+
+.reply_to_modal_header {
+    border-color: transparent;
+}
+
+.reply_to_modal_footer {
+    border-color: transparent;
+}
+
+.reply_to_user {
+    color: green;
+}

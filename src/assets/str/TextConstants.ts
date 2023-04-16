@@ -72,6 +72,12 @@ export const TextConstants = {
                     REQUIRED: "Last Name is required",
                 },
             },
+            REPLY_MESSAGE_MODAL: {
+                CONTENT: {
+                    MAX_LENGTH: `Reply cannot be more then ${ValidationConstants.REPLY_MESSAGE_MODAL.CONTENT.MAX_LENGTH} characters`,
+                    REQUIRED: "Reply must be a message",
+                },
+            },
             SEND_MESSAGE_MODAL: {
                 CONTENT: {
                     MAX_LENGTH: `Message cannot be more then ${ValidationConstants.SEND_MESSAGE_MODAL.CONTENT.MAX_LENGTH} characters`,
@@ -111,6 +117,9 @@ export const TextConstants = {
                 FIRST_NAME: "First Name is valid!",
                 HANDLE: "Handle is valid!",
                 LAST_NAME: "Last Name is valid!",
+            },
+            REPLY_TO_MESSAGE_MODAL: {
+                CONTENT: "Reply is valid!",
             },
             SEND_MESSAGE_MODAL: {
                 CONTENT: "Message is valid!",

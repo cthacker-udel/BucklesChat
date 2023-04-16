@@ -25,9 +25,15 @@ export const ValidationConstants = {
             REQUIRED: false,
         },
     },
+    REPLY_MESSAGE_MODAL: {
+        CONTENT: {
+            MAX_LENGTH: 280,
+            REQUIRED: true,
+        },
+    },
     SEND_MESSAGE_MODAL: {
         CONTENT: {
-            MAX_LENGTH: 512,
+            MAX_LENGTH: 280,
             REQUIRED: true,
         },
     },

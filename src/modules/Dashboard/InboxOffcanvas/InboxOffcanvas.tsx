@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React from "react";
-import { Accordion, Button, Image, Offcanvas } from "react-bootstrap";
+import {
+    Accordion,
+    Button,
+    Image,
+    Offcanvas,
+    OverlayTrigger,
+} from "react-bootstrap";
+import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
 import { FriendService } from "@/@classes/api/client/Friend";
-import type { FriendRequest } from "@/@types";
+import type { DirectMessage, FriendRequest } from "@/@types";
 import placeHolderPfp from "@/assets/placeholder/pfp.jpg";
-import { computeTodayDayDistance } from "@/helpers";
+import { computeTodayDayDistance, renderTooltip } from "@/helpers";
 
 import styles from "./InboxOffcanvas.module.css";
+import { PendingMessage } from "./PendingMessage";
 
 type InboxOffCanvasProperties = {
     onClose: () => void;
@@ -32,9 +40,16 @@ export const InboxOffcanvas = ({
         FriendRequest[],
         string
     >(`friend/pendingRequests?username=${username}`, { refreshInterval: 350 });
+    const { data: pendingMessages } = useSWR<
+        DirectMessage[],
+        DirectMessage[],
+        string
+    >(`friend/pendingDirectMessages?username=${username}`);
 
     const [scrolledToBottom, setScrolledToBottom] =
         React.useState<boolean>(true);
+    const [scrolledToBottomMessages, setScrolledToBottomMessages] =
+        React.useState<boolean>(false);
 
     return (
         <Offcanvas
@@ -84,7 +99,9 @@ export const InboxOffcanvas = ({
                                 <div>{"No Friend Requests"}</div>
                             ) : (
                                 <div
-                                    className={styles.friend_request_container}
+                                    className={
+                                        styles.inbox_offcanvas_accordion_container
+                                    }
                                     onScroll={(
                                         event: React.UIEvent<HTMLDivElement>,
                                     ): void => {
@@ -128,7 +145,7 @@ export const InboxOffcanvas = ({
                                                     >
                                                         <div
                                                             className={
-                                                                styles.friend_request_username
+                                                                styles.username
                                                             }
                                                         >
                                                             {
@@ -137,14 +154,14 @@ export const InboxOffcanvas = ({
                                                         </div>
                                                         <div
                                                             className={
-                                                                styles.friend_request_sent_time
+                                                                styles.item_sent_time
                                                             }
                                                         >
                                                             {`${computeTodayDayDistance(
                                                                 new Date(
                                                                     eachFriendRequest.createdAt,
                                                                 ),
-                                                            )}d ago`}
+                                                            )}d`}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -227,13 +244,88 @@ export const InboxOffcanvas = ({
                                 pendingFriendRequests.length > 0 && (
                                     <div
                                         className={
-                                            styles.friend_request_container_scroll_helper
+                                            styles.inbox_offcanvas_container_scroll_helper
                                         }
                                         style={{
                                             opacity: scrolledToBottom
                                                 ? "0%"
                                                 : "50%",
                                             zIndex: scrolledToBottom
+                                                ? "-1"
+                                                : "0",
+                                        }}
+                                    >
+                                        <i className="fa-solid fa-arrow-down fa-xl" />
+                                    </div>
+                                )}
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+                <Accordion
+                    className={styles.inbox_offcanvas_accordion}
+                    defaultActiveKey="0"
+                    flush
+                >
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header
+                            className={styles.inbox_offcanvas_accordion_header}
+                        >
+                            <div
+                                className={
+                                    styles.inbox_offcanvas_accordion_header_content
+                                }
+                            >
+                                <span>{"Messages"}</span>
+                                {pendingMessages !== undefined &&
+                                    pendingMessages.length > 0 && (
+                                        <i
+                                            className={`fa-solid fa-circle-exclamation ${styles.inbox_offcanvas_exclamation_circle}`}
+                                        />
+                                    )}
+                            </div>
+                        </Accordion.Header>
+                        <Accordion.Body
+                            className={styles.inbox_offcanvas_accordion_body}
+                        >
+                            {pendingMessages === undefined ? (
+                                <div>{"No Messages"}</div>
+                            ) : (
+                                <div
+                                    className={
+                                        styles.inbox_offcanvas_accordion_container
+                                    }
+                                    onScroll={(
+                                        event: React.UIEvent<HTMLDivElement>,
+                                    ): void => {
+                                        const { target } = event;
+                                        const convertedElement =
+                                            target as HTMLDivElement;
+                                        setScrolledToBottomMessages(
+                                            convertedElement.scrollTop +
+                                                convertedElement.offsetHeight >=
+                                                convertedElement.scrollHeight,
+                                        );
+                                    }}
+                                >
+                                    {pendingMessages.map((eachMessage) => (
+                                        <PendingMessage
+                                            key={`message_sent_${eachMessage.sender}`}
+                                            {...eachMessage}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                            {pendingFriendRequests &&
+                                pendingFriendRequests.length > 0 && (
+                                    <div
+                                        className={
+                                            styles.inbox_offcanvas_container_scroll_helper
+                                        }
+                                        style={{
+                                            opacity: scrolledToBottomMessages
+                                                ? "0%"
+                                                : "50%",
+                                            zIndex: scrolledToBottomMessages
                                                 ? "-1"
                                                 : "0",
                                         }}
