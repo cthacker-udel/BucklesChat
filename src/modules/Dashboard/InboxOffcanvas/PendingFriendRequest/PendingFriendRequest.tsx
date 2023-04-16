@@ -16,8 +16,14 @@ type PendingFriendRequestProperties = {
 };
 
 /**
+ * Each individual pending friend request in the modal's accordion. This is a pending friend request which means it is a request from a user to become friends with the current user logged in
  *
- * @returns
+ * @param props - The properties of the pending friend request
+ * @param props.createdAt - When the friend request was initially created
+ * @param props.sender - The sender of the friend request
+ * @param props.senderProfileImageUrl - The url of the image of the sender pfp
+ * @param props.username - The username of the user receiving the message
+ * @returns The pending friend request from the user
  */
 export const PendingFriendRequest = ({
     createdAt,
