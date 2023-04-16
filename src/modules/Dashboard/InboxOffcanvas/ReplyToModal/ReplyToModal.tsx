@@ -30,7 +30,7 @@ const FORM_DEFAULT_VALUES = {
  * @returns The modal used for replying to an inbox message
  */
 export const ReplyToModal = ({
-    receiver,
+    receiver: _receiver,
     replyToModalOnHide,
     sender,
     showReplyToModal,
