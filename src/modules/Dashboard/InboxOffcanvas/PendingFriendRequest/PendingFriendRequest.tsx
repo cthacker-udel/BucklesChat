@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import { FriendService } from "@/@classes/api/client/Friend";
+import { FriendService } from "@/@classes";
 import placeHolderPfp from "@/assets/placeholder/pfp.jpg";
 import { computeTodayDayDistance } from "@/helpers";
 

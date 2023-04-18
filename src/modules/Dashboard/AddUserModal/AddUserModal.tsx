@@ -3,7 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
 
-import { FriendService } from "@/@classes/api/client/Friend";
+import { FriendService } from "@/@classes";
 import type { ApiResponse } from "@/@types";
 
 import styles from "./AddUserModal.module.css";

@@ -7,7 +7,7 @@ import { ClientSideApi } from "../../ClientSideApi";
 /**
  * Client-side user api
  */
-export class ClientService extends ClientSideApi {
+export class UserService extends ClientSideApi {
     /**
      * Edits an user in the database
      *

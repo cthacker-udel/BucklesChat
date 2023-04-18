@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 
-import { FriendService } from "@/@classes/api/client/Friend";
+import { FriendService } from "@/@classes";
 import _OfflineIndicator from "@/assets/placeholder/offlineindicator.png";
 import OnlineIndicator from "@/assets/placeholder/onlineindicator.png";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";

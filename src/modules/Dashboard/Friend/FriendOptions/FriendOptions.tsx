@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 
-import { FriendService } from "@/@classes/api/client/Friend";
+import { FriendService } from "@/@classes";
 
 import styles from "./FriendOptions.module.css";
 

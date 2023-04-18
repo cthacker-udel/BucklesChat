@@ -5,8 +5,7 @@ import { Button, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 
-import { ImageService } from "@/@classes/api/client/Image";
-import { ClientService } from "@/@classes/api/client/User";
+import { ImageService, UserService } from "@/@classes";
 import type { DashboardInformation } from "@/@types";
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
@@ -227,7 +226,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                                                             uploadResponse?.success
                                                                         ) {
                                                                             const profilePictureSetResponse =
-                                                                                await ClientService.editUser(
+                                                                                await UserService.editUser(
                                                                                     {
                                                                                         profileImageRemovalUrl:
                                                                                             uploadResponse
