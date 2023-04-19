@@ -35,13 +35,14 @@ export const ReplyToModal = ({
     sender,
     showReplyToModal,
 }: ReplyToModalProperties): JSX.Element => {
-    const { control, formState, register, reset } = useForm<FormValues>({
-        criteriaMode: "all",
-        defaultValues: FORM_DEFAULT_VALUES,
-        delayError: 250,
-        mode: "all",
-        reValidateMode: "onBlur",
-    });
+    const { clearErrors, control, formState, register, reset } =
+        useForm<FormValues>({
+            criteriaMode: "all",
+            defaultValues: FORM_DEFAULT_VALUES,
+            delayError: 250,
+            mode: "all",
+            reValidateMode: "onBlur",
+        });
 
     const [content] = useWatch({
         control,
@@ -58,10 +59,17 @@ export const ReplyToModal = ({
         setCharactersRemaining(280 - content.length);
     }, [content]);
 
+    React.useEffect(() => {
+        clearErrors();
+        reset();
+    }, [clearErrors, reset, showReplyToModal]);
+
     return (
         <Modal
             contentClassName={styles.reply_to_modal_content}
-            onHide={replyToModalOnHide}
+            onHide={(): void => {
+                replyToModalOnHide();
+            }}
             show={showReplyToModal}
         >
             <Modal.Header

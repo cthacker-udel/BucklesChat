@@ -60,7 +60,7 @@ export const PendingMessage = ({
                             renderTooltip(properties, { title: "Reply" })
                         }
                         placement="top-start"
-                        trigger="hover"
+                        trigger={["hover", "focus"]}
                     >
                         <Button
                             className={styles.pending_message_reply_button}
