@@ -6,6 +6,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { TextConstants, ValidationConstants } from "@/assets";
 
 import styles from "./ReplyToModal.module.css";
+import { toast } from "react-toastify";
+import { MessageService } from "@/@classes";
 
 type ReplyToModalProperties = {
     receiver: string;
@@ -30,7 +32,7 @@ const FORM_DEFAULT_VALUES = {
  * @returns The modal used for replying to an inbox message
  */
 export const ReplyToModal = ({
-    receiver: _receiver,
+    receiver,
     replyToModalOnHide,
     sender,
     showReplyToModal,
@@ -149,7 +151,25 @@ export const ReplyToModal = ({
                 <Button
                     disabled={!dirtyFields.content || Boolean(errors.content)}
                     onClick={async (): Promise<void> => {
-                        console.log("clicked");
+                        const creatingThreadToast =
+                            toast.loading("Creating thread...");
+                        const createToastResult =
+                            await MessageService.createThread(sender, receiver);
+                        toast.dismiss(creatingThreadToast);
+
+                        const { data: didThreadCreate } = createToastResult;
+
+                        if (didThreadCreate) {
+                            toast.success("Successfully created thread");
+                            const addingMessageToast = toast.loading(
+                                "Adding message and reply to thread",
+                            );
+                            // find thread id
+                            const addInitialMessageToToast =
+                                await MessageService.addMessageToThread();
+                        } else {
+                            toast.error("Thread failed to create");
+                        }
                     }}
                     variant={
                         !dirtyFields.content && !errors.content
