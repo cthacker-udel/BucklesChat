@@ -30,11 +30,25 @@ export const InboxOffcanvas = ({
         FriendRequest[],
         string
     >(`friend/pendingRequests?username=${username}`, { refreshInterval: 350 });
-    const { data: pendingMessages } = useSWR<
+    const { data: pendingMessages, mutate: mutateMessages } = useSWR<
         DirectMessage[],
         DirectMessage[],
         string
     >(`friend/pendingDirectMessages?username=${username}`);
+
+    const removeMessageFromCache = React.useCallback(
+        async (messageId: number): Promise<void> => {
+            if (pendingMessages !== undefined) {
+                await mutateMessages(
+                    pendingMessages.filter(
+                        (eachDirectMessage: DirectMessage) =>
+                            eachDirectMessage.id !== messageId,
+                    ),
+                );
+            }
+        },
+        [mutateMessages, pendingMessages],
+    );
 
     const [scrolledToBottom, setScrolledToBottom] =
         React.useState<boolean>(true);
@@ -181,6 +195,9 @@ export const InboxOffcanvas = ({
                                     {pendingMessages.map((eachMessage) => (
                                         <PendingMessage
                                             key={`message_sent_${eachMessage.sender}`}
+                                            removeMessageFromCache={
+                                                removeMessageFromCache
+                                            }
                                             {...eachMessage}
                                         />
                                     ))}

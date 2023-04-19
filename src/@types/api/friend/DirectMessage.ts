@@ -5,4 +5,5 @@ export type DirectMessage = {
     receiver: string;
     sender: string;
     senderProfilePictureUrl?: string;
+    thread?: number;
 };

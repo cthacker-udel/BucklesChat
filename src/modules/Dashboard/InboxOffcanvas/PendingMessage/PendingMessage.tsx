@@ -15,6 +15,7 @@ type PendingMessageProperties = {
     receiver: string;
     sender: string;
     senderProfilePictureUrl?: string;
+    removeMessageFromCache: (_messageId: number) => Promise<void>;
 };
 
 /**
@@ -34,6 +35,7 @@ export const PendingMessage = ({
     createdAt,
     id,
     receiver,
+    removeMessageFromCache,
     sender,
     senderProfilePictureUrl,
 }: PendingMessageProperties): JSX.Element => {
@@ -86,6 +88,7 @@ export const PendingMessage = ({
             <ReplyToModal
                 id={id}
                 receiver={receiver}
+                removeMessageFromCache={removeMessageFromCache}
                 replyToModalOnHide={replyToModalOnHide}
                 sender={sender}
                 showReplyToModal={showReplyToModal}

@@ -15,6 +15,7 @@ type ReplyToModalProperties = {
     replyToModalOnHide: () => void;
     sender: string;
     showReplyToModal: boolean;
+    removeMessageFromCache: (_messageId: number) => Promise<void>;
 };
 
 type FormValues = {
@@ -31,6 +32,7 @@ const FORM_DEFAULT_VALUES = {
  * @param props - The properties of the ReplyToModal component, which are passed from the InboxOffCanvas component
  * @param props.id - The id of the message being replied to
  * @param props.receiver - The person that is receiving the message
+ * @param props.removeMessageFromCache - Removes the message id supplied from the cache
  * @param props.replyToModalOnHide - The callback that fires when the modal is closed
  * @param props.sender - The person that is sending the message
  * @param props.showReplyToModal - Boolean indicating whether to show the modal
@@ -39,6 +41,7 @@ const FORM_DEFAULT_VALUES = {
 export const ReplyToModal = ({
     id,
     receiver,
+    removeMessageFromCache,
     replyToModalOnHide,
     sender,
     showReplyToModal,
@@ -181,6 +184,7 @@ export const ReplyToModal = ({
                                     "Successfully replied to message!",
                                 );
                                 replyToModalOnHide();
+                                await removeMessageFromCache(id);
                             } else {
                                 toast.error(
                                     "Failed to create thread with this message as the initial message!",
