@@ -148,6 +148,9 @@ export const ReplyToModal = ({
                 </Button>
                 <Button
                     disabled={!dirtyFields.content || Boolean(errors.content)}
+                    onClick={async (): Promise<void> => {
+                        console.log("clicked");
+                    }}
                     variant={
                         !dirtyFields.content && !errors.content
                             ? "outline-secondary"
