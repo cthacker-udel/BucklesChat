@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { TextConstants, ValidationConstants } from "@/assets";
 
@@ -35,7 +35,7 @@ export const ReplyToModal = ({
     sender,
     showReplyToModal,
 }: ReplyToModalProperties): JSX.Element => {
-    const { formState, register, reset } = useForm<FormValues>({
+    const { control, formState, register, reset } = useForm<FormValues>({
         criteriaMode: "all",
         defaultValues: FORM_DEFAULT_VALUES,
         delayError: 250,
@@ -43,7 +43,20 @@ export const ReplyToModal = ({
         reValidateMode: "onBlur",
     });
 
+    const [content] = useWatch({
+        control,
+        defaultValue: { content: "" },
+        name: ["content"],
+    });
+
     const { dirtyFields, errors } = formState;
+
+    const [charactersRemaining, setCharactersRemaining] =
+        React.useState<number>(280);
+
+    React.useEffect(() => {
+        setCharactersRemaining(280 - content.length);
+    }, [content]);
 
     return (
         <Modal
@@ -57,8 +70,25 @@ export const ReplyToModal = ({
                 closeVariant="white"
             >
                 <Modal.Title>
-                    {"Reply to "}{" "}
-                    <span className={styles.reply_to_user}>{sender}</span>
+                    <div className={styles.reply_to_user_modal_header_content}>
+                        <span>
+                            <span>{"Reply to "}</span>
+                            <span className={styles.reply_to_user}>
+                                {sender}
+                            </span>
+                        </span>
+                        <span
+                            className={
+                                styles.reply_to_user_characters_remaining
+                            }
+                        >
+                            {`${Math.abs(charactersRemaining)} ${
+                                charactersRemaining >= 0
+                                    ? "characters remaining"
+                                    : "characters to delete"
+                            }`}
+                        </span>
+                    </div>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
