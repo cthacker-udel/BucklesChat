@@ -11,19 +11,28 @@ import styles from "./PendingMessage.module.css";
 type PendingMessageProperties = {
     content: string;
     createdAt: Date;
+    id: number;
     receiver: string;
     sender: string;
     senderProfilePictureUrl?: string;
 };
 
 /**
+ * Represents a message that has not been replied to, and is a result of a direct message with the user
  *
- * @param param0
- * @returns
+ * @param props - The properties of the Pending Message that are passed in from InboxOffCanvas
+ * @param props.content - The content of the message
+ * @param props.createdAt - The date that the message was created
+ * @param props.id - The id of the message
+ * @param props.receiver - The person that is receiving the message
+ * @param props.sender - The person that is sending the message
+ * @param props.senderProfilePictureUrl - The profile picture url for the person that is sending the message
+ * @returns The displayed pending message with all the above attributes properly displayed
  */
 export const PendingMessage = ({
     content,
     createdAt,
+    id,
     receiver,
     sender,
     senderProfilePictureUrl,
@@ -75,6 +84,7 @@ export const PendingMessage = ({
                 </div>
             </div>
             <ReplyToModal
+                id={id}
                 receiver={receiver}
                 replyToModalOnHide={replyToModalOnHide}
                 sender={sender}

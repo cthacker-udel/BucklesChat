@@ -2,14 +2,15 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "react-toastify";
 
+import { MessageService } from "@/@classes";
 import { TextConstants, ValidationConstants } from "@/assets";
 
 import styles from "./ReplyToModal.module.css";
-import { toast } from "react-toastify";
-import { MessageService } from "@/@classes";
 
 type ReplyToModalProperties = {
+    id: number;
     receiver: string;
     replyToModalOnHide: () => void;
     sender: string;
@@ -28,10 +29,15 @@ const FORM_DEFAULT_VALUES = {
  * Modal dedicated to replying to DMs the user chooses to reply to
  *
  * @param props - The properties of the ReplyToModal component, which are passed from the InboxOffCanvas component
+ * @param props.id - The id of the message being replied to
+ * @param props.receiver - The person that is receiving the message
+ * @param props.replyToModalOnHide - The callback that fires when the modal is closed
+ * @param props.sender - The person that is sending the message
  * @param props.showReplyToModal - Boolean indicating whether to show the modal
  * @returns The modal used for replying to an inbox message
  */
 export const ReplyToModal = ({
+    id,
     receiver,
     replyToModalOnHide,
     sender,
@@ -157,18 +163,29 @@ export const ReplyToModal = ({
                             await MessageService.createThread(sender, receiver);
                         toast.dismiss(creatingThreadToast);
 
-                        const { data: didThreadCreate } = createToastResult;
+                        const { data: createdThreadId } = createToastResult;
 
-                        if (didThreadCreate) {
-                            toast.success("Successfully created thread");
-                            const addingMessageToast = toast.loading(
-                                "Adding message and reply to thread",
-                            );
-                            // find thread id
-                            const addInitialMessageToToast =
-                                await MessageService.addMessageToThread();
-                        } else {
+                        if (createdThreadId === -1) {
                             toast.error("Thread failed to create");
+                        } else {
+                            toast.success("Successfully created thread");
+                            const addMessageResult =
+                                await MessageService.addMessageToThread(
+                                    id,
+                                    createdThreadId,
+                                );
+                            const { data: didMessageGetAdded } =
+                                addMessageResult;
+                            if (didMessageGetAdded) {
+                                toast.success(
+                                    "Successfully replied to message!",
+                                );
+                                replyToModalOnHide();
+                            } else {
+                                toast.error(
+                                    "Failed to create thread with this message as the initial message!",
+                                );
+                            }
                         }
                     }}
                     variant={

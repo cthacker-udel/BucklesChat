@@ -21,13 +21,13 @@ export class MessageService extends ClientSideApi {
     public static createThread = async (
         receiver: string,
         creator: string,
-    ): Promise<ApiResponse<boolean>> => {
+    ): Promise<ApiResponse<number>> => {
         if (receiver.length === 0 || creator.length === 0) {
-            return { data: false };
+            return { data: -1 };
         }
 
         const createRequest = await super.post<
-            ApiResponse<boolean>,
+            ApiResponse<number>,
             CreateThreadPayload
         >(
             `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.CREATE}`,
