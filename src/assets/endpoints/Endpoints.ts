@@ -19,6 +19,14 @@ export const Endpoints = {
         EXCEPTION: "exception",
         STATUS: "status",
     },
+    MESSAGE: {
+        BASE: "message/",
+        THREAD: {
+            ADD_MESSAGE: "addMessage",
+            BASE: "message/thread/",
+            CREATE: "create",
+        },
+    },
     USER: {
         BASE: "user/",
         BULK_DASHBOARD: "bulkDashboardInformation",
