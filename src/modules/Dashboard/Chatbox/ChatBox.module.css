@@ -1,0 +1,16 @@
+.chatbox_tabs_categories {
+    display: flex;
+    flex-direction: column;
+}
+
+.chatbox_tabs_content {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    width: 100%;
+    justify-content: space-between;
+    padding: 1em;
+    background-color: rgba(128, 128, 128, 0.25);
+    border-radius: 1em;
+    color: white;
+}

@@ -12,6 +12,7 @@ import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { useBackground } from "@/hooks";
 
 import { AddUserModal } from "./AddUserModal";
+import { ChatBox } from "./Chatbox";
 import styles from "./Dashboard.module.css";
 import { EditUserModal } from "./EditUserModal";
 import { Friend } from "./Friend/Friend";
@@ -310,9 +311,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                     </div>
                 </div>
                 <div className={styles.dashboard_bottom_bar}>
-                    <div className={styles.dashboard_bottom_bar_chat_box}>
-                        {"Chat Box"}
-                    </div>
+                    <ChatBox />
                 </div>
             </div>
             <EditUserModal
