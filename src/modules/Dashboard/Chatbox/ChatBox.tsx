@@ -5,11 +5,16 @@ import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { renderTooltip } from "@/helpers";
 
 import styles from "./ChatBox.module.css";
+import { Threads } from "./Threads";
+
+type ChatBoxProperties = {
+    username: string;
+};
 
 /**
  *
  */
-export const ChatBox = (): JSX.Element => (
+export const ChatBox = ({ username }: ChatBoxProperties): JSX.Element => (
     <div className={styles.chatbox_tabs_content}>
         <TabContainer defaultActiveKey="threads" id="chatbox_tabs">
             <Nav className={styles.chatbox_tabs_categories} variant="pills">
@@ -43,7 +48,9 @@ export const ChatBox = (): JSX.Element => (
                 </Nav.Item>
             </Nav>
             <Tab.Content>
-                <Tab.Pane eventKey="threads">{"Threads"}</Tab.Pane>
+                <Tab.Pane eventKey="threads">
+                    <Threads username={username} />
+                </Tab.Pane>
                 <Tab.Pane eventKey="chats">{"Chats"}</Tab.Pane>
             </Tab.Content>
         </TabContainer>

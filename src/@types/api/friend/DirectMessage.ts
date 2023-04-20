@@ -6,4 +6,5 @@ export type DirectMessage = {
     sender: string;
     senderProfilePictureUrl?: string;
     thread?: number;
+    threadOrder?: number;
 };

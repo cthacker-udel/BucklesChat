@@ -311,7 +311,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                     </div>
                 </div>
                 <div className={styles.dashboard_bottom_bar}>
-                    <ChatBox />
+                    <ChatBox username={username as unknown as string} />
                 </div>
             </div>
             <EditUserModal

@@ -23,8 +23,10 @@ export const Endpoints = {
         BASE: "message/",
         THREAD: {
             ADD_MESSAGE: "addMessage",
+            ALL_THREADS: "getAll",
             BASE: "message/thread/",
             CREATE: "create",
+            MESSAGES: "messages",
         },
     },
     USER: {

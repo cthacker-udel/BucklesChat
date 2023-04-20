@@ -1,13 +1,13 @@
 import React from "react";
 
-import type { ILoggerContext } from "@/@types";
+import type { _useLogger, ILoggerContext } from "@/@types";
 import { LoggerContext } from "@/context";
 
 /**
  *
  * @returns
  */
-export const useLogger = (): ILoggerContext => {
+export const useLogger: _useLogger = (): ILoggerContext => {
     const loggingContext = React.useContext<ILoggerContext | undefined>(
         LoggerContext,
     );

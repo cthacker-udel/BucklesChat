@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { ISocketContext } from "@/@types";
+import type { _useSocket, ISocketContext } from "@/@types";
 import { SocketContext } from "@/context";
 
 /**
@@ -9,7 +9,7 @@ import { SocketContext } from "@/context";
  *
  * @returns The socket context if it is used correctly
  */
-export const useSocket = (): ISocketContext => {
+export const useSocket: _useSocket = (): ISocketContext => {
     const socketContext = React.useContext(SocketContext);
 
     if (socketContext === undefined) {
