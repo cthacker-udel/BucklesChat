@@ -2,7 +2,7 @@
 import React from "react";
 import useSWR from "swr";
 
-import { ApiResponse, Thread, ThreadMessages } from "@/@types";
+import type { ApiResponse, ThreadMessages } from "@/@types";
 import { useSocket } from "@/hooks";
 
 type ThreadsProperties = {
