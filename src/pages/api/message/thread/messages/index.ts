@@ -1,3 +1,3 @@
 import { MessageApi } from "@/@classes";
 
-export default MessageApi.getAllThreadsMessages;
+export default MessageApi.getAllThreadMessages;

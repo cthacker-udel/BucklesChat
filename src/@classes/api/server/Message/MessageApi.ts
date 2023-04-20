@@ -6,7 +6,6 @@ import type {
     AddMessageToThreadPayload,
     ApiResponse,
     CreateThreadPayload,
-    DirectMessage,
     ExceptionLog,
     Thread,
     ThreadMessages,
@@ -157,43 +156,80 @@ export class MessageApi extends ServerSideApi {
         }
     };
 
+    /**
+     * Bulk fetches thread ids passed in, and their respective messages
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static getAllThreadMessages = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const threadId = request.query.threadIds as string;
+
+            if (threadId === undefined || threadId.length === 0) {
+                throw new Error("Must supply thread id to fetch messages");
+            }
+
+            const result = await super.get<ApiResponse<ThreadMessages>>(
+                `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.MESSAGES}`,
+                { threadId },
+            );
+
+            response.status(200);
+            response.send(result);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Fetches all the user's threads messages using username supplied in the query string
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
     public static getAllThreadsMessages = async (
         request: NextApiRequest,
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const threadIds = request.query.threadIds as string;
+            const username = request.query.username as string;
 
-            if (threadIds.length === 0 || threadIds === undefined) {
+            if (username === undefined || username.length === 0) {
                 throw new Error(
-                    "Must supply thread ids to fetch all thread messages",
+                    "Must provide username to fetch all user's threads messages",
                 );
             }
 
-            const splitThreadIds = threadIds.split(",").map(Number);
-
-            const fetchRequests: Promise<ApiResponse<DirectMessage[]>>[] = [];
-
-            for (const eachThreadId of splitThreadIds) {
-                fetchRequests.push(
-                    super.get<ApiResponse<DirectMessage[]>>(
-                        `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.MESSAGES}`,
-                        { threadId: eachThreadId },
-                    ),
-                );
-            }
-
-            const results = await Promise.all(fetchRequests);
-
-            const formattedResults: ThreadMessages[] = results.map(
-                (eachResult, index) => ({
-                    messages: eachResult.data,
-                    threadId: splitThreadIds[index],
-                }),
+            const getAllMessagesResponse = await super.get<
+                ApiResponse<ThreadMessages[]>
+            >(
+                `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.ALL_MESSAGES}`,
+                { username },
             );
 
             response.status(200);
-            response.send(formattedResults);
+            response.send(getAllMessagesResponse);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {
