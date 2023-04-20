@@ -340,7 +340,7 @@ export class FriendApi extends ServerSideApi {
                 );
             }
 
-            const { content, receiver, sender, senderProfilePicture } =
+            const { content, receiver, sender, senderProfilePictureURL } =
                 messagePayload;
 
             const dmSendResponse = await super.post<
@@ -352,7 +352,7 @@ export class FriendApi extends ServerSideApi {
                     content,
                     receiver,
                     sender,
-                    senderProfilePicture,
+                    senderProfilePictureURL,
                 },
             );
 

@@ -47,8 +47,8 @@ export const ChatBox = ({ username }: ChatBoxProperties): JSX.Element => (
                     </OverlayTrigger>
                 </Nav.Item>
             </Nav>
-            <Tab.Content>
-                <Tab.Pane eventKey="threads">
+            <Tab.Content className={styles.thread_tab}>
+                <Tab.Pane className={styles.thread_tab_pane} eventKey="threads">
                     <Threads username={username} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="chats">{"Chats"}</Tab.Pane>

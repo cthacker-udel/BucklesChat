@@ -6,11 +6,21 @@
 .chatbox_tabs_content {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: 2em;
     width: 100%;
     justify-content: space-between;
     padding: 1em;
     background-color: rgba(128, 128, 128, 0.25);
     border-radius: 1em;
     color: white;
+    min-width: 85vw;
+    max-width: 85vw;
+}
+
+.thread_tab {
+    width: 100%;
+}
+
+.thread_tab_pane {
+    height: 100%;
 }

@@ -1,0 +1,29 @@
+.thread_message {
+    display: flex;
+    padding: 0.5em;
+    gap: 5%;
+}
+
+.thread_message_send_info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    width: 10%;
+}
+
+.thread_message_sender_pfp {
+    height: 2vw;
+    width: 2vw;
+    border-radius: 2em;
+    border-width: 0.25em;
+    border-color: rgba(255, 255, 255, 0.25);
+    border-style: outset;
+    opacity: 50%;
+    align-self: center;
+}
+
+.thread_message_date_info {
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.55);
+    align-self: center;
+}

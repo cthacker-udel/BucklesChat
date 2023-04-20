@@ -1,0 +1,23 @@
+.thread_user_pfps {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    cursor: pointer;
+    padding: 1em;
+    border-radius: 1em;
+    transition: background-color 1s ease-in-out;
+}
+
+.thread_user_pfps:hover {
+    background-color: rgba(128, 128, 128, 0.25);
+}
+
+.thread_user_pfp {
+    height: 3vw;
+    width: 3vw;
+    border-radius: 2em;
+    border-width: 0.25em;
+    border-color: rgba(255, 255, 255, 0.25);
+    border-style: outset;
+    opacity: 50%;
+}

@@ -13,7 +13,6 @@ import { MessageFriend } from "./MessageFriend";
 
 type FriendProperties = {
     loggedInUsername?: string;
-    loggedInUserPfp?: string;
     profileImageUrl?: string;
     handle?: string;
     username?: string;
@@ -32,7 +31,6 @@ type FriendProperties = {
  */
 export const Friend = ({
     loggedInUsername,
-    loggedInUserPfp,
     handle,
     profileImageUrl,
     username,
@@ -127,7 +125,7 @@ export const Friend = ({
                 onMessageSend={onMessageSend}
                 receiver={username as unknown as string}
                 sender={loggedInUsername as unknown as string}
-                senderProfilePicture={loggedInUserPfp}
+                senderProfilePicture={profileImageUrl}
                 showMessageFriend={showMessageFriendModal}
             />
         </>
