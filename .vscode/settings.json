@@ -7,5 +7,6 @@
         "**/.DS_Store": false,
         "**/Thumbs.db": false,
         "**/node_modules": true
-    }
+    },
+    "cSpell.words": ["xmark"]
 }

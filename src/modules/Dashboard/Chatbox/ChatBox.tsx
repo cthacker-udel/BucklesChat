@@ -9,12 +9,16 @@ import { Threads } from "./Threads";
 
 type ChatBoxProperties = {
     username: string;
+    usernameProfilePictureUrl?: string;
 };
 
 /**
  *
  */
-export const ChatBox = ({ username }: ChatBoxProperties): JSX.Element => (
+export const ChatBox = ({
+    username,
+    usernameProfilePictureUrl,
+}: ChatBoxProperties): JSX.Element => (
     <div className={styles.chatbox_tabs_content}>
         <TabContainer defaultActiveKey="threads" id="chatbox_tabs">
             <Nav className={styles.chatbox_tabs_categories} variant="pills">
@@ -49,7 +53,10 @@ export const ChatBox = ({ username }: ChatBoxProperties): JSX.Element => (
             </Nav>
             <Tab.Content className={styles.thread_tab}>
                 <Tab.Pane className={styles.thread_tab_pane} eventKey="threads">
-                    <Threads username={username} />
+                    <Threads
+                        username={username}
+                        usernameProfilePictureUrl={usernameProfilePictureUrl}
+                    />
                 </Tab.Pane>
                 <Tab.Pane eventKey="chats">{"Chats"}</Tab.Pane>
             </Tab.Content>

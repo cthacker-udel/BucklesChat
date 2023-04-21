@@ -7,11 +7,13 @@ import type { DirectMessage, ThreadMessages } from "@/@types";
 import { useSocket } from "@/hooks";
 
 import { ThreadMessage } from "./ThreadMessage";
+import { ThreadReply } from "./ThreadReply";
 import styles from "./Threads.module.css";
 import { ThreadToggle } from "./ThreadToggle";
 
 type ThreadsProperties = {
     username: string;
+    usernameProfilePictureUrl?: string;
 };
 
 /**
@@ -19,7 +21,10 @@ type ThreadsProperties = {
  *
  * @returns All threads belonging to the user
  */
-export const Threads = ({ username }: ThreadsProperties): JSX.Element => {
+export const Threads = ({
+    username,
+    usernameProfilePictureUrl,
+}: ThreadsProperties): JSX.Element => {
     const { socket } = useSocket();
     const { data: allThreadsMessages } = useSWR<
         ThreadMessages[],
@@ -27,17 +32,15 @@ export const Threads = ({ username }: ThreadsProperties): JSX.Element => {
         string
     >(`message/thread/getAll/messages?username=${username}`);
 
-    console.log(allThreadsMessages);
-
     return (
         <div className={styles.threads_container}>
-            {allThreadsMessages?.map((eachThreadMessage) => {
+            {allThreadsMessages?.map((eachThreadMessage: ThreadMessages) => {
                 const { messages, threadId } = eachThreadMessage;
                 return (
                     <div className={styles.thread} key={`thread_${threadId}`}>
                         <Accordion
                             className={styles.thread_user}
-                            defaultActiveKey="0"
+                            defaultActiveKey="-1"
                         >
                             <ThreadToggle eventKey="0" {...eachThreadMessage} />
                             <Accordion.Collapse eventKey="0">
@@ -58,6 +61,13 @@ export const Threads = ({ username }: ThreadsProperties): JSX.Element => {
                                             />
                                         ),
                                     )}
+                                    <ThreadReply
+                                        left={messages.length % 2 === 0}
+                                        username={username}
+                                        usernameProfilePictureUrl={
+                                            usernameProfilePictureUrl
+                                        }
+                                    />
                                 </div>
                             </Accordion.Collapse>
                         </Accordion>

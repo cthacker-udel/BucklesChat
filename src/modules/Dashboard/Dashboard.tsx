@@ -311,7 +311,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                     </div>
                 </div>
                 <div className={styles.dashboard_bottom_bar}>
-                    <ChatBox username={username as unknown as string} />
+                    <ChatBox
+                        username={username as unknown as string}
+                        usernameProfilePictureUrl={data.profileImageUrl}
+                    />
                 </div>
             </div>
             <EditUserModal

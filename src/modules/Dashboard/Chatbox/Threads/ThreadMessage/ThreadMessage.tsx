@@ -1,8 +1,9 @@
 import React from "react";
+import { Image } from "react-bootstrap";
+
+import { computeTodayDayDistance } from "@/helpers";
 
 import styles from "./ThreadMessage.module.css";
-import { Image } from "react-bootstrap";
-import { computeTodayDayDistance } from "@/helpers";
 
 type ThreadMessageProperties = {
     content: string;
@@ -24,12 +25,12 @@ export const ThreadMessage = ({
     content,
     createdAt,
     left,
-    id,
-    receiver,
+    id: _id,
+    receiver: _receiver,
     sender,
     senderProfilePictureUrl,
-    thread,
-    threadOrder,
+    thread: _thread,
+    threadOrder: _threadOrder,
 }: ThreadMessageProperties): JSX.Element => (
     <div
         className={styles.thread_message}
