@@ -30,6 +30,14 @@
     gap: 0.5em;
 }
 
+.thread_collapse {
+    max-height: 25vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25);
+    border-radius: 1em;
+}
+
 .thread_messages {
     display: flex;
     flex-direction: column;

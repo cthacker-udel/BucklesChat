@@ -65,7 +65,10 @@ export const Threads = ({
                             defaultActiveKey="-1"
                         >
                             <ThreadToggle eventKey="0" {...eachThreadMessage} />
-                            <Accordion.Collapse eventKey="0">
+                            <Accordion.Collapse
+                                className={styles.thread_collapse}
+                                eventKey="0"
+                            >
                                 <div className={styles.thread_messages}>
                                     {messages.map(
                                         (
