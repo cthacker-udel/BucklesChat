@@ -24,11 +24,34 @@ export const Threads = ({
     username,
     usernameProfilePictureUrl,
 }: ThreadsProperties): JSX.Element => {
-    const { data: allThreadsMessages } = useSWR<
+    const { data: allThreadsMessages, mutate } = useSWR<
         ThreadMessages[],
         ThreadMessages[],
         string
     >(`message/thread/getAll/messages?username=${username}`);
+
+    const addMessage = React.useCallback(
+        async (threadId: number, message: DirectMessage) => {
+            if (allThreadsMessages !== undefined) {
+                const modifiedMessages = allThreadsMessages.map(
+                    (eachThreadMessages: ThreadMessages) => {
+                        if (eachThreadMessages.threadId === threadId) {
+                            return {
+                                ...eachThreadMessages,
+                                messages: [
+                                    ...eachThreadMessages.messages,
+                                    message,
+                                ],
+                            };
+                        }
+                        return { ...eachThreadMessages };
+                    },
+                );
+                await mutate(modifiedMessages);
+            }
+        },
+        [allThreadsMessages, mutate],
+    );
 
     return (
         <div className={styles.threads_container}>
@@ -61,6 +84,7 @@ export const Threads = ({
                                         ),
                                     )}
                                     <ThreadReply
+                                        addMessage={addMessage}
                                         left={messages.length % 2 === 0}
                                         receiver={
                                             creator === username
