@@ -51,8 +51,6 @@ export const ThreadReply = ({
 
     const [sendingMessage, setSendingMessage] = React.useState<boolean>(false);
 
-    console.log(content);
-
     return (
         <div
             className={styles.thread_reply}
