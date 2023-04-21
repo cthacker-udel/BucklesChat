@@ -6,6 +6,7 @@ import type {
     AddMessageToThreadPayload,
     ApiResponse,
     CreateThreadPayload,
+    DirectMessage,
     ExceptionLog,
     Thread,
     ThreadMessages,
@@ -230,6 +231,65 @@ export class MessageApi extends ServerSideApi {
 
             response.status(200);
             response.send(getAllMessagesResponse);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Adds a message to the database
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static addMessage = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const body = JSON.parse(request.body) as Partial<DirectMessage>;
+
+            if (
+                body.content === undefined ||
+                body.receiver === undefined ||
+                body.sender === undefined
+            ) {
+                throw new Error(
+                    "Invalid properties sent to add a message to the database",
+                );
+            }
+
+            const { content, receiver, sender, senderProfilePictureUrl } = body;
+
+            const addMessageResult = await super.post<
+                ApiResponse<number>,
+                Partial<DirectMessage>
+            >(`${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.ADD}`, {
+                content,
+                receiver,
+                sender,
+                senderProfilePictureUrl,
+            });
+
+            response.status(addMessageResult.data >= 0 ? 200 : 400);
+            response.send(addMessageResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {

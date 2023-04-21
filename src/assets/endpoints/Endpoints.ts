@@ -20,6 +20,7 @@ export const Endpoints = {
         STATUS: "status",
     },
     MESSAGE: {
+        ADD: "add",
         BASE: "message/",
         THREAD: {
             ADD_MESSAGE: "addMessage",

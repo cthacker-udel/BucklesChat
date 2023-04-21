@@ -3,6 +3,7 @@ import type {
     AddMessageToThreadPayload,
     ApiResponse,
     CreateThreadPayload,
+    DirectMessage,
 } from "@/@types";
 import { Endpoints } from "@/assets";
 
@@ -67,5 +68,31 @@ export class MessageService extends ClientSideApi {
         );
 
         return addRequest;
+    };
+
+    public static addMessage = async (
+        payload: Partial<DirectMessage>,
+    ): Promise<ApiResponse<number>> => {
+        if (
+            payload.content === undefined ||
+            payload.receiver === undefined ||
+            payload.sender === undefined
+        ) {
+            return { data: -1 };
+        }
+
+        const { content, receiver, sender, senderProfilePictureUrl } = payload;
+
+        const addMessageRequest = await super.post<
+            ApiResponse<number>,
+            Partial<DirectMessage>
+        >(`${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.ADD}`, {
+            content,
+            receiver,
+            sender,
+            senderProfilePictureUrl,
+        });
+
+        return addMessageRequest;
     };
 }

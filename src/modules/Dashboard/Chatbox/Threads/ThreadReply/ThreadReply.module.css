@@ -1,7 +1,7 @@
 .thread_reply {
     display: flex;
     padding: 0.5em;
-    gap: 5%;
+    gap: 1%;
 }
 
 .thread_reply_send_info {
@@ -50,6 +50,11 @@
     flex-direction: row;
     gap: 1em;
     transition: opacity 1s ease-in-out;
+    width: 90%;
+}
+
+.thread_reply_form_group {
+    width: 100%;
 }
 
 .thread_reply_form_options {

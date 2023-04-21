@@ -1,22 +1,20 @@
 import React from "react";
-import {
-    Button,
-    Form,
-    Image,
-    InputGroup,
-    OverlayTrigger,
-} from "react-bootstrap";
+import { Button, Form, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "react-toastify";
 
+import { MessageService } from "@/@classes";
 import { renderTooltip } from "@/helpers";
 
 import styles from "./ThreadReply.module.css";
 
 type ThreadReplyProperties = {
     left: boolean;
-    username: string;
-    usernameProfilePictureUrl?: string;
+    receiver: string;
+    sender: string;
+    senderProfilePictureUrl?: string;
+    threadId: number;
 };
 
 type FormValues = {
@@ -33,17 +31,27 @@ const FORM_DEFAULT_VALUES: FormValues = {
  */
 export const ThreadReply = ({
     left,
-    username,
-    usernameProfilePictureUrl,
+    receiver,
+    sender,
+    senderProfilePictureUrl,
+    threadId,
 }: ThreadReplyProperties): JSX.Element => {
-    const { register, reset } = useForm<FormValues>({
+    const { control, register, reset } = useForm<FormValues>({
         criteriaMode: "all",
         defaultValues: FORM_DEFAULT_VALUES,
         mode: "all",
         reValidateMode: "onBlur",
     });
 
+    const [content] = useWatch({
+        control,
+        defaultValue: { content: "" },
+        name: ["content"],
+    });
+
     const [sendingMessage, setSendingMessage] = React.useState<boolean>(false);
+
+    console.log(content);
 
     return (
         <div
@@ -52,9 +60,9 @@ export const ThreadReply = ({
         >
             <div className={styles.thread_reply_send_info}>
                 <Image
-                    alt={`Current logged in ${username}'s profile picture`}
+                    alt={`Current logged in ${sender}'s profile picture`}
                     className={styles.thread_reply_pfp}
-                    src={usernameProfilePictureUrl}
+                    src={senderProfilePictureUrl}
                 />
             </div>
             {sendingMessage ? (
@@ -62,10 +70,14 @@ export const ThreadReply = ({
                     className={styles.thread_reply_form_container}
                     style={{ opacity: sendingMessage ? "100%" : "0%" }}
                 >
-                    <Form.Group controlId="message_content_form">
+                    <Form.Group
+                        className={styles.thread_reply_form_group}
+                        controlId="message_content_form"
+                    >
                         <Form.Control
                             as="textarea"
                             className={styles.thread_reply_form_control}
+                            placeholder="Enter reply here"
                             {...register("content")}
                         />
                     </Form.Group>
@@ -80,6 +92,40 @@ export const ThreadReply = ({
                         >
                             <Button
                                 className={styles.thread_reply_form_option}
+                                onClick={async (): Promise<void> => {
+                                    const addedMessage =
+                                        await MessageService.addMessage({
+                                            content,
+                                            receiver,
+                                            sender,
+                                            senderProfilePictureUrl,
+                                        });
+                                    if (addedMessage.data >= 0) {
+                                        const addingMessageToThreadToast =
+                                            toast.loading(
+                                                "Adding message to thread...",
+                                            );
+                                        const addMessageToThreadRequest =
+                                            await MessageService.addMessageToThread(
+                                                addedMessage.data,
+                                                threadId,
+                                            );
+                                        toast.dismiss(
+                                            addingMessageToThreadToast,
+                                        );
+                                        if (addMessageToThreadRequest.data) {
+                                            toast.success(
+                                                "Added message to thread successfully!",
+                                            );
+                                            reset();
+                                            setSendingMessage(false);
+                                        } else {
+                                            toast.error(
+                                                "Failed to add message to thread.",
+                                            );
+                                        }
+                                    }
+                                }}
                                 variant="outline-light"
                             >
                                 <i className="fa-solid fa-share fa-sm" />

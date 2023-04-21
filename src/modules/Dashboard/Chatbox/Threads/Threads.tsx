@@ -4,7 +4,6 @@ import { Accordion } from "react-bootstrap";
 import useSWR from "swr";
 
 import type { DirectMessage, ThreadMessages } from "@/@types";
-import { useSocket } from "@/hooks";
 
 import { ThreadMessage } from "./ThreadMessage";
 import { ThreadReply } from "./ThreadReply";
@@ -25,7 +24,6 @@ export const Threads = ({
     username,
     usernameProfilePictureUrl,
 }: ThreadsProperties): JSX.Element => {
-    const { socket } = useSocket();
     const { data: allThreadsMessages } = useSWR<
         ThreadMessages[],
         ThreadMessages[],
@@ -35,7 +33,8 @@ export const Threads = ({
     return (
         <div className={styles.threads_container}>
             {allThreadsMessages?.map((eachThreadMessage: ThreadMessages) => {
-                const { messages, threadId } = eachThreadMessage;
+                const { creator, messages, receiver, threadId } =
+                    eachThreadMessage;
                 return (
                     <div className={styles.thread} key={`thread_${threadId}`}>
                         <Accordion
@@ -63,10 +62,16 @@ export const Threads = ({
                                     )}
                                     <ThreadReply
                                         left={messages.length % 2 === 0}
-                                        username={username}
-                                        usernameProfilePictureUrl={
+                                        receiver={
+                                            creator === username
+                                                ? receiver
+                                                : creator
+                                        }
+                                        sender={username}
+                                        senderProfilePictureUrl={
                                             usernameProfilePictureUrl
                                         }
+                                        threadId={threadId}
                                     />
                                 </div>
                             </Accordion.Collapse>
