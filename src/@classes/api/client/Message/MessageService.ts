@@ -81,7 +81,7 @@ export class MessageService extends ClientSideApi {
             return { data: -1 };
         }
 
-        const { content, receiver, sender, senderProfilePictureUrl } = payload;
+        const { content, receiver, sender } = payload;
 
         const addMessageRequest = await super.post<
             ApiResponse<number>,
@@ -90,7 +90,6 @@ export class MessageService extends ClientSideApi {
             content,
             receiver,
             sender,
-            senderProfilePictureUrl,
         });
 
         return addMessageRequest;

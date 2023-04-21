@@ -113,7 +113,6 @@ export class FriendService extends ClientSideApi {
         receiver: string,
         sender: string,
         content: string,
-        senderProfilePictureURL?: string,
     ): Promise<ApiResponse<boolean>> => {
         if (
             receiver.length === 0 ||
@@ -129,7 +128,6 @@ export class FriendService extends ClientSideApi {
                 content,
                 receiver,
                 sender,
-                senderProfilePictureURL,
             },
         );
 

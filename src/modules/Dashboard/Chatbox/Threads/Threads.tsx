@@ -67,7 +67,11 @@ export const Threads = ({
                             className={styles.thread_user}
                             defaultActiveKey="-1"
                         >
-                            <ThreadToggle eventKey="0" {...eachThreadMessage} />
+                            <ThreadToggle
+                                eventKey="0"
+                                sender={username}
+                                {...eachThreadMessage}
+                            />
                             <Accordion.Collapse
                                 className={styles.thread_collapse}
                                 eventKey="0"

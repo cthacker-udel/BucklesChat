@@ -6,10 +6,10 @@ import useSWR from "swr";
 import { Key } from "ts-key-enum";
 
 import type { User } from "@/@types";
+import { Endpoints } from "@/assets";
 import placeholderPFP from "@/assets/placeholder/pfp.jpg";
 
 import styles from "./FriendMultiselect.module.css";
-import { Endpoints } from "@/assets";
 
 type FriendMultiselectProperties = {
     onSearch: (

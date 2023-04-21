@@ -104,6 +104,7 @@ export const ThreadReply = ({
     return (
         <div
             className={styles.thread_reply}
+            id={`thread_reply_${receiver}_${sender}`}
             style={{ flexDirection: left ? "row" : "row-reverse" }}
         >
             <div className={styles.thread_reply_send_info}>

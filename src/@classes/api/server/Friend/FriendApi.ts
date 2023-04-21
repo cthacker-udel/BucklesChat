@@ -4,7 +4,6 @@ import { v4 } from "uuid";
 
 import type {
     ApiResponse,
-    DirectMessage,
     DmPayload,
     ExceptionLog,
     FriendPayload,
@@ -340,8 +339,7 @@ export class FriendApi extends ServerSideApi {
                 );
             }
 
-            const { content, receiver, sender, senderProfilePictureURL } =
-                messagePayload;
+            const { content, receiver, sender } = messagePayload;
 
             const dmSendResponse = await super.post<
                 ApiResponse<boolean>,
@@ -352,61 +350,11 @@ export class FriendApi extends ServerSideApi {
                     content,
                     receiver,
                     sender,
-                    senderProfilePictureURL,
                 },
             );
 
             response.status(dmSendResponse.data ? 200 : 400);
             response.send(dmSendResponse);
-        } catch (error: unknown) {
-            const convertedError = error as Error;
-            try {
-                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
-                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
-                    {
-                        id: v4().toString(),
-                        message: convertedError.message,
-                        stackTrace: convertedError.stack,
-                        timestamp: Date.now(),
-                    },
-                );
-            } finally {
-                response.status(500);
-                response.json({
-                    apiError: { code: 500, message: (error as Error).message },
-                    data: false,
-                });
-            }
-        }
-    };
-
-    /**
-     * Retrieves all pending messages for the username supplied
-     *
-     * @param request - The client request
-     * @param response - The client response
-     */
-    public static pendingDirectMessages = async (
-        request: NextApiRequest,
-        response: NextApiResponse,
-    ): Promise<void> => {
-        try {
-            const username = request.query.username as string;
-
-            if (username === undefined) {
-                throw new Error(
-                    "Must supply username to retrieve direct messages",
-                );
-            }
-
-            const fetchedDirectMessages = await super.get<
-                ApiResponse<DirectMessage[]>
-            >(`friend/pendingDirectMessages?username=${username}`);
-
-            response.status(
-                fetchedDirectMessages.data === undefined ? 400 : 200,
-            );
-            response.send(fetchedDirectMessages);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {
