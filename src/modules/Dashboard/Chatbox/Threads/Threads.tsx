@@ -4,6 +4,7 @@ import { Accordion } from "react-bootstrap";
 import useSWR from "swr";
 
 import type { DirectMessage, ThreadMessages } from "@/@types";
+import { Endpoints } from "@/assets";
 
 import { ThreadMessage } from "./ThreadMessage";
 import { ThreadReply } from "./ThreadReply";
@@ -28,7 +29,9 @@ export const Threads = ({
         ThreadMessages[],
         ThreadMessages[],
         string
-    >(`message/thread/getAll/messages?username=${username}`);
+    >(
+        `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.ALL_MESSAGES}?username=${username}`,
+    );
 
     const addMessage = React.useCallback(
         async (threadId: number, message: DirectMessage) => {

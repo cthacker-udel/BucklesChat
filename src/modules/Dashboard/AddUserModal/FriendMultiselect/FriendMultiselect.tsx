@@ -9,6 +9,7 @@ import type { User } from "@/@types";
 import placeholderPFP from "@/assets/placeholder/pfp.jpg";
 
 import styles from "./FriendMultiselect.module.css";
+import { Endpoints } from "@/assets";
 
 type FriendMultiselectProperties = {
     onSearch: (
@@ -30,14 +31,14 @@ export const FriendMultiSelect = ({
     username,
 }: FriendMultiselectProperties): JSX.Element => {
     const { data: availableFriends } = useSWR<string[], undefined, string>(
-        `friend/availableFriends?username=${username}`,
+        `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}?username=${username}`,
     );
     const { data: availableFriendInformation } = useSWR<
         Partial<User>[],
         Partial<User>[],
         string
     >(
-        `user/bulkDashboardInformation?usernames=${
+        `${Endpoints.USER.BASE}${Endpoints.USER.BULK_DASHBOARD}?usernames=${
             availableFriends === undefined ? "" : availableFriends.join(",")
         }`,
     );

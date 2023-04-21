@@ -4,6 +4,7 @@ import { Accordion, Offcanvas } from "react-bootstrap";
 import useSWR from "swr";
 
 import type { DirectMessage, FriendRequest } from "@/@types";
+import { Endpoints } from "@/assets";
 
 import styles from "./InboxOffcanvas.module.css";
 import { PendingFriendRequest } from "./PendingFriendRequest";
@@ -29,12 +30,19 @@ export const InboxOffcanvas = ({
         FriendRequest[],
         FriendRequest[],
         string
-    >(`friend/pendingRequests?username=${username}`, { refreshInterval: 350 });
+    >(
+        `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.PENDING_REQUESTS}?username=${username}`,
+        {
+            refreshInterval: 350,
+        },
+    );
     const { data: pendingMessages, mutate: mutateMessages } = useSWR<
         DirectMessage[],
         DirectMessage[],
         string
-    >(`friend/pendingDirectMessages?username=${username}`);
+    >(
+        `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.PENDING_DIRECT_MESSAGES}?username=${username}`,
+    );
 
     const removeMessageFromCache = React.useCallback(
         async (messageId: number): Promise<void> => {

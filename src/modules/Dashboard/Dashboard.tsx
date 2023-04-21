@@ -7,6 +7,7 @@ import useSWR from "swr";
 
 import { ImageService, UserService } from "@/@classes";
 import type { DashboardInformation } from "@/@types";
+import { Endpoints } from "@/assets";
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { useBackground } from "@/hooks";
@@ -33,7 +34,11 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
         DashboardInformation,
         DashboardInformation,
         string
-    >(`user/dashboard?username=${username}`, null, { refreshInterval: 2000 });
+    >(
+        `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}?username=${username}`,
+        null,
+        { refreshInterval: 2000 },
+    );
 
     const [hoveringOverProfilePicture, setHoveringOverProfilePicture] =
         React.useState<boolean>(false);

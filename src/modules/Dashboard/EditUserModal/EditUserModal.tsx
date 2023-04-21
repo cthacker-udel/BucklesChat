@@ -6,7 +6,7 @@ import useSWR from "swr";
 
 import { UserService } from "@/@classes";
 import type { User } from "@/@types";
-import { TextConstants, ValidationConstants } from "@/assets";
+import { Endpoints, TextConstants, ValidationConstants } from "@/assets";
 
 import styles from "./EditUserModal.module.css";
 
@@ -46,7 +46,7 @@ export const EditUserModal = ({
     username,
 }: EditUserModalProperties): JSX.Element => {
     const { data } = useSWR<Partial<User>, Partial<User>, string>(
-        `user/details?username=${username}`,
+        `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}?username=${username}`,
     );
 
     const { clearErrors, formState, getValues, register, reset, resetField } =

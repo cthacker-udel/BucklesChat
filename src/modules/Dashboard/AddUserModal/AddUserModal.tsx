@@ -5,6 +5,7 @@ import { useSWRConfig } from "swr";
 
 import { FriendService } from "@/@classes";
 import type { ApiResponse } from "@/@types";
+import { Endpoints } from "@/assets";
 
 import styles from "./AddUserModal.module.css";
 import { FriendMultiSelect } from "./FriendMultiselect";
@@ -120,7 +121,9 @@ export const AddUserModal = ({
             index += 1;
         }
         toast.dismiss(sendingRequestsToast);
-        await mutate(`friend/availableFriends?username=${username}`);
+        await mutate(
+            `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}?username=${username}`,
+        );
     }, [mutate, selectedFriends, username]);
 
     return (

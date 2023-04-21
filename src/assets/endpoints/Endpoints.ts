@@ -22,6 +22,7 @@ export const Endpoints = {
     MESSAGE: {
         ADD: "add",
         BASE: "message/",
+        PENDING_DIRECT_MESSAGES: "pendingDirectMessages",
         THREAD: {
             ADD_MESSAGE: "addMessage",
             ALL_MESSAGES: "getAll/messages",
