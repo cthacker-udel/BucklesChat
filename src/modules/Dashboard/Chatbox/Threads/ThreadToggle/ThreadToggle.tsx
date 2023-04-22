@@ -30,8 +30,11 @@ export const ThreadToggle = ({
         );
 
         if (foundReplyElements.length > 0) {
-            const foundReplyElement = foundReplyElements[0];
-            foundReplyElement.scrollIntoView({ behavior: "smooth" });
+            // Used because element renders too quickly for scroll to happen, wait half a second then scroll
+            setTimeout(() => {
+                const foundReplyElement = foundReplyElements[0];
+                foundReplyElement.scrollIntoView({ behavior: "smooth" });
+            }, 50);
         }
     }, [receiver, sender]);
 

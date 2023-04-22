@@ -6,5 +6,6 @@ export type DashboardInformation = {
     username?: string;
     createdAt?: string;
     numberOfFriends?: number;
+    numberOfMessages?: number;
     friendsInformation?: Partial<User>[];
 };

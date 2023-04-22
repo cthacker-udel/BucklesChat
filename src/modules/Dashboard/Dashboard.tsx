@@ -176,7 +176,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 <span>
                                     {`${data.numberOfFriends ?? 0} Friends`}
                                 </span>
-                                <span>{"10 messages sent"}</span>
+                                <span>{`${data.numberOfMessages} messages sent`}</span>
                                 <div className={styles.dashboard_member_since}>
                                     <span
                                         className={
