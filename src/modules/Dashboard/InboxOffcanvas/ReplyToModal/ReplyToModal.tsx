@@ -164,14 +164,12 @@ export const ReplyToModal = ({
                             toast.loading("Creating thread...");
                         const createToastResult =
                             await MessageService.createThread(sender, receiver);
-                        toast.dismiss(creatingThreadToast);
 
                         const { data: createdThreadId } = createToastResult;
 
                         if (createdThreadId === -1) {
                             toast.error("Thread failed to create");
                         } else {
-                            toast.success("Successfully created thread");
                             const addMessageResult =
                                 await MessageService.addMessageToThread(
                                     id,
@@ -180,17 +178,32 @@ export const ReplyToModal = ({
                             const { data: didMessageGetAdded } =
                                 addMessageResult;
                             if (didMessageGetAdded) {
-                                toast.success(
-                                    "Successfully replied to message!",
-                                );
-                                replyToModalOnHide();
-                                await removeMessageFromCache(id);
+                                const { data: newMessageId } =
+                                    await MessageService.addMessage({
+                                        content,
+                                        receiver: sender,
+                                        sender: receiver,
+                                    });
+                                const { data: addedNewMessageToThread } =
+                                    await MessageService.addMessageToThread(
+                                        newMessageId,
+                                        createdThreadId,
+                                    );
+                                if (addedNewMessageToThread) {
+                                    replyToModalOnHide();
+                                    await removeMessageFromCache(id);
+                                } else {
+                                    toast.error(
+                                        "Failed to add reply to thread",
+                                    );
+                                }
                             } else {
                                 toast.error(
                                     "Failed to create thread with this message as the initial message!",
                                 );
                             }
                         }
+                        toast.dismiss(creatingThreadToast);
                     }}
                     variant={
                         !dirtyFields.content && !errors.content

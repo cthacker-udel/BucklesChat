@@ -70,6 +70,12 @@ export class MessageService extends ClientSideApi {
         return addRequest;
     };
 
+    /**
+     * Creates a message in the database and returns the id of the message that was created if created successfully
+     *
+     * @param payload - The message payload, which houses the creator, receiver, and the content of the message
+     * @returns - The id of the message that was created
+     */
     public static addMessage = async (
         payload: Partial<DirectMessage>,
     ): Promise<ApiResponse<number>> => {
