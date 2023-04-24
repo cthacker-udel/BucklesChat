@@ -168,7 +168,11 @@ export const ReplyToModal = ({
                         const { data: createdThreadId } = createToastResult;
 
                         if (createdThreadId === -1) {
-                            toast.error("Thread failed to create");
+                            toast.update(creatingThreadToast, {
+                                autoClose: 5000,
+                                render: "Thread failed to create",
+                                type: toast.TYPE.ERROR,
+                            });
                         } else {
                             const addMessageResult =
                                 await MessageService.addMessageToThread(
@@ -190,20 +194,28 @@ export const ReplyToModal = ({
                                         createdThreadId,
                                     );
                                 if (addedNewMessageToThread) {
+                                    toast.update(creatingThreadToast, {
+                                        autoClose: 5000,
+                                        render: "Successfully created thread!",
+                                        type: toast.TYPE.SUCCESS,
+                                    });
                                     replyToModalOnHide();
                                     await removeMessageFromCache(id);
                                 } else {
-                                    toast.error(
-                                        "Failed to add reply to thread",
-                                    );
+                                    toast.update(creatingThreadToast, {
+                                        autoClose: 5000,
+                                        render: "Failed to add reply to thread",
+                                        type: toast.TYPE.ERROR,
+                                    });
                                 }
                             } else {
-                                toast.error(
-                                    "Failed to create thread with this message as the initial message!",
-                                );
+                                toast.update(creatingThreadToast, {
+                                    autoClose: 5000,
+                                    render: "Failed to create thread with this message as the initial message!",
+                                    type: toast.TYPE.ERROR,
+                                });
                             }
                         }
-                        toast.dismiss(creatingThreadToast);
                     }}
                     variant={
                         !dirtyFields.content && !errors.content
