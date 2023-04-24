@@ -161,15 +161,16 @@ export const ReplyToModal = ({
                     disabled={!dirtyFields.content || Boolean(errors.content)}
                     onClick={async (): Promise<void> => {
                         const creatingThreadToast =
-                            toast.loading("Creating thread...");
+                            toast.loading<string>("Creating thread...");
                         const createToastResult =
                             await MessageService.createThread(sender, receiver);
 
                         const { data: createdThreadId } = createToastResult;
 
                         if (createdThreadId === -1) {
-                            toast.update(creatingThreadToast, {
-                                autoClose: 5000,
+                            toast.update<string>(creatingThreadToast, {
+                                autoClose: 3000,
+                                isLoading: false,
                                 render: "Thread failed to create",
                                 type: toast.TYPE.ERROR,
                             });
@@ -194,23 +195,26 @@ export const ReplyToModal = ({
                                         createdThreadId,
                                     );
                                 if (addedNewMessageToThread) {
-                                    toast.update(creatingThreadToast, {
-                                        autoClose: 5000,
+                                    toast.update<string>(creatingThreadToast, {
+                                        autoClose: 3000,
+                                        isLoading: false,
                                         render: "Successfully created thread!",
                                         type: toast.TYPE.SUCCESS,
                                     });
                                     replyToModalOnHide();
                                     await removeMessageFromCache(id);
                                 } else {
-                                    toast.update(creatingThreadToast, {
-                                        autoClose: 5000,
+                                    toast.update<string>(creatingThreadToast, {
+                                        autoClose: 3000,
+                                        isLoading: false,
                                         render: "Failed to add reply to thread",
                                         type: toast.TYPE.ERROR,
                                     });
                                 }
                             } else {
-                                toast.update(creatingThreadToast, {
-                                    autoClose: 5000,
+                                toast.update<string>(creatingThreadToast, {
+                                    autoClose: 3000,
+                                    isLoading: false,
                                     render: "Failed to create thread with this message as the initial message!",
                                     type: toast.TYPE.ERROR,
                                 });
