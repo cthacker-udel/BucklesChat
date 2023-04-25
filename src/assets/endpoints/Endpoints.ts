@@ -22,6 +22,11 @@ export const Endpoints = {
     MESSAGE: {
         ADD: "add",
         BASE: "message/",
+        CHATROOM: {
+            ALL: "all",
+            BASE: "message/chatroom/",
+            STATS: "stats",
+        },
         PENDING_DIRECT_MESSAGES: "pendingDirectMessages",
         THREAD: {
             ADD_MESSAGE: "addMessage",

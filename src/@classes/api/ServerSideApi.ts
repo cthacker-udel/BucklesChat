@@ -18,6 +18,7 @@ export class ServerSideApi {
                   .map((eachEntry) => `${eachEntry[0]}=${eachEntry[1]}`)
                   .join("")}`
             : "";
+
         const getRequestResult = await fetch(
             `${process.env.SERVICE_URL}${endpoint}${queryString}`,
             {

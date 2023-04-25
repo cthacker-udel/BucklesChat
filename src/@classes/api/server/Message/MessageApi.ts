@@ -5,6 +5,8 @@ import { v4 } from "uuid";
 import type {
     AddMessageToThreadPayload,
     ApiResponse,
+    ChatRoom,
+    ChatRoomStats,
     CreateThreadPayload,
     DirectMessage,
     ExceptionLog,
@@ -340,6 +342,93 @@ export class MessageApi extends ServerSideApi {
                 fetchedDirectMessages.data === undefined ? 400 : 200,
             );
             response.send(fetchedDirectMessages);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Fetches all chat-rooms from the database
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static getAllChatRooms = async (
+        _request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const allChatRooms = await super.get<ApiResponse<ChatRoom[]>>(
+                `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.ALL}`,
+            );
+
+            response.status(200);
+            response.json(allChatRooms);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Fetches stats for chat rooms
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static getChatRoomStats = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const chatRoomId = request.query.chatRoomId as string;
+
+            if (chatRoomId === undefined) {
+                throw new Error(
+                    "Must supply chat room id when attempting to fetch chat room stats",
+                );
+            }
+
+            const chatRoomStats = await super.get<ChatRoomStats>(
+                `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.STATS}`,
+                { chatRoomId },
+            );
+
+            response.status(200);
+            response.send(chatRoomStats);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {

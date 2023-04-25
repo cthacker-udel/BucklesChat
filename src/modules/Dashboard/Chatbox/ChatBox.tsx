@@ -4,6 +4,7 @@ import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 
 import { renderTooltip } from "@/helpers";
 
+import { Chat } from "./Chat/Chat";
 import styles from "./ChatBox.module.css";
 import { Threads } from "./Threads";
 
@@ -58,7 +59,9 @@ export const ChatBox = ({
                         usernameProfilePictureUrl={usernameProfilePictureUrl}
                     />
                 </Tab.Pane>
-                <Tab.Pane eventKey="chats">{"Chats"}</Tab.Pane>
+                <Tab.Pane eventKey="chats">
+                    <Chat />
+                </Tab.Pane>
             </Tab.Content>
         </TabContainer>
     </div>

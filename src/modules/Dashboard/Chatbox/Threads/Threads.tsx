@@ -58,61 +58,69 @@ export const Threads = ({
 
     return (
         <div className={styles.threads_container}>
-            {allThreadsMessages?.map((eachThreadMessage: ThreadMessages) => {
-                const { creator, messages, receiver, threadId } =
-                    eachThreadMessage;
-                return (
-                    <div className={styles.thread} key={`thread_${threadId}`}>
-                        <Accordion
-                            className={styles.thread_user}
-                            defaultActiveKey="-1"
+            {allThreadsMessages?.map(
+                (
+                    eachThreadMessage: ThreadMessages,
+                    eachThreadIndex: number,
+                ) => {
+                    const { creator, messages, receiver, threadId } =
+                        eachThreadMessage;
+                    return (
+                        <div
+                            className={styles.thread}
+                            key={`thread_${threadId}`}
                         >
-                            <ThreadToggle
-                                eventKey="0"
-                                sender={username}
-                                {...eachThreadMessage}
-                            />
-                            <Accordion.Collapse
-                                className={styles.thread_collapse}
-                                eventKey="0"
+                            <Accordion
+                                className={styles.thread_user}
+                                defaultActiveKey="-1"
                             >
-                                <div className={styles.thread_messages}>
-                                    {messages.map(
-                                        (
-                                            eachDirectMessage: DirectMessage,
-                                            eachDirectMessageIndex: number,
-                                        ) => (
-                                            <ThreadMessage
-                                                key={`message_${eachDirectMessage.id}`}
-                                                left={
-                                                    eachDirectMessageIndex %
-                                                        2 ===
-                                                    0
-                                                }
-                                                {...eachDirectMessage}
-                                            />
-                                        ),
-                                    )}
-                                    <ThreadReply
-                                        addMessage={addMessage}
-                                        left={messages.length % 2 === 0}
-                                        receiver={
-                                            creator === username
-                                                ? receiver
-                                                : creator
-                                        }
-                                        sender={username}
-                                        senderProfilePictureUrl={
-                                            usernameProfilePictureUrl
-                                        }
-                                        threadId={threadId}
-                                    />
-                                </div>
-                            </Accordion.Collapse>
-                        </Accordion>
-                    </div>
-                );
-            })}
+                                <ThreadToggle
+                                    eventKey={`${eachThreadIndex}`}
+                                    sender={username}
+                                    {...eachThreadMessage}
+                                />
+                                <Accordion.Collapse
+                                    className={styles.thread_collapse}
+                                    eventKey={`${eachThreadIndex}`}
+                                >
+                                    <div className={styles.thread_messages}>
+                                        {messages.map(
+                                            (
+                                                eachDirectMessage: DirectMessage,
+                                                eachDirectMessageIndex: number,
+                                            ) => (
+                                                <ThreadMessage
+                                                    key={`message_${eachDirectMessage.id}`}
+                                                    left={
+                                                        eachDirectMessageIndex %
+                                                            2 ===
+                                                        0
+                                                    }
+                                                    {...eachDirectMessage}
+                                                />
+                                            ),
+                                        )}
+                                        <ThreadReply
+                                            addMessage={addMessage}
+                                            left={messages.length % 2 === 0}
+                                            receiver={
+                                                creator === username
+                                                    ? receiver
+                                                    : creator
+                                            }
+                                            sender={username}
+                                            senderProfilePictureUrl={
+                                                usernameProfilePictureUrl
+                                            }
+                                            threadId={threadId}
+                                        />
+                                    </div>
+                                </Accordion.Collapse>
+                            </Accordion>
+                        </div>
+                    );
+                },
+            )}
         </div>
     );
 };
