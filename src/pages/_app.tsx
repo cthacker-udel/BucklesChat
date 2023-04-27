@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { SWRConfig } from "swr/_internal";
 
 import type { ApiResponse } from "@/@types";
-import { LoggerProvider, SocketProvider } from "@/providers";
+import { LoggerProvider } from "@/providers";
 
 import { Layout } from "../common";
 
@@ -38,13 +38,11 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
                 refreshInterval: 3000,
             }}
         >
-            <SocketProvider>
-                <LoggerProvider>
-                    <Layout>
-                        <Component {...pageProps} />
-                    </Layout>
-                </LoggerProvider>
-            </SocketProvider>
+            <LoggerProvider>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </LoggerProvider>
         </SWRConfig>
         <ToastContainer
             autoClose={5000}

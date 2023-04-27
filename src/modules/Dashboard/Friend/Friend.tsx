@@ -48,14 +48,12 @@ export const Friend = ({
             sender: string,
             receiver: string,
             content: string,
-            senderPfp?: string,
         ): Promise<boolean> => {
             try {
                 const { data } = await FriendService.sendDM(
                     receiver,
                     sender,
                     content,
-                    senderPfp,
                 );
                 return data;
             } catch {

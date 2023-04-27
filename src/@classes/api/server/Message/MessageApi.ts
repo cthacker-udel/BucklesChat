@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 } from "uuid";
 
 import type {
-    AddChatRoomMessageDTO,
+    AddChatRoomMessageDto,
     AddMessageToThreadPayload,
     ApiResponse,
     ChatRoom,
@@ -505,7 +505,7 @@ export class MessageApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const payload = JSON.parse(request.body) as AddChatRoomMessageDTO;
+            const payload = JSON.parse(request.body) as AddChatRoomMessageDto;
 
             if (
                 payload.chatRoomId === undefined ||
@@ -520,7 +520,7 @@ export class MessageApi extends ServerSideApi {
 
             const result = await super.post<
                 ApiResponse<Partial<ChatRoomMessage>>,
-                AddChatRoomMessageDTO
+                AddChatRoomMessageDto
             >(
                 `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.ADD_MESSAGE}`,
                 { chatRoomId, messageId },

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import type {
-    AddChatRoomMessageDTO,
+    AddChatRoomMessageDto,
     AddMessageToThreadPayload,
     ApiResponse,
     ChatRoomMessage,
@@ -116,7 +116,7 @@ export class MessageService extends ClientSideApi {
 
         const addMessageToChatRoomRequest = await super.post<
             ApiResponse<Partial<ChatRoomMessage>>,
-            AddChatRoomMessageDTO
+            AddChatRoomMessageDto
         >(
             `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.ADD_MESSAGE}`,
             { chatRoomId, messageId },

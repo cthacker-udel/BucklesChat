@@ -1,4 +1,4 @@
-export type { AddChatRoomMessageDTO } from "./AddChatRoomMessageDTO";
+export type { AddChatRoomMessageDto } from "./AddChatRoomMessageDto";
 export type { ChatRoom } from "./ChatRoom";
 export type { ChatRoomMessage } from "./ChatRoomMessage";
 export type { ChatRoomStats } from "./ChatRoomStats";
