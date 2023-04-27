@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import React from "react";
-import { useAccordionButton } from "react-bootstrap";
 import useSWR from "swr";
 
 import type { ChatRoomStats } from "@/@types";
@@ -12,10 +11,9 @@ type ChatRoomToggleProperties = {
     createdAt?: Date;
     createdBy: string;
     description?: string;
-    eventKey: string;
     id?: number;
     name: string;
-    toggleActiveKey: (_newActiveKey: string) => void;
+    onChatRoomOpen: (_chatName: string) => void;
     updatedAt?: Date;
 };
 
@@ -28,10 +26,9 @@ export const ChatRoomToggle = ({
     createdAt: _createdAt,
     createdBy: _createdBy,
     description: _description,
-    eventKey,
     id,
     name,
-    toggleActiveKey,
+    onChatRoomOpen,
     updatedAt: _updatedAt,
 }: ChatRoomToggleProperties): JSX.Element => {
     const { data: chatRoomStats } = useSWR<
@@ -41,14 +38,12 @@ export const ChatRoomToggle = ({
     >(
         `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.STATS}?chatRoomId=${id}`,
     );
-    const chatRoomToggleHook = useAccordionButton(eventKey);
 
     return (
         <div
             className={styles.chat_room_toggle}
-            onClick={(event: React.MouseEvent<HTMLDivElement>): void => {
-                toggleActiveKey(eventKey);
-                chatRoomToggleHook(event);
+            onClick={(): void => {
+                onChatRoomOpen(name);
             }}
         >
             <div className={styles.chat_room_stats}>

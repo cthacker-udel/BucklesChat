@@ -1,0 +1,46 @@
+.chat_room_messages {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 1em;
+}
+
+.empty_chat_room_message {
+    align-self: center;
+    padding: 1em;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.55);
+    border-radius: 1em;
+    width: fit-content;
+}
+
+.chat_room_form_control {
+    color: white;
+    overflow: hidden !important;
+    background-color: transparent;
+}
+
+.chat_room_form_control:focus {
+    color: white;
+    overflow: hidden !important;
+    background-color: transparent;
+}
+
+.chat_room_message_option_button {
+    width: 10vw;
+}
+
+.chat_room_message_options {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+}
+
+.chat_room_message_list_group {
+    background: transparent;
+    max-height: 50vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: gray;
+}

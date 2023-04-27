@@ -1,0 +1,17 @@
+.chat_message_item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1em;
+    background: transparent;
+    color: white;
+    font-size: 0.95em;
+    align-items: center;
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.chat_message_pfp {
+    width: 3vw;
+    height: 3vw;
+    border-radius: 2em;
+}

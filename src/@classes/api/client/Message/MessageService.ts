@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import type {
+    AddChatRoomMessageDTO,
     AddMessageToThreadPayload,
     ApiResponse,
+    ChatRoomMessage,
     CreateThreadPayload,
     DirectMessage,
 } from "@/@types";
@@ -79,11 +81,7 @@ export class MessageService extends ClientSideApi {
     public static addMessage = async (
         payload: Partial<DirectMessage>,
     ): Promise<ApiResponse<number>> => {
-        if (
-            payload.content === undefined ||
-            payload.receiver === undefined ||
-            payload.sender === undefined
-        ) {
+        if (payload.content === undefined || payload.sender === undefined) {
             return { data: -1 };
         }
 
@@ -99,5 +97,31 @@ export class MessageService extends ClientSideApi {
         });
 
         return addMessageRequest;
+    };
+
+    /**
+     * Adds a message to a chat room
+     *
+     * @param chatRoomId - The id of the chat room we are adding the message to
+     * @param messageId - The id of the message we are adding
+     * @returns The added message
+     */
+    public static addMessageToChatRoom = async (
+        chatRoomId: number,
+        messageId: number,
+    ): Promise<ApiResponse<Partial<ChatRoomMessage>>> => {
+        if (Number.isNaN(chatRoomId) || Number.isNaN(messageId)) {
+            return { data: {} };
+        }
+
+        const addMessageToChatRoomRequest = await super.post<
+            ApiResponse<Partial<ChatRoomMessage>>,
+            AddChatRoomMessageDTO
+        >(
+            `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.ADD_MESSAGE}`,
+            { chatRoomId, messageId },
+        );
+
+        return addMessageToChatRoomRequest;
     };
 }

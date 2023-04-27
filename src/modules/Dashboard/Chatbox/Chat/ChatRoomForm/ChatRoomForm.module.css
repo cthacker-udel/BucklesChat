@@ -1,0 +1,27 @@
+.chat_room_form_modal_content {
+    background-color: black;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    min-height: 80vh;
+    max-height: 80vh;
+    height: 80vh;
+}
+
+.chat_room_form_dialog {
+    width: 75vw;
+    max-width: 75vw;
+    min-width: 75vw;
+    min-height: 80vh;
+    max-height: 80vh;
+    height: 80vh;
+}
+
+.chat_room_form_modal_header {
+    border: none;
+}
+
+.chat_room_form_modal_footer {
+    border: none;
+    font-size: 0.75em;
+    color: rgba(128, 128, 128, 0.75);
+}

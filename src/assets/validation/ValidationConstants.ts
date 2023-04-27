@@ -1,6 +1,12 @@
 import { RegexConstants } from "../regex";
 
 export const ValidationConstants = {
+    CHAT: {
+        ADD_MESSAGE: {
+            MAX_LENGTH: 280,
+            REQUIRED: true,
+        },
+    },
     EDIT_MODAL: {
         DATE_OF_BIRTH: {
             REQUIRED: false,

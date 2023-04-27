@@ -42,6 +42,12 @@ export const TextConstants = {
     },
     VALIDATION: {
         INVALID: {
+            CHAT: {
+                ADD_MESSAGE: {
+                    MAX_LENGTH: `Message must be at most ${ValidationConstants.CHAT.ADD_MESSAGE.MAX_LENGTH} characters`,
+                    REQUIRED: "Message is required",
+                },
+            },
             EDIT_MODAL: {
                 DATE_OF_BIRTH: {
                     NO_100_PLUS:
