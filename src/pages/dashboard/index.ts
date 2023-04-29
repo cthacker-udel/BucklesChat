@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable import/no-nodejs-modules -- disabled */
 import type { IncomingMessage } from "node:http";
 
@@ -21,6 +22,16 @@ export const getServerSideProps: GetServerSideProps<PageProperties> = async ({
     req,
 }: GetServerSideProperties) => {
     const { data } = await UserApi.ssGetUserDashboardInformation(req.headers);
+
+    if (data === undefined) {
+        return {
+            redirect: {
+                destination: "/login",
+                permanent: false,
+            },
+        };
+    }
+
     return {
         props: {
             username: data.username === undefined ? "" : data.username,

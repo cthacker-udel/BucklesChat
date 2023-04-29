@@ -414,4 +414,40 @@ export class UserApi extends ServerSideApi {
             return { data: 0 };
         }
     };
+
+    /**
+     * Logs the user out of the application
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static logout = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            await super.post<ApiResponse<void>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.LOGOUT}`,
+                {},
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
+            );
+
+            response.send({ data: response.statusCode === 200 });
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+        }
+    };
 }

@@ -47,6 +47,7 @@ export const Endpoints = {
         DOES_EXIST: "doesUsernameExist",
         EDIT: "edit",
         LOGIN: "login",
+        LOGOUT: "logout",
         SIGNUP: "signup",
         STATUS: "status",
         TOTAL_USERS: "totalUsers",

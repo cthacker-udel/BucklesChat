@@ -27,4 +27,19 @@ export class UserService extends ClientSideApi {
         >(`${Endpoints.USER.BASE}${Endpoints.USER.EDIT}`, partialUser);
         return editRequest;
     };
+
+    /**
+     * Logs the user out from the service
+     *
+     * @returns The logout response, 204 for success and 500 for failure, true if 204, false if 500
+     */
+    public static logout = async (): Promise<ApiResponse<boolean>> => {
+        const response = await super.post<ApiResponse<boolean>, unknown>(
+            `${Endpoints.USER.BASE}${Endpoints.USER.LOGOUT}`,
+            undefined,
+            undefined,
+        );
+
+        return response;
+    };
 }

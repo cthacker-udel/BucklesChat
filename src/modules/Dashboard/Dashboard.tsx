@@ -63,6 +63,26 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
         setShowUserInboxOffcanvas(false);
     }, []);
 
+    const logout = React.useCallback(async () => {
+        const loadingToast = toast.loading("Logging out...");
+        const result = await UserService.logout();
+
+        if (result.data) {
+            toast.update(loadingToast, {
+                isLoading: false,
+                render: "Loading successful!",
+                type: "success",
+            });
+            router.push("/login");
+        } else {
+            toast.update(loadingToast, {
+                isLoading: false,
+                render: "Failed to logout",
+                type: "error",
+            });
+        }
+    }, [router]);
+
     if (error) {
         router.push("/login");
     }
@@ -164,6 +184,21 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 variant="warning"
                             >
                                 <i className="fa-solid fa-inbox fa-sm" />
+                            </Button>
+                            <Button
+                                className={styles.dashboard_user_logout}
+                                onClick={async (): Promise<void> => {
+                                    await logout();
+                                }}
+                                style={{
+                                    opacity: hoveringOverProfilePicture ? 1 : 0,
+                                    right: hoveringOverProfilePicture
+                                        ? "6vw"
+                                        : "1vw",
+                                }}
+                                variant="secondary"
+                            >
+                                <i className="fa-solid fa-right-from-bracket" />
                             </Button>
                         </div>
                         <div className={styles.dashboard_user_info}>
