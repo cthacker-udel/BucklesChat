@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable import/no-nodejs-modules -- disabled */
 import type { IncomingMessage } from "node:http";
 
