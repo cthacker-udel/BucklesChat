@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
-/* eslint-disable @typescript-eslint/indent -- disabled */
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";

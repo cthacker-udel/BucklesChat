@@ -63,8 +63,6 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
         setShowUserInboxOffcanvas(false);
     }, []);
 
-    console.log(isLoading, error, data);
-
     if (error) {
         router.push("/login");
     }
