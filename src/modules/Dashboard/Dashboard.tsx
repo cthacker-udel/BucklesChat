@@ -69,13 +69,15 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
 
         if (result.data) {
             toast.update(loadingToast, {
+                autoClose: 500,
                 isLoading: false,
-                render: "Loading successful!",
+                render: "Logout successful!",
                 type: "success",
             });
             router.push("/login");
         } else {
             toast.update(loadingToast, {
+                autoClose: 200,
                 isLoading: false,
                 render: "Failed to logout",
                 type: "error",
