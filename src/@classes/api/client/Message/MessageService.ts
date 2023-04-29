@@ -81,11 +81,11 @@ export class MessageService extends ClientSideApi {
     public static addMessage = async (
         payload: Partial<DirectMessage>,
     ): Promise<ApiResponse<number>> => {
-        if (payload.content === undefined || payload.sender === undefined) {
+        if (payload.content === undefined) {
             return { data: -1 };
         }
 
-        const { content, receiver, sender } = payload;
+        const { content, receiver } = payload;
 
         const addMessageRequest = await super.post<
             ApiResponse<number>,
@@ -93,7 +93,6 @@ export class MessageService extends ClientSideApi {
         >(`${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.ADD}`, {
             content,
             receiver,
-            sender,
         });
 
         return addMessageRequest;

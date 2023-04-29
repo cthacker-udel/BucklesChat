@@ -270,13 +270,13 @@ export class MessageApi extends ServerSideApi {
         try {
             const body = JSON.parse(request.body) as Partial<DirectMessage>;
 
-            if (body.content === undefined || body.sender === undefined) {
+            if (body.content === undefined) {
                 throw new Error(
                     "Invalid properties sent to add a message to the database",
                 );
             }
 
-            const { content, receiver, sender } = body;
+            const { content, receiver } = body;
 
             const addMessageResult = await super.post<
                 ApiResponse<number>,
@@ -286,7 +286,6 @@ export class MessageApi extends ServerSideApi {
                 {
                     content,
                     receiver,
-                    sender,
                 },
                 undefined,
                 request.headers as { [key: string]: string },

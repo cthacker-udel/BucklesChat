@@ -75,8 +75,6 @@ export const ChatDisplay = ({
 
     const { dirtyFields, errors, isValidating } = formState;
 
-    const sender = "a";
-
     const sendMessage = React.useCallback(async () => {
         if (
             errors.content === undefined &&
@@ -86,7 +84,6 @@ export const ChatDisplay = ({
             const sendingMessageToast = toast.loading("Sending message");
             const addingMessage = await MessageService.addMessage({
                 content,
-                sender,
             });
             const { data } = addingMessage;
             if (data > 0) {
