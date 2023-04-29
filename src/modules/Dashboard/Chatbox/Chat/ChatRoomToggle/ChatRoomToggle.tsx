@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 
@@ -31,13 +33,23 @@ export const ChatRoomToggle = ({
     onChatRoomOpen,
     updatedAt: _updatedAt,
 }: ChatRoomToggleProperties): JSX.Element => {
-    const { data: chatRoomStats } = useSWR<
-        ChatRoomStats,
-        ChatRoomStats,
-        string
-    >(
+    const {
+        data: chatRoomStats,
+        error,
+        isLoading,
+    } = useSWR<ChatRoomStats, Error, string>(
         `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.STATS}?chatRoomId=${id}`,
     );
+
+    const router = useRouter();
+
+    if (error !== undefined) {
+        router.push("/login");
+    }
+
+    if (isLoading) {
+        return <span />;
+    }
 
     return (
         <div

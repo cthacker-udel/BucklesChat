@@ -29,6 +29,11 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
                     const result = await fetch(
                         `${process.env.NEXT_PUBLIC_BASE_URL}api/${resource}`,
                     );
+
+                    if (result.status === 401) {
+                        throw new Error("Invalid user");
+                    }
+
                     const convertedResult =
                         (await result.json()) as ApiResponse;
                     const { data } = convertedResult;

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable react/no-array-index-key -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import { Form, Image, InputGroup } from "react-bootstrap";
 import useSWR from "swr";
@@ -18,7 +20,6 @@ type FriendMultiselectProperties = {
     ) => void;
     onSelectFriend: (_username: string) => void;
     selectedFriends: Set<string>;
-    username: string;
 };
 
 /**
@@ -28,20 +29,25 @@ export const FriendMultiSelect = ({
     onSearch,
     onSelectFriend,
     selectedFriends,
-    username,
 }: FriendMultiselectProperties): JSX.Element => {
-    const { data: availableFriends } = useSWR<string[], undefined, string>(
-        `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}?username=${username}`,
+    const {
+        data: availableFriends,
+        error,
+        isLoading: isLoadingAvailableFriends,
+    } = useSWR<string[], Error, string>(
+        `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}`,
     );
-    const { data: availableFriendInformation } = useSWR<
-        Partial<User>[],
-        Partial<User>[],
-        string
-    >(
+    const {
+        data: availableFriendInformation,
+        error: availableFriendsError,
+        isLoading: isLoadingBulkDashboard,
+    } = useSWR<Partial<User>[], Error, string>(
         `${Endpoints.USER.BASE}${Endpoints.USER.BULK_DASHBOARD}?usernames=${
             availableFriends === undefined ? "" : availableFriends.join(",")
         }`,
     );
+
+    const router = useRouter();
 
     const [handleLookup, setHandleLookup] = React.useState<Map<string, string>>(
         new Map(),
@@ -135,9 +141,15 @@ export const FriendMultiSelect = ({
         }
     }, [availableFriendInformation]);
 
+    if (error !== undefined || availableFriendsError !== undefined) {
+        router.push("/login");
+    }
+
     if (
         availableFriendInformation === undefined ||
-        availableFriends === undefined
+        availableFriends === undefined ||
+        isLoadingAvailableFriends ||
+        isLoadingBulkDashboard
     ) {
         return <div />;
     }

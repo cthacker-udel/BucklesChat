@@ -1,4 +1,7 @@
+/* eslint-disable import/no-nodejs-modules -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import type { IncomingHttpHeaders } from "node:http";
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 } from "uuid";
 
@@ -31,9 +34,11 @@ export class UserApi extends ServerSideApi {
             const postedResult = await super.post<User>(
                 `${Endpoints.USER.BASE}${Endpoints.USER.SIGNUP}`,
                 JSON.parse(request.body) as User,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(postedResult === undefined ? 400 : 200);
             response.json(postedResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -70,9 +75,11 @@ export class UserApi extends ServerSideApi {
         try {
             const getResult = await super.get<ApiResponse<boolean>>(
                 `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${request.query.username}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(getResult.data ? 200 : 400);
             response.json(getResult);
         } catch (error: unknown) {
             try {
@@ -112,10 +119,13 @@ export class UserApi extends ServerSideApi {
                 ApiResponse<boolean>,
                 Partial<User>
             >(
-                `${Endpoints.USER.BASE}${Endpoints.USER.EDIT}?username=${partialUser?.username}`,
+                `${Endpoints.USER.BASE}${Endpoints.USER.EDIT}`,
                 partialUser,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
-            response.status(updateResult.data ? 200 : 400);
+
             response.send(updateResult);
         } catch (error: unknown) {
             try {
@@ -153,9 +163,11 @@ export class UserApi extends ServerSideApi {
             const getResult = await super.post<ApiResponse<boolean>>(
                 `${Endpoints.USER.BASE}${Endpoints.USER.LOGIN}`,
                 JSON.parse(request.body) as Partial<User>,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(getResult.data ? 200 : 400);
             response.json(getResult);
         } catch (error: unknown) {
             try {
@@ -190,13 +202,15 @@ export class UserApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const username = request.query.username;
             const getResult = await super.get<
                 ApiResponse<DashboardInformation>
             >(
-                `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}?username=${username}`,
+                `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
-            response.status(getResult.apiError === undefined ? 200 : 400);
+
             response.send(getResult);
         } catch (error: unknown) {
             try {
@@ -234,8 +248,11 @@ export class UserApi extends ServerSideApi {
             const usernames = request.query.usernames as string;
             const getResult = await super.get<ApiResponse<Partial<User>[]>>(
                 `${Endpoints.USER.BASE}${Endpoints.USER.BULK_DASHBOARD}?usernames=${usernames}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
-            response.status(200);
+
             response.send(getResult);
         } catch (error: unknown) {
             try {
@@ -270,13 +287,15 @@ export class UserApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const username = request.query.username;
             const getResult = await super.get<
                 ApiResponse<DashboardInformation>
             >(
-                `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}?username=${username}`,
+                `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
-            response.status(getResult.apiError === undefined ? 200 : 400);
+
             response.send(getResult);
         } catch (error: unknown) {
             try {
@@ -306,13 +325,15 @@ export class UserApi extends ServerSideApi {
      * @param username - The username we are looking up
      */
     public static ssGetUserDashboardInformation = async (
-        username: string,
+        headers: IncomingHttpHeaders,
     ): Promise<ApiResponse<DashboardInformation>> => {
         try {
             const getResult = await super.get<
                 ApiResponse<DashboardInformation>
             >(
-                `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}?username=${username}`,
+                `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}`,
+                undefined,
+                headers as { [key: string]: string },
             );
             return getResult;
         } catch (error: unknown) {
@@ -332,7 +353,7 @@ export class UserApi extends ServerSideApi {
                 data: {
                     handle: undefined,
                     profileImageUrl: undefined,
-                    username,
+                    username: undefined,
                 },
             };
         }

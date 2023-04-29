@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable react/no-array-index-key -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import { Button, Form, ListGroup, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
@@ -45,13 +47,16 @@ export const ChatDisplay = ({
     id,
     name,
 }: ChatDisplayProperties): JSX.Element => {
-    const { data: chatMessages, mutate } = useSWR<
-        ChatRoomMessage[],
-        ChatRoomMessage[],
-        string
-    >(
+    const {
+        data: chatMessages,
+        mutate,
+        error,
+        isLoading,
+    } = useSWR<ChatRoomMessage[], Error, string>(
         `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.MESSAGES}?id=${id}`,
     );
+
+    const router = useRouter();
 
     const { clearErrors, control, formState, register, reset } =
         useForm<FormValues>({
@@ -130,6 +135,14 @@ export const ChatDisplay = ({
         mutate,
         reset,
     ]);
+
+    if (error !== undefined) {
+        router.push("/login");
+    }
+
+    if (isLoading) {
+        return <span />;
+    }
 
     return (
         <div className={styles.chat_room_messages}>

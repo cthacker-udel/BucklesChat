@@ -1,3 +1,7 @@
+import type { NextApiResponse } from "next";
+
+import { copyResponseHeadersToResponse } from "@/helpers";
+import { copyResponseStatusToResponse } from "@/helpers/copyResponseStatusToResponse";
 /* eslint-disable sonarjs/no-duplicate-string -- disabled */
 /* eslint-disable @typescript-eslint/no-extraneous-class -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
@@ -12,6 +16,8 @@ export class ServerSideApi {
     public static async get<T>(
         endpoint: string,
         queryParameters?: { [key: string]: number | string },
+        headers?: { [key: string]: string },
+        nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const queryString = queryParameters
             ? `?${Object.entries(queryParameters)
@@ -23,10 +29,21 @@ export class ServerSideApi {
             `${process.env.SERVICE_URL}${endpoint}${queryString}`,
             {
                 credentials: "include",
+                headers: {
+                    Cookie:
+                        headers === undefined
+                            ? ""
+                            : (headers as { [key: string]: string }).cookie,
+                },
                 method: "GET",
                 mode: "cors",
             },
         );
+
+        if (nextApiResponse !== undefined) {
+            copyResponseHeadersToResponse(getRequestResult, nextApiResponse);
+            copyResponseStatusToResponse(getRequestResult, nextApiResponse);
+        }
 
         const parsedGetRequest = await getRequestResult.json();
 
@@ -44,11 +61,12 @@ export class ServerSideApi {
         body: K,
         queryParameters?: { [key: string]: number | string },
         headers?: { [key: string]: string },
+        nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const modifiedHeaders = {
-            ...headers,
             Accept: "application/json",
             "Content-Type": "application/json",
+            Cookie: headers === undefined ? "" : headers.cookie,
         };
         const queryString = queryParameters
             ? `${Object.entries(queryParameters)
@@ -69,6 +87,11 @@ export class ServerSideApi {
             },
         );
 
+        if (nextApiResponse !== undefined) {
+            copyResponseHeadersToResponse(postRequestResult, nextApiResponse);
+            copyResponseStatusToResponse(postRequestResult, nextApiResponse);
+        }
+
         const parsedPostRequest = await postRequestResult.json();
 
         return parsedPostRequest as T;
@@ -83,10 +106,11 @@ export class ServerSideApi {
         endpoint: string,
         queryParameters?: { [key: string]: number | string },
         headers?: { [key: string]: number | string },
+        nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const modifiedHeaders = {
             "Content-Type": "application/json",
-            ...headers,
+            Cookie: headers === undefined ? "" : (headers.Cookie as string),
         };
         const queryString = queryParameters
             ? `${Object.entries(queryParameters)
@@ -102,6 +126,11 @@ export class ServerSideApi {
                 mode: "cors",
             },
         );
+
+        if (nextApiResponse !== undefined) {
+            copyResponseHeadersToResponse(deleteRequestResult, nextApiResponse);
+            copyResponseStatusToResponse(deleteRequestResult, nextApiResponse);
+        }
 
         const parsedDeleteRequest = await deleteRequestResult.json();
 
@@ -120,10 +149,11 @@ export class ServerSideApi {
         body?: K,
         queryParameters?: { [key: string]: number | string },
         headers?: { [key: string]: string },
+        nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const modifiedHeaders = {
             "Content-Type": "application/json",
-            ...headers,
+            Cookie: headers === undefined ? "" : headers.cookie,
         };
         const queryString = queryParameters
             ? `${Object.entries(queryParameters)
@@ -141,6 +171,11 @@ export class ServerSideApi {
                 mode: "cors",
             },
         );
+
+        if (nextApiResponse !== undefined) {
+            copyResponseHeadersToResponse(putRequestResult, nextApiResponse);
+            copyResponseStatusToResponse(putRequestResult, nextApiResponse);
+        }
 
         const parsedPutRequest = await putRequestResult.json();
 

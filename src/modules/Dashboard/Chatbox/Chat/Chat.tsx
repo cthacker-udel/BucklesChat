@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
+/* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 
@@ -13,10 +16,15 @@ import { ChatRoomToggle } from "./ChatRoomToggle";
  * @returns - The main chat component, that houses all of the current live chats taking place
  */
 export const Chat = (): JSX.Element => {
-    const { data: chatRooms } = useSWR<ChatRoom[], ChatRoom[], string>(
+    const {
+        data: chatRooms,
+        error: allChatRoomsError,
+        isLoading,
+    } = useSWR<ChatRoom[], Error, string>(
         `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.ALL}`,
     );
 
+    const router = useRouter();
     const [activeChat, setActiveChat] = React.useState<string>("-1");
 
     const onChatRoomFormClose = React.useCallback(() => {
@@ -26,6 +34,14 @@ export const Chat = (): JSX.Element => {
     const onChatRoomOpen = React.useCallback((name: string) => {
         setActiveChat(name);
     }, []);
+
+    if (allChatRoomsError !== undefined) {
+        router.push("/login");
+    }
+
+    if (isLoading) {
+        return <span />;
+    }
 
     return (
         <div className={styles.chat_room_list}>

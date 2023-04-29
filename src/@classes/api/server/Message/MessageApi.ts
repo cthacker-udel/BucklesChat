@@ -45,9 +45,11 @@ export class MessageApi extends ServerSideApi {
             >(
                 `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.CREATE}`,
                 parsedRequest,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(creationResult?.data ? 200 : 400);
             response.json(creationResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -90,9 +92,11 @@ export class MessageApi extends ServerSideApi {
             >(
                 `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.ADD_MESSAGE}`,
                 body,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(addRequest?.data ? 200 : 400);
             response.json(addRequest);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -136,8 +140,10 @@ export class MessageApi extends ServerSideApi {
             const allThreads = await super.get<ApiResponse<Thread[]>>(
                 `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.ALL_THREADS}`,
                 { username },
+                request.headers as { [key: string]: string },
+                response,
             );
-            response.status(200);
+
             response.send(allThreads);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -181,9 +187,10 @@ export class MessageApi extends ServerSideApi {
             const result = await super.get<ApiResponse<ThreadMessages>>(
                 `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.MESSAGES}`,
                 { threadId },
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(200);
             response.send(result);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -218,22 +225,15 @@ export class MessageApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const username = request.query.username as string;
-
-            if (username === undefined || username.length === 0) {
-                throw new Error(
-                    "Must provide username to fetch all user's threads messages",
-                );
-            }
-
             const getAllMessagesResponse = await super.get<
                 ApiResponse<ThreadMessages[]>
             >(
                 `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.ALL_MESSAGES}`,
-                { username },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(200);
             response.send(getAllMessagesResponse);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -281,13 +281,18 @@ export class MessageApi extends ServerSideApi {
             const addMessageResult = await super.post<
                 ApiResponse<number>,
                 Partial<DirectMessage>
-            >(`${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.ADD}`, {
-                content,
-                receiver,
-                sender,
-            });
+            >(
+                `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.ADD}`,
+                {
+                    content,
+                    receiver,
+                    sender,
+                },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
+            );
 
-            response.status(addMessageResult.data >= 0 ? 200 : 400);
             response.send(addMessageResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -322,23 +327,15 @@ export class MessageApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const username = request.query.username as string;
-
-            if (username === undefined) {
-                throw new Error(
-                    "Must supply username to retrieve direct messages",
-                );
-            }
-
             const fetchedDirectMessages = await super.get<
                 ApiResponse<DirectMessage[]>
             >(
-                `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.PENDING_DIRECT_MESSAGES}?username=${username}`,
+                `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.PENDING_DIRECT_MESSAGES}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(
-                fetchedDirectMessages.data === undefined ? 400 : 200,
-            );
             response.send(fetchedDirectMessages);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -375,9 +372,11 @@ export class MessageApi extends ServerSideApi {
         try {
             const allChatRooms = await super.get<ApiResponse<ChatRoom[]>>(
                 `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.ALL}`,
+                undefined,
+                undefined,
+                response,
             );
 
-            response.status(200);
             response.json(allChatRooms);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -423,9 +422,10 @@ export class MessageApi extends ServerSideApi {
             const chatRoomStats = await super.get<ChatRoomStats>(
                 `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.STATS}`,
                 { chatRoomId },
+                undefined,
+                response,
             );
 
-            response.status(200);
             response.send(chatRoomStats);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -468,9 +468,11 @@ export class MessageApi extends ServerSideApi {
 
             const chatMessages = await super.get<ChatRoomMessage[]>(
                 `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.MESSAGES}?id=${chatRoomId}`,
+                undefined,
+                undefined,
+                response,
             );
 
-            response.status(200);
             response.send(chatMessages);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -524,9 +526,11 @@ export class MessageApi extends ServerSideApi {
             >(
                 `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.ADD_MESSAGE}`,
                 { chatRoomId, messageId },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(200);
             response.send(result);
         } catch (error: unknown) {
             const convertedError = error as Error;

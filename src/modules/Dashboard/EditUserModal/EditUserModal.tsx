@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -45,9 +47,11 @@ export const EditUserModal = ({
     showEditModal,
     username,
 }: EditUserModalProperties): JSX.Element => {
-    const { data } = useSWR<Partial<User>, Partial<User>, string>(
-        `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}?username=${username}`,
+    const { data, error, isLoading } = useSWR<Partial<User>, Error, string>(
+        `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}`,
     );
+
+    const router = useRouter();
 
     const { clearErrors, formState, getValues, register, reset, resetField } =
         useForm<FormValues>({
@@ -65,6 +69,14 @@ export const EditUserModal = ({
             reset({ ...FORM_DEFAULT_VALUES, ...data });
         }
     }, [data, reset]);
+
+    if (error !== undefined) {
+        router.push("/login");
+    }
+
+    if (isLoading) {
+        return <span />;
+    }
 
     return (
         <Modal onHide={editModalOnClose} show={showEditModal}>

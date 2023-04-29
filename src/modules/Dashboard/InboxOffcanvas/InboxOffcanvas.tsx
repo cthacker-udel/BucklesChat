@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import { Accordion, Offcanvas } from "react-bootstrap";
 import useSWR from "swr";
@@ -13,7 +15,6 @@ import { PendingMessage } from "./PendingMessage";
 type InboxOffCanvasProperties = {
     onClose: () => void;
     showUserInboxOffcanvas: boolean;
-    username: string;
 };
 
 /**
@@ -24,25 +25,26 @@ type InboxOffCanvasProperties = {
 export const InboxOffcanvas = ({
     onClose,
     showUserInboxOffcanvas,
-    username,
 }: InboxOffCanvasProperties): JSX.Element => {
-    const { data: pendingFriendRequests } = useSWR<
-        FriendRequest[],
-        FriendRequest[],
-        string
-    >(
-        `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.PENDING_REQUESTS}?username=${username}`,
+    const {
+        data: pendingFriendRequests,
+        error: pendingRequestsError,
+        isLoading,
+    } = useSWR<FriendRequest[], FriendRequest[], string>(
+        `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.PENDING_REQUESTS}`,
         {
             refreshInterval: 350,
         },
     );
-    const { data: pendingMessages, mutate: mutateMessages } = useSWR<
-        DirectMessage[],
-        DirectMessage[],
-        string
-    >(
-        `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.PENDING_DIRECT_MESSAGES}?username=${username}`,
+    const {
+        data: pendingMessages,
+        mutate: mutateMessages,
+        error: pendingDirectMessagesError,
+    } = useSWR<DirectMessage[], DirectMessage[], string>(
+        `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.PENDING_DIRECT_MESSAGES}`,
     );
+
+    const router = useRouter();
 
     const removeMessageFromCache = React.useCallback(
         async (messageId: number): Promise<void> => {
@@ -62,6 +64,17 @@ export const InboxOffcanvas = ({
         React.useState<boolean>(true);
     const [scrolledToBottomMessages, setScrolledToBottomMessages] =
         React.useState<boolean>(false);
+
+    if (
+        pendingDirectMessagesError !== undefined ||
+        pendingRequestsError !== undefined
+    ) {
+        router.push("/login");
+    }
+
+    if (isLoading) {
+        return <span />;
+    }
 
     return (
         <Offcanvas

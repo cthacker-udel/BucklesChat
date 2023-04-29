@@ -122,7 +122,7 @@ export const AddUserModal = ({
         }
         toast.dismiss(sendingRequestsToast);
         await mutate(
-            `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}?username=${username}`,
+            `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}`,
         );
     }, [mutate, selectedFriends, username]);
 
@@ -144,7 +144,6 @@ export const AddUserModal = ({
                     onSearch={onSearch}
                     onSelectFriend={onSelectFriend}
                     selectedFriends={selectedFriends}
-                    username={username}
                 />
             </Modal.Body>
             <Modal.Footer className={styles.add_friend_modal_footer}>

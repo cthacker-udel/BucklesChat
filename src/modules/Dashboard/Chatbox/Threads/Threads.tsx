@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import { Accordion } from "react-bootstrap";
 import useSWR from "swr";
@@ -25,13 +27,16 @@ export const Threads = ({
     username,
     usernameProfilePictureUrl,
 }: ThreadsProperties): JSX.Element => {
-    const { data: allThreadsMessages, mutate } = useSWR<
-        ThreadMessages[],
-        ThreadMessages[],
-        string
-    >(
-        `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.ALL_MESSAGES}?username=${username}`,
+    const {
+        data: allThreadsMessages,
+        mutate,
+        error,
+        isLoading,
+    } = useSWR<ThreadMessages[], Error, string>(
+        `${Endpoints.MESSAGE.THREAD.BASE}${Endpoints.MESSAGE.THREAD.ALL_MESSAGES}`,
     );
+
+    const router = useRouter();
 
     const addMessage = React.useCallback(
         async (threadId: number, message: DirectMessage) => {
@@ -55,6 +60,14 @@ export const Threads = ({
         },
         [allThreadsMessages, mutate],
     );
+
+    if (error !== undefined) {
+        router.push("/login");
+    }
+
+    if (isLoading) {
+        return <span />;
+    }
 
     return (
         <div className={styles.threads_container}>

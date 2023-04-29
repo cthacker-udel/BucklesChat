@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable unicorn/no-null -- disabled just for useSwr, would rather use undefined */
 /* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React, { type ChangeEvent } from "react";
 import { Button, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -30,16 +32,15 @@ type DashboardProperties = {
  */
 export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
     useBackground(Background, { noOptions: true });
-    const { data, mutate } = useSWR<
+    const { data, mutate, error, isLoading } = useSWR<
         DashboardInformation,
-        DashboardInformation,
+        Error,
         string
-    >(
-        `${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}?username=${username}`,
-        null,
-        { refreshInterval: 2000 },
-    );
+    >(`${Endpoints.USER.BASE}${Endpoints.USER.DASHBOARD}`, null, {
+        refreshInterval: 2000,
+    });
 
+    const router = useRouter();
     const [hoveringOverProfilePicture, setHoveringOverProfilePicture] =
         React.useState<boolean>(false);
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
@@ -62,7 +63,13 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
         setShowUserInboxOffcanvas(false);
     }, []);
 
-    if (data === undefined) {
+    console.log(isLoading, error, data);
+
+    if (error) {
+        router.push("/login");
+    }
+
+    if (data === undefined || isLoading) {
         return <span />;
     }
 
@@ -338,7 +345,6 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
             <InboxOffcanvas
                 onClose={userInboxOffcanvasOnClose}
                 showUserInboxOffcanvas={showUserInboxOffcanvas}
-                username={username ?? ""}
             />
         </>
     );

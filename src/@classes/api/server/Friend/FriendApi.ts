@@ -30,12 +30,13 @@ export class FriendApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const username = request.query.username;
             const allAvailableFriends = await super.get<ApiResponse<string[]>>(
-                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}?username=${username}`,
+                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(200);
             response.json(allAvailableFriends);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -79,8 +80,11 @@ export class FriendApi extends ServerSideApi {
             >(
                 `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.SEND_REQUEST}`,
                 requestData,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
-            response.status(sendFriendRequestResponse.data ? 200 : 400);
+
             response.send(sendFriendRequestResponse);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -115,17 +119,13 @@ export class FriendApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            const username = request.query.username;
-
-            if (username === undefined) {
-                throw new Error("Must supply username");
-            }
-
             const result = await super.get<ApiResponse<FriendRequest[]>>(
-                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.PENDING_REQUESTS}?username=${username}`,
+                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.PENDING_REQUESTS}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(200);
             response.send(result);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -175,12 +175,17 @@ export class FriendApi extends ServerSideApi {
             const sendResult = await super.post<
                 ApiResponse<boolean>,
                 FriendRequestPayload
-            >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.ACCEPT_REQUEST}`, {
-                usernameFrom,
-                usernameTo,
-            });
+            >(
+                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.ACCEPT_REQUEST}`,
+                {
+                    usernameFrom,
+                    usernameTo,
+                },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
+            );
 
-            response.status(sendResult.data === undefined ? 400 : 200);
             response.send(sendResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -230,12 +235,17 @@ export class FriendApi extends ServerSideApi {
             const sendResult = await super.post<
                 ApiResponse<boolean>,
                 FriendRequestPayload
-            >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REJECT_REQUEST}`, {
-                usernameFrom,
-                usernameTo,
-            });
+            >(
+                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REJECT_REQUEST}`,
+                {
+                    usernameFrom,
+                    usernameTo,
+                },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
+            );
 
-            response.status(sendResult.data === undefined ? 400 : 200);
             response.send(sendResult);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -287,12 +297,17 @@ export class FriendApi extends ServerSideApi {
             const removalRequest = await super.post<
                 ApiResponse<boolean>,
                 FriendPayload
-            >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REMOVE_FRIEND}`, {
-                recipient,
-                sender,
-            });
+            >(
+                `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REMOVE_FRIEND}`,
+                {
+                    recipient,
+                    sender,
+                },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
+            );
 
-            response.status(removalRequest.data ? 200 : 400);
             response.send(removalRequest);
         } catch (error: unknown) {
             const convertedError = error as Error;
@@ -351,9 +366,11 @@ export class FriendApi extends ServerSideApi {
                     receiver,
                     sender,
                 },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
             );
 
-            response.status(dmSendResponse.data ? 200 : 400);
             response.send(dmSendResponse);
         } catch (error: unknown) {
             const convertedError = error as Error;
