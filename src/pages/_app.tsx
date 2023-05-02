@@ -21,46 +21,61 @@ import { Layout } from "../common";
  * @param props.pageProps - The page props we are passing into the component
  * @returns The app component
  */
-const App = ({ Component, pageProps }: AppProps): JSX.Element => (
-    <>
-        <SWRConfig
-            value={{
-                fetcher: async (resource: string, _init: any): Promise<any> => {
-                    const result = await fetch(
-                        `${process.env.NEXT_PUBLIC_BASE_URL}api/${resource}`,
-                    );
+const App = ({ Component, pageProps }: AppProps): JSX.Element => {
+    React.useEffect(() => {
+        if (typeof window !== "undefined") {
+            const loadingSpinner = document.querySelector("#loading_spinner");
 
-                    if (result.status === 401) {
-                        throw new Error("Invalid user");
-                    }
+            if (loadingSpinner) {
+                loadingSpinner.remove();
+            }
+        }
+    }, []);
 
-                    const convertedResult =
-                        (await result.json()) as ApiResponse;
-                    const { data } = convertedResult;
-                    return data;
-                },
-                provider: () => new Map(),
-                refreshInterval: 3000,
-            }}
-        >
-            <LoggerProvider>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </LoggerProvider>
-        </SWRConfig>
-        <ToastContainer
-            autoClose={5000}
-            closeOnClick
-            draggable
-            hideProgressBar={false}
-            newestOnTop={false}
-            pauseOnHover
-            position="top-right"
-            rtl={false}
-            theme="light"
-        />
-    </>
-);
+    return (
+        <>
+            <SWRConfig
+                value={{
+                    fetcher: async (
+                        resource: string,
+                        _init: any,
+                    ): Promise<any> => {
+                        const result = await fetch(
+                            `${process.env.NEXT_PUBLIC_BASE_URL}api/${resource}`,
+                        );
+
+                        if (result.status === 401) {
+                            throw new Error("Invalid user");
+                        }
+
+                        const convertedResult =
+                            (await result.json()) as ApiResponse;
+                        const { data } = convertedResult;
+                        return data;
+                    },
+                    provider: () => new Map(),
+                    refreshInterval: 3000,
+                }}
+            >
+                <LoggerProvider>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </LoggerProvider>
+            </SWRConfig>
+            <ToastContainer
+                autoClose={5000}
+                closeOnClick
+                draggable
+                hideProgressBar={false}
+                newestOnTop={false}
+                pauseOnHover
+                position="top-right"
+                rtl={false}
+                theme="light"
+            />
+        </>
+    );
+};
 
 export { App as default };
