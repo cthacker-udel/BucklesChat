@@ -1,9 +1,17 @@
 .username_form {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(128, 128, 128, 0.25);
+    color: rgba(255, 255, 255, 0.25);
 }
 
 .username_form:focus {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(128, 128, 128, 0.25);
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.edit_modal_content {
+    background-color: rgba(0, 0, 0, 0.65);
+    border: 1px outset white;
+    color: white;
 }
 
 .edit_modal_title {
@@ -16,6 +24,16 @@
     display: flex;
     flex-direction: column;
     gap: 1em;
+}
+
+.edit_modal_form > div > input:not(.username_form) {
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
+}
+
+.edit_modal_form > div > input:focus:not(.username_form) {
+    background-color: rgba(0, 0, 0, 0.65);
+    color: white;
 }
 
 .edit_modal_footer {

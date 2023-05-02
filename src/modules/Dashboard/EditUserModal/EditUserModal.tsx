@@ -5,6 +5,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import { Key } from "ts-key-enum";
 
 import { UserService } from "@/@classes";
 import type { User } from "@/@types";
@@ -66,9 +67,111 @@ export const EditUserModal = ({
 
     React.useEffect(() => {
         if (data !== undefined) {
-            reset({ ...FORM_DEFAULT_VALUES, ...data });
+            const resetValues: { [key: string]: number | string } = {
+                ...FORM_DEFAULT_VALUES,
+            };
+            for (const [key, value] of Object.entries(data)) {
+                if (value !== null) {
+                    resetValues[key] = value;
+                }
+            }
+            reset({ ...resetValues });
         }
     }, [data, reset]);
+
+    const canceledEdit = React.useCallback((): void => {
+        toast.info("Closed Edit User");
+
+        if (data !== undefined) {
+            for (const eachKey of Object.keys(data)) {
+                resetField(
+                    eachKey as
+                        | "dob"
+                        | "email"
+                        | "firstName"
+                        | "handle"
+                        | "lastName",
+                    {
+                        defaultValue: (data as { [key: string]: string })[
+                            eachKey
+                        ],
+                    },
+                );
+                clearErrors(
+                    eachKey as
+                        | "dob"
+                        | "email"
+                        | "firstName"
+                        | "handle"
+                        | "lastName",
+                );
+            }
+        }
+
+        editModalOnClose();
+    }, [clearErrors, data, editModalOnClose, resetField]);
+
+    const editUser = React.useCallback(async (): Promise<void> => {
+        const formValues = getValues() as unknown as FormValues & {
+            [key: string]: string;
+        };
+        const values: { [key: string]: unknown } = {};
+
+        if (formValues.handle !== undefined) {
+            await mutateHandle(formValues.handle);
+        }
+
+        for (const eachDirtyField of Object.keys(dirtyFields)) {
+            values[eachDirtyField] = formValues[eachDirtyField];
+        }
+
+        if (Object.keys(values).length > 0) {
+            for (const eachKey of Object.keys(values)) {
+                resetField(
+                    eachKey as
+                        | "dob"
+                        | "email"
+                        | "firstName"
+                        | "handle"
+                        | "lastName",
+                    {
+                        defaultValue: values[eachKey] as string,
+                    },
+                );
+                clearErrors(
+                    eachKey as
+                        | "dob"
+                        | "email"
+                        | "firstName"
+                        | "handle"
+                        | "lastName",
+                );
+            }
+
+            const updateToast = toast.loading("Updating profile...");
+            const { data: didUpdate } = await UserService.editUser({
+                ...values,
+                username,
+            });
+            toast.dismiss(updateToast);
+            if (didUpdate) {
+                toast.success("Updated profile!");
+                editModalOnClose();
+            } else {
+                toast.error("Failed to update profile.");
+            }
+        } else {
+            toast.info("No values were changed");
+        }
+    }, [
+        clearErrors,
+        dirtyFields,
+        editModalOnClose,
+        getValues,
+        mutateHandle,
+        resetField,
+        username,
+    ]);
 
     if (error !== undefined) {
         router.push("/login");
@@ -79,8 +182,12 @@ export const EditUserModal = ({
     }
 
     return (
-        <Modal onHide={editModalOnClose} show={showEditModal}>
-            <Modal.Header closeButton>
+        <Modal
+            contentClassName={styles.edit_modal_content}
+            onHide={editModalOnClose}
+            show={showEditModal}
+        >
+            <Modal.Header closeButton closeVariant="white">
                 <Modal.Title>
                     <div className={styles.edit_modal_title}>
                         <span>{"Edit User"}</span>
@@ -88,7 +195,22 @@ export const EditUserModal = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form className={styles.edit_modal_form}>
+                <Form
+                    className={styles.edit_modal_form}
+                    onKeyDown={async (
+                        event: React.KeyboardEvent<HTMLFormElement>,
+                    ): Promise<void> => {
+                        const { key } = event;
+                        if (
+                            key === Key.Enter &&
+                            !isValidating &&
+                            Object.keys(errors).length === 0 &&
+                            isDirty
+                        ) {
+                            await editUser();
+                        }
+                    }}
+                >
                     <Form.Group controlId="username_form">
                         <Form.Label>{"Username"}</Form.Label>
                         <Form.Control
@@ -340,40 +462,7 @@ export const EditUserModal = ({
                 </Form>
             </Modal.Body>
             <Modal.Footer className={styles.edit_modal_footer}>
-                <Button
-                    onClick={(): void => {
-                        toast.info("Closed Edit User");
-
-                        if (data !== undefined) {
-                            for (const eachKey of Object.keys(data)) {
-                                resetField(
-                                    eachKey as
-                                        | "dob"
-                                        | "email"
-                                        | "firstName"
-                                        | "handle"
-                                        | "lastName",
-                                    {
-                                        defaultValue: (
-                                            data as { [key: string]: string }
-                                        )[eachKey],
-                                    },
-                                );
-                                clearErrors(
-                                    eachKey as
-                                        | "dob"
-                                        | "email"
-                                        | "firstName"
-                                        | "handle"
-                                        | "lastName",
-                                );
-                            }
-                        }
-
-                        editModalOnClose();
-                    }}
-                    variant="outline-secondary"
-                >
+                <Button onClick={canceledEdit} variant="outline-secondary">
                     {"Cancel"}
                 </Button>
                 <Button
@@ -381,63 +470,7 @@ export const EditUserModal = ({
                         !isValidating &&
                         (Object.keys(errors).length > 0 || !isDirty)
                     }
-                    onClick={async (): Promise<void> => {
-                        const formValues =
-                            getValues() as unknown as FormValues & {
-                                [key: string]: string;
-                            };
-                        const values: { [key: string]: unknown } = {};
-
-                        if (formValues.handle !== undefined) {
-                            await mutateHandle(formValues.handle);
-                        }
-
-                        for (const eachDirtyField of Object.keys(dirtyFields)) {
-                            values[eachDirtyField] = formValues[eachDirtyField];
-                        }
-
-                        if (Object.keys(values).length > 0) {
-                            for (const eachKey of Object.keys(values)) {
-                                resetField(
-                                    eachKey as
-                                        | "dob"
-                                        | "email"
-                                        | "firstName"
-                                        | "handle"
-                                        | "lastName",
-                                    {
-                                        defaultValue: values[eachKey] as string,
-                                    },
-                                );
-                                clearErrors(
-                                    eachKey as
-                                        | "dob"
-                                        | "email"
-                                        | "firstName"
-                                        | "handle"
-                                        | "lastName",
-                                );
-                            }
-
-                            const updateToast = toast.loading(
-                                "Updating profile...",
-                            );
-                            const { data: didUpdate } =
-                                await UserService.editUser({
-                                    ...values,
-                                    username,
-                                });
-                            toast.dismiss(updateToast);
-                            if (didUpdate) {
-                                toast.success("Updated profile!");
-                                editModalOnClose();
-                            } else {
-                                toast.error("Failed to update profile.");
-                            }
-                        } else {
-                            toast.info("No values were changed");
-                        }
-                    }}
+                    onClick={editUser}
                     variant={
                         !isValidating && Object.keys(errors).length === 0
                             ? "success"

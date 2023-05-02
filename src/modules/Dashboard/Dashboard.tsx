@@ -309,6 +309,17 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                                                                             .data
                                                                                             .url,
                                                                                 },
+                                                                                {
+                                                                                    optimisticData:
+                                                                                        {
+                                                                                            profileImageUrl:
+                                                                                                uploadResponse
+                                                                                                    .data
+                                                                                                    .url,
+                                                                                        },
+                                                                                    revalidate:
+                                                                                        false,
+                                                                                },
                                                                             );
                                                                             const {
                                                                                 data: result,
@@ -409,7 +420,13 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
             <EditUserModal
                 editModalOnClose={editModalOnClose}
                 mutateHandle={async (handleValue: string): Promise<void> => {
-                    await mutate({ ...data, handle: handleValue });
+                    await mutate(
+                        { ...data, handle: handleValue },
+                        {
+                            optimisticData: { handle: handleValue },
+                            revalidate: false,
+                        },
+                    );
                 }}
                 showEditModal={showEditModal}
                 username={username ?? ""}

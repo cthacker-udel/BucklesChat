@@ -55,7 +55,10 @@ export const Threads = ({
                         return { ...eachThreadMessages };
                     },
                 );
-                await mutate(modifiedMessages);
+                await mutate(modifiedMessages, {
+                    optimisticData: modifiedMessages,
+                    revalidate: false,
+                });
             }
         },
         [allThreadsMessages, mutate],

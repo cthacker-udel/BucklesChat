@@ -95,10 +95,19 @@ export const ChatDisplay = ({
                 if (Object.keys(createdChatMessage).length > 0) {
                     reset();
                     clearErrors();
-                    await mutate([
-                        ...chatMessages,
-                        createdChatMessage as ChatRoomMessage,
-                    ]);
+                    await mutate(
+                        [
+                            ...chatMessages,
+                            createdChatMessage as ChatRoomMessage,
+                        ],
+                        {
+                            optimisticData: [
+                                ...chatMessages,
+                                createdChatMessage as ChatRoomMessage,
+                            ],
+                            revalidate: false,
+                        },
+                    );
                     toast.update(sendingMessageToast, {
                         autoClose: 500,
                         isLoading: false,
