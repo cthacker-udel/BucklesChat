@@ -219,18 +219,18 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                     {`${data.numberOfFriends ?? 0} Friend${
                                         data.numberOfFriends === undefined
                                             ? ""
-                                            : data.numberOfFriends > 1
-                                            ? "s"
-                                            : ""
+                                            : data.numberOfFriends === 1
+                                            ? ""
+                                            : "s"
                                     }`}
                                 </span>
                                 <span>
                                     {`${data.numberOfMessages} message${
                                         data.numberOfMessages === undefined
                                             ? ""
-                                            : data.numberOfMessages > 1
-                                            ? "s"
-                                            : ""
+                                            : data.numberOfMessages === 1
+                                            ? ""
+                                            : "s"
                                     } sent`}
                                 </span>
                                 <div className={styles.dashboard_member_since}>
