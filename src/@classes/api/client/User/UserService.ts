@@ -52,7 +52,11 @@ export class UserService extends ClientSideApi {
     public static isEmailValid = async (
         email: string,
     ): Promise<ApiResponse<boolean>> => {
-        if (!RegexConstants.EMAIL.test(email)) {
+        if (
+            email === undefined ||
+            !RegexConstants.EMAIL.test(email) ||
+            email.length === 0
+        ) {
             return { data: false };
         }
 

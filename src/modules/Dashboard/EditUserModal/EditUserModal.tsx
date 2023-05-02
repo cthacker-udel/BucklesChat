@@ -9,7 +9,12 @@ import { Key } from "ts-key-enum";
 
 import { UserService } from "@/@classes";
 import type { User } from "@/@types";
-import { Endpoints, TextConstants, ValidationConstants } from "@/assets";
+import {
+    Endpoints,
+    RegexConstants,
+    TextConstants,
+    ValidationConstants,
+} from "@/assets";
 
 import styles from "./EditUserModal.module.css";
 
@@ -48,10 +53,6 @@ export const EditUserModal = ({
     showEditModal,
     username,
 }: EditUserModalProperties): JSX.Element => {
-    const { data, error, isLoading } = useSWR<Partial<User>, Error, string>(
-        `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}`,
-    );
-
     const router = useRouter();
 
     const { clearErrors, formState, getValues, register, reset, resetField } =
@@ -62,6 +63,10 @@ export const EditUserModal = ({
             mode: "all",
             reValidateMode: "onBlur",
         });
+
+    const { data, error, isLoading } = useSWR<Partial<User>, Error, string>(
+        `${Endpoints.USER.BASE}${Endpoints.USER.DETAILS}`,
+    );
 
     const { dirtyFields, errors, isValidating, isDirty } = formState;
 
@@ -328,6 +333,34 @@ export const EditUserModal = ({
                                             .EDIT_MODAL.EMAIL.REQUIRED,
                                     value: ValidationConstants.EDIT_MODAL.EMAIL
                                         .REQUIRED,
+                                },
+                                validate: {
+                                    isEmailValid: async (email: string) => {
+                                        if (email === "") {
+                                            return true;
+                                        }
+
+                                        if (!RegexConstants.EMAIL.test(email)) {
+                                            return "Email is invalid (format incorrect)";
+                                        }
+
+                                        const result =
+                                            await UserService.isEmailValid(
+                                                email,
+                                            );
+
+                                        if (result === undefined) {
+                                            return "Email is invalid (unable to verify)";
+                                        }
+                                        const { data: isEmailValidData } =
+                                            result;
+
+                                        if (isEmailValidData) {
+                                            return true;
+                                        }
+
+                                        return "Email is invalid (not an actual email)";
+                                    },
                                 },
                             })}
                         />

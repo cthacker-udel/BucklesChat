@@ -464,7 +464,7 @@ export class UserApi extends ServerSideApi {
         try {
             const email = request.query.email;
 
-            if (email === undefined) {
+            if (email === undefined || email.length === 0) {
                 throw new Error("Must supply valid email to validate");
             }
             const isEmailValid = await super.get<ApiResponse<boolean>>(
