@@ -46,3 +46,27 @@
     padding: 0.5em;
     border-radius: 1em;
 }
+
+.no_threads_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 1.25em;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.no_threads_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.no_threads_title {
+    font-family: "Dynapuff", sans-serif;
+}
+
+.no_threads_subtitle {
+    font-size: 0.75em;
+    text-align: center;
+    color: rgba(128, 128, 128, 0.65);
+    font-family: "Dynapuff", sans-serif;
+}

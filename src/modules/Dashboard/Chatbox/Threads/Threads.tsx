@@ -2,6 +2,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { Accordion } from "react-bootstrap";
+import { ClipLoader } from "react-spinners";
 import useSWR from "swr";
 
 import type { DirectMessage, ThreadMessages } from "@/@types";
@@ -65,7 +66,22 @@ export const Threads = ({
     }
 
     if (allThreadsMessages === undefined || isLoading) {
-        return <span />;
+        return <ClipLoader color="blue" />;
+    }
+
+    if (allThreadsMessages.length === 0) {
+        return (
+            <div className={styles.no_threads_container}>
+                <div className={styles.no_threads_content}>
+                    <span className={styles.no_threads_title}>
+                        {"It's empty in here..."}
+                    </span>
+                    <span className={styles.no_threads_subtitle}>
+                        {"Message someone!"}
+                    </span>
+                </div>
+            </div>
+        );
     }
 
     return (
