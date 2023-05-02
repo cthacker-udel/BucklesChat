@@ -85,8 +85,6 @@ export const EditUserModal = ({
     }, [data, reset]);
 
     const canceledEdit = React.useCallback((): void => {
-        toast.info("Closed Edit User");
-
         if (data !== undefined) {
             for (const eachKey of Object.keys(data)) {
                 resetField(
