@@ -217,6 +217,29 @@
     scroll-behavior: smooth;
 }
 
+.dashboard_no_friends_display {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.dashboard_no_friends_display_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard_no_friends_display_title {
+    font-family: "Dynapuff", sans-serif;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.dashboard_no_friends_display_subtitle {
+    font-family: "Dynapuff", sans-serif;
+    font-size: 0.75em;
+    text-align: center;
+    color: rgba(128, 128, 128, 0.5);
+}
+
 /* END FRIENDS LIST */
 
 /* ANIMATIONS */

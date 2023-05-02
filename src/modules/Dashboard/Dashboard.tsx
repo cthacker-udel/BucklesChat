@@ -362,13 +362,41 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                         </div>
                     </div>
                     <div className={styles.dashboard_top_bar_friends_list}>
-                        {data.friendsInformation?.map((eachFriend) => (
-                            <Friend
-                                loggedInUsername={username}
-                                {...eachFriend}
-                                key={`friend ${eachFriend.username}`}
-                            />
-                        ))}
+                        {data.friendsInformation !== undefined &&
+                        data.friendsInformation?.length > 0 ? (
+                            data.friendsInformation?.map((eachFriend) => (
+                                <Friend
+                                    loggedInUsername={username}
+                                    {...eachFriend}
+                                    key={`friend ${eachFriend.username}`}
+                                />
+                            ))
+                        ) : (
+                            <div
+                                className={styles.dashboard_no_friends_display}
+                            >
+                                <div
+                                    className={
+                                        styles.dashboard_no_friends_display_content
+                                    }
+                                >
+                                    <div
+                                        className={
+                                            styles.dashboard_no_friends_display_title
+                                        }
+                                    >
+                                        {"Add some friends!"}
+                                    </div>
+                                    <div
+                                        className={
+                                            styles.dashboard_no_friends_display_subtitle
+                                        }
+                                    >
+                                        {"Use the green button"}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className={styles.dashboard_bottom_bar}>
