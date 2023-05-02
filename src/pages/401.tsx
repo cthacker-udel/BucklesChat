@@ -4,4 +4,6 @@ import React from "react";
  *
  * @returns
  */
-export const FourZeroOnePage = (): JSX.Element => <div>{"Hello"}</div>;
+const FourZeroOnePage = (): JSX.Element => <div>{"Hello"}</div>;
+
+export { FourZeroOnePage as default };

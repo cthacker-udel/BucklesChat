@@ -66,4 +66,24 @@ export class UserService extends ClientSideApi {
 
         return response;
     };
+
+    /**
+     * Attempts to confirm an email given the email confirmation token
+     *
+     * @param token - The token used to confirm the email
+     * @returns Whether the email was confirmed or not
+     */
+    public static confirmEmail = async (
+        token: string,
+    ): Promise<ApiResponse<boolean>> => {
+        if (token === undefined || token.length === 0) {
+            return { data: false };
+        }
+
+        const response = await super.get<ApiResponse<boolean>>(
+            `${Endpoints.USER.BASE}${Endpoints.USER.CONFIRM_EMAIL}?token=${token}`,
+        );
+
+        return response;
+    };
 }

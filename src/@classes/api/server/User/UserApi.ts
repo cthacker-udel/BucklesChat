@@ -490,4 +490,47 @@ export class UserApi extends ServerSideApi {
             } catch {}
         }
     };
+
+    /**
+     * Confirms a user email
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static confirmEmail = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const token = request.query.token as string;
+
+            if (token === undefined) {
+                throw new Error(
+                    "Must supply confirmation token when attempting to confirm email",
+                );
+            }
+
+            const didConfirmEmail = await super.get<ApiResponse<boolean>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.CONFIRM_EMAIL}`,
+                { token },
+                request.headers as { [key: string]: string },
+                response,
+            );
+
+            response.send(didConfirmEmail);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+        }
+    };
 }
