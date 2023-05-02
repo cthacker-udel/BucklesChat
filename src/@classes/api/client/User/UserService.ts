@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import type { ApiResponse, User } from "@/@types";
-import { Endpoints } from "@/assets";
+import { Endpoints, RegexConstants } from "@/assets";
 
 import { ClientSideApi } from "../../ClientSideApi";
 
@@ -38,6 +38,26 @@ export class UserService extends ClientSideApi {
             `${Endpoints.USER.BASE}${Endpoints.USER.LOGOUT}`,
             undefined,
             undefined,
+        );
+
+        return response;
+    };
+
+    /**
+     * Checks if the provided email is valid
+     *
+     * @param email - The email we are validating
+     * @returns Whether or not the email is valid
+     */
+    public static isEmailValid = async (
+        email: string,
+    ): Promise<ApiResponse<boolean>> => {
+        if (!RegexConstants.EMAIL.test(email)) {
+            return { data: false };
+        }
+
+        const response = await super.get<ApiResponse<boolean>>(
+            `${Endpoints.USER.BASE}${Endpoints.USER.IS_EMAIL_VALID}?email=${email}`,
         );
 
         return response;

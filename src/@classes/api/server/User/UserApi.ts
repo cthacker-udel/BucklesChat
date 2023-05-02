@@ -450,4 +450,44 @@ export class UserApi extends ServerSideApi {
             } catch {}
         }
     };
+
+    /**
+     * Checks if the supplied email is valid, and returns the result of either false, or true.
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static isEmailValid = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const email = request.query.email;
+
+            if (email === undefined) {
+                throw new Error("Must supply valid email to validate");
+            }
+            const isEmailValid = await super.get<ApiResponse<boolean>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.IS_EMAIL_VALID}?email=${email}`,
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
+            );
+
+            response.send(isEmailValid);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+        }
+    };
 }
