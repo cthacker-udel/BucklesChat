@@ -137,13 +137,13 @@ export const ChatDisplay = ({
         router.push("/login");
     }
 
-    if (isLoading) {
+    if (chatMessages === undefined || isLoading) {
         return <span />;
     }
 
     return (
         <div className={styles.chat_room_messages}>
-            {chatMessages && chatMessages.length > 0 && (
+            {chatMessages.length > 0 && (
                 <ListGroup
                     className={styles.chat_room_message_list_group}
                     variant="flush"

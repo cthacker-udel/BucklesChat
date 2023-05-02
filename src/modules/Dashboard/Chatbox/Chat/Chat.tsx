@@ -38,7 +38,7 @@ export const Chat = (): JSX.Element => {
         router.push("/login");
     }
 
-    if (isLoading) {
+    if (chatRooms === undefined || isLoading) {
         return <span />;
     }
 

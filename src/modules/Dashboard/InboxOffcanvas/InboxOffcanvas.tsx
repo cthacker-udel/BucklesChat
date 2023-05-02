@@ -72,7 +72,11 @@ export const InboxOffcanvas = ({
         router.push("/login");
     }
 
-    if (isLoading) {
+    if (
+        pendingMessages === undefined ||
+        pendingFriendRequests === undefined ||
+        isLoading
+    ) {
         return <span />;
     }
 
@@ -146,24 +150,21 @@ export const InboxOffcanvas = ({
                                     )}
                                 </div>
                             )}
-                            {pendingFriendRequests &&
-                                pendingFriendRequests.length > 0 && (
-                                    <div
-                                        className={
-                                            styles.inbox_offcanvas_container_scroll_helper
-                                        }
-                                        style={{
-                                            opacity: scrolledToBottom
-                                                ? "0%"
-                                                : "50%",
-                                            zIndex: scrolledToBottom
-                                                ? "-1"
-                                                : "0",
-                                        }}
-                                    >
-                                        <i className="fa-solid fa-arrow-down fa-xl" />
-                                    </div>
-                                )}
+                            {pendingFriendRequests.length > 0 && (
+                                <div
+                                    className={
+                                        styles.inbox_offcanvas_container_scroll_helper
+                                    }
+                                    style={{
+                                        opacity: scrolledToBottom
+                                            ? "0%"
+                                            : "50%",
+                                        zIndex: scrolledToBottom ? "-1" : "0",
+                                    }}
+                                >
+                                    <i className="fa-solid fa-arrow-down fa-xl" />
+                                </div>
+                            )}
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
@@ -224,24 +225,23 @@ export const InboxOffcanvas = ({
                                     ))}
                                 </div>
                             )}
-                            {pendingFriendRequests &&
-                                pendingFriendRequests.length > 0 && (
-                                    <div
-                                        className={
-                                            styles.inbox_offcanvas_container_scroll_helper
-                                        }
-                                        style={{
-                                            opacity: scrolledToBottomMessages
-                                                ? "0%"
-                                                : "50%",
-                                            zIndex: scrolledToBottomMessages
-                                                ? "-1"
-                                                : "0",
-                                        }}
-                                    >
-                                        <i className="fa-solid fa-arrow-down fa-xl" />
-                                    </div>
-                                )}
+                            {pendingFriendRequests.length > 0 && (
+                                <div
+                                    className={
+                                        styles.inbox_offcanvas_container_scroll_helper
+                                    }
+                                    style={{
+                                        opacity: scrolledToBottomMessages
+                                            ? "0%"
+                                            : "50%",
+                                        zIndex: scrolledToBottomMessages
+                                            ? "-1"
+                                            : "0",
+                                    }}
+                                >
+                                    <i className="fa-solid fa-arrow-down fa-xl" />
+                                </div>
+                            )}
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>

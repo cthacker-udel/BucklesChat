@@ -64,7 +64,7 @@ export const Threads = ({
         router.push("/login");
     }
 
-    if (isLoading) {
+    if (allThreadsMessages === undefined || isLoading) {
         return <span />;
     }
 

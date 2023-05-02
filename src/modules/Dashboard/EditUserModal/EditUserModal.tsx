@@ -74,7 +74,7 @@ export const EditUserModal = ({
         router.push("/login");
     }
 
-    if (isLoading) {
+    if (data === undefined || isLoading) {
         return <span />;
     }
 

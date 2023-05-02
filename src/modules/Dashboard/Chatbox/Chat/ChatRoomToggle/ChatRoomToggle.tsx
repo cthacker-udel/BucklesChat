@@ -46,7 +46,7 @@ export const ChatRoomToggle = ({
         router.push("/login");
     }
 
-    if (isLoading) {
+    if (chatRoomStats === undefined || isLoading) {
         return <span />;
     }
 
