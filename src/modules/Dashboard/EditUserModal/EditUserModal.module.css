@@ -45,3 +45,21 @@
 .edit_modal_footer > button {
     width: max-content;
 }
+
+.edit_user_email_form_label {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+
+.edit_user_email_form_label > i {
+    align-self: center;
+}
+
+.edit_user_email_form_icon_confirmed {
+    color: lightblue;
+}
+
+.edit_user_email_form_icon_not_confirmed {
+    color: orangered;
+}

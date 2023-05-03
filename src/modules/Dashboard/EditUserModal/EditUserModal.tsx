@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/indent -- disabled */
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 import { useRouter } from "next/router";
 import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, OverlayTrigger } from "react-bootstrap";
+import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useSWR from "swr";
@@ -15,6 +17,7 @@ import {
     TextConstants,
     ValidationConstants,
 } from "@/assets";
+import { renderTooltip } from "@/helpers";
 
 import styles from "./EditUserModal.module.css";
 
@@ -72,7 +75,7 @@ export const EditUserModal = ({
 
     React.useEffect(() => {
         if (data !== undefined) {
-            const resetValues: { [key: string]: number | string } = {
+            const resetValues: { [key: string]: boolean | number | string } = {
                 ...FORM_DEFAULT_VALUES,
             };
             for (const [key, value] of Object.entries(data)) {
@@ -312,7 +315,43 @@ export const EditUserModal = ({
                         )}
                     </Form.Group>
                     <Form.Group controlId="email_form">
-                        <Form.Label>{"Email"}</Form.Label>
+                        <Form.Label
+                            className={styles.edit_user_email_form_label}
+                        >
+                            {"Email"}
+                            {data.isEmailConfirmed !== undefined &&
+                            data.isEmailConfirmed ? (
+                                <OverlayTrigger
+                                    overlay={(
+                                        properties: OverlayInjectedProps,
+                                    ): JSX.Element =>
+                                        renderTooltip(properties, {
+                                            title: "Confirmed",
+                                        })
+                                    }
+                                    placement="right"
+                                >
+                                    <i
+                                        className={`fa-solid fa-check ${styles.edit_user_email_form_icon_confirmed}`}
+                                    />
+                                </OverlayTrigger>
+                            ) : (
+                                <OverlayTrigger
+                                    overlay={(
+                                        properties: OverlayInjectedProps,
+                                    ): JSX.Element =>
+                                        renderTooltip(properties, {
+                                            title: "Not Confirmed",
+                                        })
+                                    }
+                                    placement="right"
+                                >
+                                    <i
+                                        className={`fa-solid fa-triangle-exclamation ${styles.edit_user_email_form_icon_not_confirmed}`}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                        </Form.Label>
                         <Form.Control
                             isInvalid={Boolean(errors.email)}
                             isValid={dirtyFields.email && !errors.email}

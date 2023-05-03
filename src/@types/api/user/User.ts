@@ -11,4 +11,7 @@ export type User = {
     profileImageRemovalUrl?: string;
     createdAt?: number | string;
     updatedAt?: number | string;
+    id?: number;
+    isEmailConfirmed?: boolean;
+    emailConfirmationToken?: string;
 };
