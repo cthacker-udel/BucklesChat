@@ -8,4 +8,5 @@ export type DashboardInformation = {
     numberOfFriends?: number;
     numberOfMessages?: number;
     friendsInformation?: Partial<User>[];
+    isEmailConfirmed?: boolean;
 };

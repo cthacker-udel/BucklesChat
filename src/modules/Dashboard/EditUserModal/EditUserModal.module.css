@@ -57,9 +57,9 @@
 }
 
 .edit_user_email_form_icon_confirmed {
-    color: lightblue;
+    color: rgb(21, 199, 247);
 }
 
 .edit_user_email_form_icon_not_confirmed {
-    color: orangered;
+    color: rgb(204, 51, 0);
 }

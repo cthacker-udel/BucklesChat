@@ -205,8 +205,19 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                         </div>
                         <div className={styles.dashboard_user_info}>
                             <div className={styles.dashboard_user_handle}>
-                                {"@"}
-                                {data.handle ?? "N/A"}
+                                <span>
+                                    {"@"}
+                                    {data.handle ?? "N/A"}
+                                </span>
+                                {data.isEmailConfirmed ? (
+                                    <i
+                                        className={`fa-solid fa-circle-check ${styles.user_email_confirmed_icon}`}
+                                    />
+                                ) : (
+                                    <i
+                                        className={`fa-solid fa-triangle-exclamation ${styles.user_email_unconfirmed_icon}`}
+                                    />
+                                )}
                             </div>
                             <div className={styles.dashboard_user_username}>
                                 {data.username}

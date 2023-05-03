@@ -332,7 +332,7 @@ export const EditUserModal = ({
                                     placement="right"
                                 >
                                     <i
-                                        className={`fa-solid fa-check ${styles.edit_user_email_form_icon_confirmed}`}
+                                        className={`fa-solid fa-circle-check ${styles.edit_user_email_form_icon_confirmed}`}
                                     />
                                 </OverlayTrigger>
                             ) : (

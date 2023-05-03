@@ -56,7 +56,10 @@ export class ServerSideApi {
      * @param body
      * @param queryParameters
      */
-    public static async post<T, K = { [key: string]: number | string }>(
+    public static async post<
+        T,
+        K = { [key: string]: boolean | number | string },
+    >(
         endpoint: string,
         body: K,
         queryParameters?: { [key: string]: number | string },

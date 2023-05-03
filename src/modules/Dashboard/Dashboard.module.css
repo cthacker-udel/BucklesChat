@@ -84,6 +84,21 @@
 .dashboard_user_handle {
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.05em;
+    display: flex;
+    flex-direction: row;
+    gap: 0.75em;
+}
+
+.dashboard_user_handle > i {
+    align-self: center;
+}
+
+.user_email_confirmed_icon {
+    color: rgb(21, 199, 247);
+}
+
+.user_email_unconfirmed_icon {
+    color: rgb(204, 51, 0);
 }
 
 .dashboard_user_info_divider {
