@@ -73,8 +73,17 @@ export class UserApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
+            const username = request.query.username;
+
+            if (username === undefined || username.length === 0) {
+                response.json({ data: false });
+                return;
+            }
+
             const getResult = await super.get<ApiResponse<boolean>>(
-                `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${request.query.username}`,
+                `${Endpoints.USER.BASE}${Endpoints.USER.DOES_EXIST}?username=${
+                    username as string
+                }`,
                 undefined,
                 request.headers as { [key: string]: string },
                 response,
