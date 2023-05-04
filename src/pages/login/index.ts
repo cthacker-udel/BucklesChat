@@ -5,6 +5,7 @@ import type { IncomingMessage } from "node:http";
 import type { GetServerSideProps } from "next/types";
 
 import { UserApi } from "@/@classes";
+import { cookieKey } from "@/assets";
 
 type PageProperties = {
     numberOfUsersOnline?: number;
@@ -24,9 +25,9 @@ export const getServerSideProps: GetServerSideProps<PageProperties> = async ({
 }: GetServerSideProperties) => {
     const { data: numberOfUsersOnline } = await UserApi.usersOnline();
     const { data: numberOfUsers } = await UserApi.totalUsers();
-    const { data } = await UserApi.ssGetUserDashboardInformation(req.headers);
+    const isLoggedIn = req.headers.cookie?.includes(cookieKey);
 
-    if (data !== undefined) {
+    if (isLoggedIn) {
         return { redirect: { destination: "/dashboard", permanent: false } };
     }
 

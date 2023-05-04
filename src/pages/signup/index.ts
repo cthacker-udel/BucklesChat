@@ -1,9 +1,11 @@
+/* eslint-disable require-await -- disabled */
+/* eslint-disable @typescript-eslint/require-await -- disabled */
 /* eslint-disable import/no-nodejs-modules -- disabled */
 import type { IncomingMessage } from "node:http";
 
 import type { GetServerSideProps } from "next/types";
 
-import { UserApi } from "@/@classes";
+import { cookieKey } from "@/assets";
 
 type PageProperties = object;
 
@@ -18,9 +20,9 @@ type GetServerSideProperties = {
 export const getServerSideProps: GetServerSideProps<PageProperties> = async ({
     req,
 }: GetServerSideProperties) => {
-    const { data } = await UserApi.ssGetUserDashboardInformation(req.headers);
+    const isLoggedIn = req.headers.cookie?.includes(cookieKey);
 
-    if (data !== undefined) {
+    if (isLoggedIn) {
         return { redirect: { destination: "/dashboard", permanent: false } };
     }
 

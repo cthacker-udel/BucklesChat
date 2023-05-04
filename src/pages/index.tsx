@@ -1,7 +1,21 @@
+/* eslint-disable require-await -- disabled */
+/* eslint-disable @typescript-eslint/require-await -- disabled */
+/* eslint-disable import/no-nodejs-modules -- disabled */
+import type { IncomingMessage } from "node:http";
+
 import Head from "next/head";
+import type { GetServerSideProps } from "next/types";
 import React from "react";
 
+import { cookieKey } from "@/assets";
+
 import { HomePage } from "../modules/HomePage";
+
+type PageProperties = object;
+
+type GetServerSideProperties = {
+    req: IncomingMessage;
+};
 
 /**
  * The index page of the application, when the user starts up the website, it loads this page
@@ -42,4 +56,21 @@ const Home = (): JSX.Element => (
     </>
 );
 
-export { Home as default };
+/**
+ *
+ * @param param0
+ * @returns
+ */
+const getServerSideProps: GetServerSideProps<PageProperties> = async ({
+    req,
+}: GetServerSideProperties) => {
+    const isLoggedIn = req.headers.cookie?.includes(cookieKey);
+
+    if (isLoggedIn) {
+        return { redirect: { destination: "/dashboard", permanent: false } };
+    }
+
+    return { props: {} };
+};
+
+export { Home as default, getServerSideProps };
