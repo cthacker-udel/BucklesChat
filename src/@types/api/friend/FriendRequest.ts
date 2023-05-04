@@ -1,7 +1,7 @@
 export type FriendRequest = {
     customMessage?: string;
     username: string;
-    sender: string;
+    sender: number;
     createdAt: string;
     senderProfileImageUrl?: string;
 };

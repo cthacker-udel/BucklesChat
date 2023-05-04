@@ -9,16 +9,11 @@ import { TextConstants, ValidationConstants } from "@/assets";
 import styles from "./MessageFriend.module.css";
 
 type MessageFriendProperties = {
+    friendId?: number;
+    handle?: string;
     messageFriendOnHide: () => void;
-    onMessageSend: (
-        _sender: string,
-        _receiver: string,
-        _content: string,
-        _senderPfp?: string,
-    ) => Promise<boolean>;
+    onMessageSend: (_receiver: number, _content: string) => Promise<boolean>;
     receiver: string;
-    sender: string;
-    senderProfilePicture?: string;
     showMessageFriend: boolean;
 };
 
@@ -43,11 +38,11 @@ const FORM_DEFAULT_VALUES = {
  * @returns The modal used for messaging the user
  */
 export const MessageFriend = ({
+    friendId,
+    handle,
     messageFriendOnHide,
     onMessageSend,
     receiver,
-    sender,
-    senderProfilePicture,
     showMessageFriend,
 }: MessageFriendProperties): JSX.Element => {
     const { formState, getValues, register, reset } = useForm<FormValues>({
@@ -74,7 +69,9 @@ export const MessageFriend = ({
             <Modal.Header closeButton closeVariant="white">
                 <Modal.Title className={styles.message_friend_modal_title}>
                     {"Message "}
-                    <span className={styles.message_receiver}>{receiver}</span>
+                    <span className={styles.message_receiver}>
+                        {handle ?? receiver}
+                    </span>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -131,17 +128,18 @@ export const MessageFriend = ({
                 <Button
                     disabled={!dirtyFields.content || Boolean(errors.content)}
                     onClick={async (): Promise<void> => {
+                        if (friendId === undefined) {
+                            reset();
+                            messageFriendOnHide();
+                            return;
+                        }
+
                         const messageSendingToast = toast.loading(
                             `Sending message to ${receiver}...`,
                         );
                         const { content } = getValues();
                         reset();
-                        const result = await onMessageSend(
-                            sender,
-                            receiver,
-                            content,
-                            senderProfilePicture,
-                        );
+                        const result = await onMessageSend(friendId, content);
                         toast.dismiss(messageSendingToast);
 
                         if (result) {

@@ -16,17 +16,15 @@ export class FriendService extends ClientSideApi {
     /**
      * Sends a friend request to the specified user `usernameTo` from the user `usernameFrom`
      *
-     * @param usernameTo -  The username we are sending the request to
-     * @param usernameFrom - The username we are sending the request from
+     * @param userIdTo -  The username we are sending the request to
      * @param customMessage - The custom message we are appending to the request
      * @returns Whether or not the request was successfully sent
      */
     public static sendFriendRequest = async (
-        usernameTo: string,
-        usernameFrom: string,
+        userIdTo: number,
         customMessage?: string,
     ): Promise<ApiResponse<boolean>> => {
-        if (usernameTo.length === 0 || usernameFrom.length === 0) {
+        if (userIdTo === undefined) {
             return { data: false };
         }
 
@@ -35,8 +33,7 @@ export class FriendService extends ClientSideApi {
             FriendRequestPayload
         >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.SEND_REQUEST}`, {
             customMessage,
-            usernameFrom,
-            usernameTo,
+            userIdTo,
         });
 
         return sendRequest;
@@ -45,17 +42,15 @@ export class FriendService extends ClientSideApi {
     /**
      * Accepts or rejects a friend request from the user (`usernameFrom`) to the user (`usernameTo`)
      *
-     * @param usernameTo - The username the friend request is targeted at
-     * @param usernameFrom - The username whom sent the friend request
+     * @param userIdFrom - The user id whom sent the friend request
      * @param accept - Whether we are accepting or rejecting the friend request
      * @returns - Whether or not the process went through
      */
     public static processFriendRequest = async (
-        usernameTo: string,
-        usernameFrom: string,
+        userIdFrom: number,
         accept: boolean,
     ): Promise<ApiResponse<boolean>> => {
-        if (usernameTo.length === 0 || usernameFrom.length === 0) {
+        if (userIdFrom === undefined) {
             return { data: false };
         }
 
@@ -68,7 +63,7 @@ export class FriendService extends ClientSideApi {
                     ? Endpoints.FRIEND.ACCEPT_REQUEST
                     : Endpoints.FRIEND.REJECT_REQUEST
             }`,
-            { usernameFrom, usernameTo },
+            { userIdFrom },
         );
 
         return processRequest;
@@ -77,15 +72,13 @@ export class FriendService extends ClientSideApi {
     /**
      * Removes a friend from the database
      *
-     * @param recipient - The recipient of the friend request
-     * @param sender - The sender of the friend request
+     * @param friendId - The id of the friend you want to remove
      * @returns Whether or not the friend was successfully removed
      */
     public static removeFriend = async (
-        recipient: string,
-        sender: string,
+        friendId?: number,
     ): Promise<ApiResponse<boolean>> => {
-        if (recipient.length === 0 || sender.length === 0) {
+        if (friendId === undefined) {
             return { data: false };
         }
 
@@ -93,8 +86,7 @@ export class FriendService extends ClientSideApi {
             ApiResponse<boolean>,
             FriendPayload
         >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REMOVE_FRIEND}`, {
-            recipient,
-            sender,
+            sender: friendId,
         });
 
         return removeFriendRequest;
@@ -104,21 +96,15 @@ export class FriendService extends ClientSideApi {
      * Sends a direct message to the user specified by `receiver` from the user `sender` with content of `content`
      *
      * @param receiver - The person who is receiving the message
-     * @param sender - The person who is sending the message
      * @param content - The content of the message
      * @param senderProfilePicture - The profile picture of the person sending the message
      * @returns Whether or not the DM was successfully sent
      */
     public static sendDM = async (
-        receiver: string,
-        sender: string,
+        receiver: number,
         content: string,
     ): Promise<ApiResponse<boolean>> => {
-        if (
-            receiver.length === 0 ||
-            sender.length === 0 ||
-            content.length === 0
-        ) {
+        if (receiver === undefined || content.length === 0) {
             return { data: false };
         }
 
@@ -127,7 +113,6 @@ export class FriendService extends ClientSideApi {
             {
                 content,
                 receiver,
-                sender,
             },
         );
 

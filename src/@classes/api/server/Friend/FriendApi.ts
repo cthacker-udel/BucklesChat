@@ -164,22 +164,18 @@ export class FriendApi extends ServerSideApi {
                 request.body,
             ) as FriendRequestPayload;
 
-            if (
-                requestPayload.usernameFrom === undefined ||
-                requestPayload.usernameTo === undefined
-            ) {
+            if (requestPayload.userIdFrom === undefined) {
                 throw new Error("Must send usernames to accept requests");
             }
 
-            const { usernameTo, usernameFrom } = requestPayload;
+            const { userIdFrom: usernameFrom } = requestPayload;
             const sendResult = await super.post<
                 ApiResponse<boolean>,
                 FriendRequestPayload
             >(
                 `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.ACCEPT_REQUEST}`,
                 {
-                    usernameFrom,
-                    usernameTo,
+                    userIdFrom: usernameFrom,
                 },
                 undefined,
                 request.headers as { [key: string]: string },
@@ -224,22 +220,18 @@ export class FriendApi extends ServerSideApi {
                 request.body,
             ) as FriendRequestPayload;
 
-            if (
-                requestPayload.usernameFrom === undefined ||
-                requestPayload.usernameTo === undefined
-            ) {
+            if (requestPayload.userIdTo === undefined) {
                 throw new Error("Must send usernames to reject requests");
             }
 
-            const { usernameTo, usernameFrom } = requestPayload;
+            const { userIdTo: usernameTo } = requestPayload;
             const sendResult = await super.post<
                 ApiResponse<boolean>,
                 FriendRequestPayload
             >(
                 `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REJECT_REQUEST}`,
                 {
-                    usernameFrom,
-                    usernameTo,
+                    userIdTo: usernameTo,
                 },
                 undefined,
                 request.headers as { [key: string]: string },
@@ -283,16 +275,13 @@ export class FriendApi extends ServerSideApi {
         try {
             const requestPayload = JSON.parse(request.body) as FriendPayload;
 
-            if (
-                requestPayload.recipient === undefined ||
-                requestPayload.sender === undefined
-            ) {
+            if (requestPayload.sender === undefined) {
                 throw new Error(
                     "Must supply both usernames to remove a friend",
                 );
             }
 
-            const { recipient, sender } = requestPayload;
+            const { sender } = requestPayload;
 
             const removalRequest = await super.post<
                 ApiResponse<boolean>,
@@ -300,7 +289,6 @@ export class FriendApi extends ServerSideApi {
             >(
                 `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REMOVE_FRIEND}`,
                 {
-                    recipient,
                     sender,
                 },
                 undefined,
@@ -346,7 +334,6 @@ export class FriendApi extends ServerSideApi {
 
             if (
                 messagePayload.receiver === undefined ||
-                messagePayload.sender === undefined ||
                 messagePayload.content === undefined
             ) {
                 throw new Error(
@@ -354,7 +341,7 @@ export class FriendApi extends ServerSideApi {
                 );
             }
 
-            const { content, receiver, sender } = messagePayload;
+            const { content, receiver } = messagePayload;
 
             const dmSendResponse = await super.post<
                 ApiResponse<boolean>,
@@ -364,7 +351,6 @@ export class FriendApi extends ServerSideApi {
                 {
                     content,
                     receiver,
-                    sender,
                 },
                 undefined,
                 request.headers as { [key: string]: string },

@@ -388,7 +388,6 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                         data.friendsInformation?.length > 0 ? (
                             data.friendsInformation?.map((eachFriend) => (
                                 <Friend
-                                    loggedInUsername={username}
                                     {...eachFriend}
                                     key={`friend ${eachFriend.username}`}
                                 />

@@ -8,25 +8,25 @@ import { FriendOptions } from "./FriendOptions";
  * Creates a FriendOptions component with the injected properties from the OverlayTrigger component
  *
  * @param onMessageFriendOptionCallback - The callback that is fired when the message friend option is clicked
- * @param handle - The friend's handle (can be null)
- * @param loggedInUsername - The username of the user who is currently logged in
- * @param profileImageUrl - The friend's profile image url (can be null)
  * @param username - The friend's username
  * @param rest - The inject props from the OverlayTrigger component
+ * @param id - The id of the friend in the database
+ * @param handle - (optional) The friend's handle (can be null)
+ * @param profileImageUrl - (optional) The friend's profile image url (can be null)
  * @returns The rendered FriendOptions component, with the appropriate properties passed in
  */
 export const createFriendOptions = (
     onMessageFriendOptionCallback: () => void,
-    loggedInUsername: string,
     username: string,
     rest: OverlayInjectedProps,
+    id?: number,
     handle?: string,
     profileImageUrl?: string,
 ): JSX.Element => (
     <Tooltip {...rest}>
         <FriendOptions
             handle={handle}
-            loggedInUsername={loggedInUsername}
+            id={id}
             onMessageFriendOptionCallback={onMessageFriendOptionCallback}
             profileImageUrl={profileImageUrl}
             username={username}

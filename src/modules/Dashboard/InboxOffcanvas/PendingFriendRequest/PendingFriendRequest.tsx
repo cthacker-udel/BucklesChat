@@ -10,7 +10,7 @@ import styles from "./PendingFriendRequest.module.css";
 
 type PendingFriendRequestProperties = {
     createdAt: string;
-    sender: string;
+    sender: number;
     senderProfileImageUrl?: string;
     username: string;
 };
@@ -42,7 +42,7 @@ export const PendingFriendRequest = ({
                 src={senderProfileImageUrl ?? placeHolderPfp.src}
             />
             <div className={styles.friend_request_info}>
-                <div className={styles.username}>{sender}</div>
+                <div className={styles.username}>{username}</div>
                 <div className={styles.item_sent_time}>
                     {`${computeTodayDayDistance(new Date(createdAt))}d`}
                 </div>
@@ -56,7 +56,6 @@ export const PendingFriendRequest = ({
                         `Accepting ${sender}'s friend request...`,
                     );
                     const result = await FriendService.processFriendRequest(
-                        username,
                         sender,
                         true,
                     );
@@ -80,7 +79,6 @@ export const PendingFriendRequest = ({
                         `Rejecting ${sender}'s friend request...`,
                     );
                     const result = await FriendService.processFriendRequest(
-                        username,
                         sender,
                         false,
                     );

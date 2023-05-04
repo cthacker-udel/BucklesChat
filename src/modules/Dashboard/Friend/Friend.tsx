@@ -12,9 +12,9 @@ import { createFriendOptions } from "./FriendOptions/createFriendOption";
 import { MessageFriend } from "./MessageFriend";
 
 type FriendProperties = {
-    loggedInUsername?: string;
-    profileImageUrl?: string;
     handle?: string;
+    id?: number;
+    profileImageUrl?: string;
     username?: string;
 };
 
@@ -22,7 +22,6 @@ type FriendProperties = {
  * An individual friend belonging to a user
  *
  * @param props - The properties passed into the Friend component from the Dashboard component
- * @param props.loggedInUsername - The current username of the logged in user
  * @param props.handle - The handle of the friend
  * @param props.profileImageUrl - The profile image url of the friend
  * @param props.username - The username of the selected friend
@@ -30,8 +29,8 @@ type FriendProperties = {
  * @returns An individual friend in the friends list which displays when the user accesses the dashboard
  */
 export const Friend = ({
-    loggedInUsername,
     handle,
+    id,
     profileImageUrl,
     username,
 }: FriendProperties): JSX.Element => {
@@ -44,17 +43,9 @@ export const Friend = ({
     }, []);
 
     const onMessageSend = React.useCallback(
-        async (
-            sender: string,
-            receiver: string,
-            content: string,
-        ): Promise<boolean> => {
+        async (receiver: number, content: string): Promise<boolean> => {
             try {
-                const { data } = await FriendService.sendDM(
-                    receiver,
-                    sender,
-                    content,
-                );
+                const { data } = await FriendService.sendDM(receiver, content);
                 return data;
             } catch {
                 return false;
@@ -90,9 +81,9 @@ export const Friend = ({
                         ): JSX.Element =>
                             createFriendOptions(
                                 onMessageOptionClick,
-                                loggedInUsername as unknown as string,
                                 username as unknown as string,
                                 properties,
+                                id,
                                 handle,
                                 profileImageUrl,
                             )
@@ -117,13 +108,13 @@ export const Friend = ({
                 </div>
             </div>
             <MessageFriend
+                friendId={id}
+                handle={handle}
                 messageFriendOnHide={(): void => {
                     setShowMessageFriendModal(false);
                 }}
                 onMessageSend={onMessageSend}
                 receiver={username as unknown as string}
-                sender={loggedInUsername as unknown as string}
-                senderProfilePicture={profileImageUrl}
                 showMessageFriend={showMessageFriendModal}
             />
         </>

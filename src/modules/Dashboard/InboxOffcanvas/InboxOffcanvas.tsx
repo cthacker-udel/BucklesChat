@@ -225,7 +225,7 @@ export const InboxOffcanvas = ({
                                     ))}
                                 </div>
                             )}
-                            {pendingFriendRequests.length > 0 && (
+                            {pendingMessages.length > 0 && (
                                 <div
                                     className={
                                         styles.inbox_offcanvas_container_scroll_helper
