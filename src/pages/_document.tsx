@@ -2,8 +2,6 @@
 import { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
 
-import { Loading } from "@/modules";
-
 /**
  * Only rendered on the server, updates the html and body tags used to render a page.
  *
@@ -34,7 +32,6 @@ const Document = (): JSX.Element => (
             />
         </Head>
         <body>
-            <Loading />
             <Main />
             <NextScript />
         </body>
