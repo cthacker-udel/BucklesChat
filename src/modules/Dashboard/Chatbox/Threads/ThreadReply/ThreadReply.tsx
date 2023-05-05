@@ -7,6 +7,7 @@ import { Key } from "ts-key-enum";
 
 import { MessageService } from "@/@classes";
 import type { DirectMessage } from "@/@types";
+import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { renderTooltip } from "@/helpers";
 
 import styles from "./ThreadReply.module.css";
@@ -111,7 +112,7 @@ export const ThreadReply = ({
                 <Image
                     alt={`Current logged in ${sender}'s profile picture`}
                     className={styles.thread_reply_pfp}
-                    src={senderProfilePictureUrl}
+                    src={senderProfilePictureUrl ?? placeholderPfp.src}
                 />
             </div>
             {sendingMessage ? (

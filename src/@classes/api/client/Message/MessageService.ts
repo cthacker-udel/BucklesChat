@@ -6,6 +6,7 @@ import type {
     ChatRoomMessage,
     CreateThreadPayload,
     DirectMessage,
+    DmPayload,
 } from "@/@types";
 import { Endpoints } from "@/assets";
 
@@ -122,5 +123,33 @@ export class MessageService extends ClientSideApi {
         );
 
         return addMessageToChatRoomRequest;
+    };
+
+    /**
+     * Sends a direct message to the user specified by `receiver` from the user `sender` with content of `content`
+     *
+     * @param receiver - The person who is receiving the message
+     * @param content - The content of the message
+     * @param senderProfilePicture - The profile picture of the person sending the message
+     * @returns Whether or not the DM was successfully sent
+     */
+    public static sendDM = async (
+        receiver: number,
+        content: string,
+    ): Promise<ApiResponse<boolean>> => {
+        console.log("sending dm", receiver, content);
+        if (receiver === undefined || content.length === 0) {
+            return { data: false };
+        }
+
+        const sendDmRequest = await super.post<ApiResponse<boolean>, DmPayload>(
+            `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.SEND_DIRECT_MESSAGE}`,
+            {
+                content,
+                receiver,
+            },
+        );
+
+        return sendDmRequest;
     };
 }

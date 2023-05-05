@@ -34,18 +34,14 @@ export const FriendMultiSelect = ({
         data: availableFriends,
         error,
         isLoading: isLoadingAvailableFriends,
-    } = useSWR<string[], Error, string>(
-        `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}`,
-    );
-    const {
-        data: availableFriendInformation,
-        error: availableFriendsError,
-        isLoading: isLoadingBulkDashboard,
-    } = useSWR<Partial<User>[], Error, string>(
-        `${Endpoints.USER.BASE}${Endpoints.USER.BULK_DASHBOARD}?usernames=${
-            availableFriends === undefined ? "" : availableFriends.join(",")
-        }`,
-    );
+    } = useSWR<
+        Pick<
+            User,
+            "createdAt" | "handle" | "id" | "profileImageUrl" | "username"
+        >[],
+        Error,
+        string
+    >(`${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.AVAILABLE_FRIENDS}`);
 
     const router = useRouter();
 
@@ -59,18 +55,18 @@ export const FriendMultiSelect = ({
         (event: React.KeyboardEvent<HTMLDivElement>) => {
             if (
                 (event.key === Key.ArrowDown || event.key === Key.ArrowUp) &&
-                availableFriendInformation !== undefined
+                availableFriends !== undefined
             ) {
                 const isKeyDown = event.key === Key.ArrowDown;
                 const modifiedKeyIndex = isKeyDown
-                    ? currentKeyIndex === availableFriendInformation.length - 1
+                    ? currentKeyIndex === availableFriends.length - 1
                         ? 0
                         : currentKeyIndex + 1
                     : currentKeyIndex === 0
-                    ? availableFriendInformation.length - 1
+                    ? availableFriends.length - 1
                     : currentKeyIndex - 1;
                 const currentKeyIndexFriend =
-                    availableFriendInformation[modifiedKeyIndex];
+                    availableFriends[modifiedKeyIndex];
                 const foundFriendDocuments = document.querySelectorAll(
                     `#username_${
                         currentKeyIndexFriend.username as unknown as string
@@ -95,10 +91,9 @@ export const FriendMultiSelect = ({
                 setCurrentKeyIndex(modifiedKeyIndex);
             } else if (
                 event.key === Key.Enter &&
-                availableFriendInformation !== undefined
+                availableFriends !== undefined
             ) {
-                const currentKeyIndexFriend =
-                    availableFriendInformation[currentKeyIndex];
+                const currentKeyIndexFriend = availableFriends[currentKeyIndex];
                 const foundFriendDocuments = document.querySelectorAll(
                     `#username_${
                         currentKeyIndexFriend.username as unknown as string
@@ -115,12 +110,12 @@ export const FriendMultiSelect = ({
                 }
             }
         },
-        [availableFriendInformation, currentKeyIndex, onSelectFriend],
+        [availableFriends, currentKeyIndex, onSelectFriend],
     );
 
     React.useEffect(() => {
-        if (availableFriendInformation !== undefined) {
-            for (const eachFriendInformation of availableFriendInformation) {
+        if (availableFriends !== undefined) {
+            for (const eachFriendInformation of availableFriends) {
                 if (eachFriendInformation.handle !== null) {
                     setHandleLookup((oldHandleLookup) => {
                         const clonedMap = new Map(oldHandleLookup);
@@ -139,18 +134,13 @@ export const FriendMultiSelect = ({
                 }
             }
         }
-    }, [availableFriendInformation]);
+    }, [availableFriends]);
 
-    if (error !== undefined || availableFriendsError !== undefined) {
+    if (error !== undefined) {
         router.push("/login");
     }
 
-    if (
-        availableFriendInformation === undefined ||
-        availableFriends === undefined ||
-        isLoadingAvailableFriends ||
-        isLoadingBulkDashboard
-    ) {
+    if (availableFriends === undefined || isLoadingAvailableFriends) {
         return <div />;
     }
 
@@ -176,7 +166,7 @@ export const FriendMultiSelect = ({
                 </InputGroup.Text>
             </InputGroup>
             <div className={styles.multiselect_container} id="friend_list">
-                {availableFriendInformation.map(
+                {availableFriends.map(
                     (eachFriendInformation: Partial<User>, _index: number) => (
                         <div
                             className={styles.multiselect_selection}
@@ -196,41 +186,64 @@ export const FriendMultiSelect = ({
                                     styles.multiselect_selection_user_information
                                 }
                             >
-                                <Image
-                                    alt={`${eachFriendInformation.username}'s profile picture`}
-                                    className={styles.multiselect_profile_image}
-                                    src={
-                                        eachFriendInformation.profileImageUrl ??
-                                        placeholderPFP.src
-                                    }
-                                />
                                 <div
                                     className={
-                                        styles.multiselect_selection_text
+                                        styles.multiselect_selection_user_image_username
                                     }
                                 >
-                                    <span
+                                    <Image
+                                        alt={`${eachFriendInformation.username}'s profile picture`}
+                                        className={
+                                            styles.multiselect_profile_image
+                                        }
+                                        src={
+                                            eachFriendInformation.profileImageUrl ??
+                                            placeholderPFP.src
+                                        }
+                                    />
+                                    <div
                                         className={
                                             styles.multiselect_selection_header_text
                                         }
                                     >
-                                        {eachFriendInformation.handle ??
-                                            eachFriendInformation.username}
-                                    </span>
-                                    <div
-                                        className={
-                                            styles.multiselect_selection_subtext
-                                        }
-                                    >
-                                        {eachFriendInformation.createdAt ===
-                                        undefined
-                                            ? new Date(
-                                                  Date.now(),
-                                              ).toLocaleDateString()
-                                            : new Date(
-                                                  eachFriendInformation.createdAt,
-                                              ).toLocaleDateString()}
+                                        {eachFriendInformation.handle ===
+                                        null ? (
+                                            <div>
+                                                {eachFriendInformation.username}
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div>
+                                                    {
+                                                        eachFriendInformation.handle
+                                                    }
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.multiselect_selection_header_username_with_handle
+                                                    }
+                                                >
+                                                    {
+                                                        eachFriendInformation.username
+                                                    }
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
+                                </div>
+                                <div
+                                    className={
+                                        styles.multiselect_selection_subtext
+                                    }
+                                >
+                                    {eachFriendInformation.createdAt ===
+                                    undefined
+                                        ? new Date(
+                                              Date.now(),
+                                          ).toLocaleDateString()
+                                        : new Date(
+                                              eachFriendInformation.createdAt,
+                                          ).toLocaleDateString()}
                                 </div>
                             </div>
                             {eachFriendInformation.username && (

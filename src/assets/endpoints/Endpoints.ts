@@ -6,7 +6,6 @@ export const Endpoints = {
         PENDING_REQUESTS: "pendingRequests",
         REJECT_REQUEST: "rejectRequest",
         REMOVE_FRIEND: "removeFriend",
-        SEND_DIRECT_MESSAGE: "sendDirectMessage",
         SEND_REQUEST: "sendRequest",
     },
     IMAGE: {
@@ -30,6 +29,7 @@ export const Endpoints = {
             STATS: "stats",
         },
         PENDING_DIRECT_MESSAGES: "pendingDirectMessages",
+        SEND_DIRECT_MESSAGE: "sendDirectMessage",
         THREAD: {
             ADD_MESSAGE: "addMessage",
             ALL_MESSAGES: "getAll/messages",

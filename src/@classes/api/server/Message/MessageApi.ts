@@ -11,6 +11,7 @@ import type {
     ChatRoomStats,
     CreateThreadPayload,
     DirectMessage,
+    DmPayload,
     ExceptionLog,
     Thread,
     ThreadMessages,
@@ -531,6 +532,68 @@ export class MessageApi extends ServerSideApi {
             );
 
             response.send(result);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Sends a direct message to a user in the application
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static sendDM = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            console.log("sending dm");
+            const messagePayload = JSON.parse(request.body) as DmPayload;
+
+            if (
+                messagePayload.receiver === undefined ||
+                messagePayload.content === undefined
+            ) {
+                throw new Error(
+                    "Must supply sender and receiver when sending direct message",
+                );
+            }
+
+            const { content, receiver } = messagePayload;
+
+            const dmSendResponse = await super.post<
+                ApiResponse<boolean>,
+                DmPayload
+            >(
+                `${Endpoints.MESSAGE.BASE}${Endpoints.MESSAGE.SEND_DIRECT_MESSAGE}`,
+                {
+                    content,
+                    receiver,
+                },
+                undefined,
+                request.headers as { [key: string]: string },
+                response,
+            );
+
+            response.send(dmSendResponse);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {

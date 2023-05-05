@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Image, OverlayTrigger } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 
-import { FriendService } from "@/@classes";
+import { MessageService } from "@/@classes";
 import _OfflineIndicator from "@/assets/placeholder/offlineindicator.png";
 import OnlineIndicator from "@/assets/placeholder/onlineindicator.png";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
@@ -45,7 +45,7 @@ export const Friend = ({
     const onMessageSend = React.useCallback(
         async (receiver: number, content: string): Promise<boolean> => {
             try {
-                const { data } = await FriendService.sendDM(receiver, content);
+                const { data } = await MessageService.sendDM(receiver, content);
                 return data;
             } catch {
                 return false;
