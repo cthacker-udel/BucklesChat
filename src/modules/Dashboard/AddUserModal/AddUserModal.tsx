@@ -28,26 +28,23 @@ export const AddUserModal = ({
     username,
 }: FormValues): JSX.Element => {
     const { mutate } = useSWRConfig();
-    const [selectedFriends, setSelectedFriends] = React.useState<Set<string>>(
+    const [selectedFriends, setSelectedFriends] = React.useState<Set<number>>(
         new Set(),
     );
 
-    const onSelectFriend = React.useCallback(
-        (selectedUsername: string): void => {
-            if (selectedUsername !== undefined) {
-                setSelectedFriends((oldSelectedFriends: Set<string>) => {
-                    const newSelectedFriends = new Set(oldSelectedFriends);
-                    if (newSelectedFriends.has(selectedUsername)) {
-                        newSelectedFriends.delete(selectedUsername);
-                    } else {
-                        newSelectedFriends.add(selectedUsername);
-                    }
-                    return newSelectedFriends;
-                });
-            }
-        },
-        [],
-    );
+    const onSelectFriend = React.useCallback((selectedId: number): void => {
+        if (selectedId !== undefined) {
+            setSelectedFriends((oldSelectedFriends: Set<number>) => {
+                const newSelectedFriends = new Set(oldSelectedFriends);
+                if (newSelectedFriends.has(selectedId)) {
+                    newSelectedFriends.delete(selectedId);
+                } else {
+                    newSelectedFriends.add(selectedId);
+                }
+                return newSelectedFriends;
+            });
+        }
+    }, []);
 
     const onSearch = React.useCallback(
         (handleOrUsername: string, handleLookup: Map<string, string>) => {
@@ -98,24 +95,32 @@ export const AddUserModal = ({
 
     const sendRequestToSelectedFriends = React.useCallback(async () => {
         const requests: Promise<ApiResponse<boolean>>[] = [];
-        for (const eachUsername of selectedFriends.values()) {
-            requests.push(
-                FriendService.sendFriendRequest(eachUsername, username),
-            );
+        for (const eachId of selectedFriends.values()) {
+            requests.push(FriendService.sendFriendRequest(eachId, username));
         }
         const sendingRequestsToast = toast.loading("Sending friend requests");
         const successfullySentRequests = await Promise.all(requests);
-        const usernames = [...selectedFriends.values()];
+        const userIds = [...selectedFriends.values()];
 
         let index = 0;
         for (const eachResult of successfullySentRequests) {
+            const currentUserId = userIds[index];
+            const foundUser = document.querySelector(
+                `#userid_${currentUserId}`,
+            ) as unknown as HTMLElement;
             if (eachResult.data) {
                 toast.success(
-                    `Successfully sent a request to ${usernames[index]}`,
+                    `Successfully sent a friend request to ${
+                        foundUser.dataset.handle ?? foundUser.dataset.username
+                    }`,
+                    { autoClose: 3000 },
                 );
             } else {
                 toast.error(
-                    `Failed to send a friend request to ${usernames[index]}`,
+                    `Failed to send a friend request to ${
+                        foundUser.dataset.handle ?? foundUser.dataset.username
+                    }`,
+                    { autoClose: 3000 },
                 );
             }
             index += 1;

@@ -18,8 +18,8 @@ type FriendMultiselectProperties = {
         _handleOrUsername: string,
         _handleLookup: Map<string, string>,
     ) => void;
-    onSelectFriend: (_username: string) => void;
-    selectedFriends: Set<string>;
+    onSelectFriend: (_id: number) => void;
+    selectedFriends: Set<number>;
 };
 
 /**
@@ -68,9 +68,7 @@ export const FriendMultiSelect = ({
                 const currentKeyIndexFriend =
                     availableFriends[modifiedKeyIndex];
                 const foundFriendDocuments = document.querySelectorAll(
-                    `#username_${
-                        currentKeyIndexFriend.username as unknown as string
-                    }`,
+                    `#userid_${currentKeyIndexFriend.id}`,
                 );
                 if (foundFriendDocuments.length > 0) {
                     foundFriendDocuments[0]?.scrollIntoView({
@@ -95,17 +93,15 @@ export const FriendMultiSelect = ({
             ) {
                 const currentKeyIndexFriend = availableFriends[currentKeyIndex];
                 const foundFriendDocuments = document.querySelectorAll(
-                    `#username_${
-                        currentKeyIndexFriend.username as unknown as string
-                    }`,
+                    `#userid_${currentKeyIndexFriend.id}`,
                 );
                 if (foundFriendDocuments.length > 0) {
                     const foundFriendDocument =
                         foundFriendDocuments[0] as HTMLElement;
-                    const { username: foundFriendUsername } =
+                    const { userid: foundFriendId } =
                         foundFriendDocument.dataset;
-                    if (foundFriendUsername !== undefined) {
-                        onSelectFriend(foundFriendUsername);
+                    if (foundFriendId !== undefined) {
+                        onSelectFriend(Number.parseInt(foundFriendId, 10));
                     }
                 }
             }
@@ -170,14 +166,14 @@ export const FriendMultiSelect = ({
                     (eachFriendInformation: Partial<User>, _index: number) => (
                         <div
                             className={styles.multiselect_selection}
+                            data-handle={eachFriendInformation.handle}
+                            data-userid={eachFriendInformation.id}
                             data-username={eachFriendInformation.username}
-                            id={`username_${
-                                eachFriendInformation.username as unknown as string
-                            }`}
+                            id={`userid_${eachFriendInformation.id}`}
                             key={`multiselect_selection-${_index}`}
                             onClick={(): void => {
                                 onSelectFriend(
-                                    eachFriendInformation.username as unknown as string,
+                                    eachFriendInformation.id as unknown as number,
                                 );
                             }}
                         >
@@ -253,7 +249,7 @@ export const FriendMultiSelect = ({
                                     }
                                 >
                                     {selectedFriends.has(
-                                        eachFriendInformation.username,
+                                        eachFriendInformation.id as unknown as number,
                                     ) ? (
                                         <i
                                             className={`fa-solid fa-circle-check ${styles.toggle_selected}`}
