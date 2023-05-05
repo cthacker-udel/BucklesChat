@@ -1,3 +1,4 @@
+/* eslint-disable ramda/prefer-ramda-boolean -- disabled */
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable unicorn/no-null -- disabled just for useSwr, would rather use undefined */
 /* eslint-disable @typescript-eslint/indent -- disabled */
@@ -5,7 +6,7 @@ import { useRouter } from "next/router";
 import React, { type ChangeEvent } from "react";
 import { Button, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 
 import { ImageService, UserService } from "@/@classes";
 import type { DashboardInformation } from "@/@types";
@@ -32,6 +33,7 @@ type DashboardProperties = {
  */
 export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
     useBackground(Background, { noOptions: true });
+    const { mutate: globalMutate } = useSWRConfig();
     const { data, mutate, error, isLoading } = useSWR<
         DashboardInformation,
         Error,
@@ -74,6 +76,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                 render: "Logout successful!",
                 type: "success",
             });
+            globalMutate(() => true, undefined, { revalidate: false });
             router.push("/login");
         } else {
             toast.update(loadingToast, {
@@ -83,7 +86,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                 type: "error",
             });
         }
-    }, [router]);
+    }, [globalMutate, router]);
 
     if (error) {
         router.push("/login");
