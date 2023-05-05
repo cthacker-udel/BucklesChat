@@ -42,6 +42,9 @@
 .friend_info_display {
     align-self: center;
     color: white;
+    font-family: "Dynapuff", sans-serif !important;
+    font-size: 1.15em;
+    letter-spacing: 0.03em;
 }
 
 .friend_info_actions {
