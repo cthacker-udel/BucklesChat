@@ -1,10 +1,13 @@
+/* eslint-disable import/no-nodejs-modules -- disabled */
+/* eslint-disable sonarjs/no-duplicate-string -- disabled */
+/* eslint-disable @typescript-eslint/no-extraneous-class -- disabled */
+/* eslint-disable @typescript-eslint/indent -- disabled */
+import type { IncomingHttpHeaders } from "node:http";
+
 import type { NextApiResponse } from "next";
 
 import { copyResponseHeadersToResponse } from "@/helpers";
 import { copyResponseStatusToResponse } from "@/helpers/copyResponseStatusToResponse";
-/* eslint-disable sonarjs/no-duplicate-string -- disabled */
-/* eslint-disable @typescript-eslint/no-extraneous-class -- disabled */
-/* eslint-disable @typescript-eslint/indent -- disabled */
 
 /**
  *
@@ -108,7 +111,7 @@ export class ServerSideApi {
     public static async delete<T>(
         endpoint: string,
         queryParameters?: { [key: string]: number | string },
-        headers?: { [key: string]: number | string },
+        headers?: IncomingHttpHeaders | { [key: string]: number | string },
         nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const modifiedHeaders = {

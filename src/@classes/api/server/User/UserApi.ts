@@ -542,4 +542,39 @@ export class UserApi extends ServerSideApi {
             } catch {}
         }
     };
+
+    /**
+     * Clears the user state from the redis database, making them appear offline to other users
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static clearState = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const clearStateResponse = await super.delete<ApiResponse<boolean>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.CLEAR_USER_STATE}`,
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.send(clearStateResponse);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+        }
+    };
 }

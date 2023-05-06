@@ -42,6 +42,7 @@ export const Endpoints = {
     USER: {
         BASE: "user/",
         BULK_DASHBOARD: "bulkDashboardInformation",
+        CLEAR_USER_STATE: "clearUserState",
         CONFIRM_EMAIL: "confirmEmail",
         DASHBOARD: "dashboardInformation",
         DETAILS: "details",
@@ -50,9 +51,11 @@ export const Endpoints = {
         IS_EMAIL_VALID: "isEmailValid",
         LOGIN: "login",
         LOGOUT: "logout",
+        PING_STATE_EXPIRATION: "pingUserStateExpiration",
         SIGNUP: "signup",
         STATUS: "status",
         TOTAL_USERS: "totalUsers",
+        UPDATE_STATE: "updateUserState",
         USERS_ONLINE: "usersOnline",
     },
 };

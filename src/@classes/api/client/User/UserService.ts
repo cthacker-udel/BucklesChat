@@ -86,4 +86,17 @@ export class UserService extends ClientSideApi {
 
         return response;
     };
+
+    /**
+     * Attempts to remove the logged in state from the redis database
+     *
+     * @returns Whether the state was cleared
+     */
+    public static clearState = async (): Promise<ApiResponse<boolean>> => {
+        const response = await super.delete<ApiResponse<boolean>>(
+            `${Endpoints.USER.BASE}${Endpoints.USER.CLEAR_USER_STATE}`,
+        );
+
+        return response;
+    };
 }
