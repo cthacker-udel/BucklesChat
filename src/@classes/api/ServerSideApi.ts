@@ -19,7 +19,7 @@ export class ServerSideApi {
     public static async get<T>(
         endpoint: string,
         queryParameters?: { [key: string]: number | string },
-        headers?: { [key: string]: string },
+        headers?: IncomingHttpHeaders | { [key: string]: string },
         nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const queryString = queryParameters
@@ -66,13 +66,13 @@ export class ServerSideApi {
         endpoint: string,
         body: K,
         queryParameters?: { [key: string]: number | string },
-        headers?: { [key: string]: string },
+        headers?: IncomingHttpHeaders | { [key: string]: number | string },
         nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const modifiedHeaders = {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Cookie: headers === undefined ? "" : headers.cookie,
+            Cookie: headers === undefined ? "" : (headers.cookie as string),
         };
         const queryString = queryParameters
             ? `${Object.entries(queryParameters)
@@ -87,7 +87,7 @@ export class ServerSideApi {
             {
                 body: stringifiedBody,
                 credentials: "include",
-                headers: modifiedHeaders ?? {},
+                headers: modifiedHeaders,
                 method: "POST",
                 mode: "cors",
             },
@@ -116,7 +116,7 @@ export class ServerSideApi {
     ): Promise<T> {
         const modifiedHeaders = {
             "Content-Type": "application/json",
-            Cookie: headers === undefined ? "" : (headers.Cookie as string),
+            Cookie: headers === undefined ? "" : (headers.cookie as string),
         };
         const queryString = queryParameters
             ? `${Object.entries(queryParameters)

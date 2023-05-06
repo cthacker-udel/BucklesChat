@@ -52,10 +52,10 @@ export const Endpoints = {
         LOGIN: "login",
         LOGOUT: "logout",
         PING_STATE_EXPIRATION: "pingUserStateExpiration",
+        REFRESH_USER_STATE: "refreshUserState",
         SIGNUP: "signup",
         STATUS: "status",
         TOTAL_USERS: "totalUsers",
-        UPDATE_STATE: "updateUserState",
         USERS_ONLINE: "usersOnline",
     },
 };

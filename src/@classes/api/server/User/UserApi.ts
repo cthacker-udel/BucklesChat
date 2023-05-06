@@ -6,6 +6,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 } from "uuid";
 
 import type {
+    ActiveStatus,
     ApiResponse,
     DashboardInformation,
     ExceptionLog,
@@ -562,6 +563,41 @@ export class UserApi extends ServerSideApi {
             );
 
             response.send(clearStateResponse);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+        }
+    };
+
+    /**
+     * Pings the expiration time of the user's status
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static pingUserStateExpiration = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const userState = await super.get<ApiResponse<ActiveStatus>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.PING_STATE_EXPIRATION}`,
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.send(userState);
         } catch (error: unknown) {
             try {
                 const convertedError = error as Error;
