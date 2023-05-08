@@ -56,20 +56,4 @@ export const useActiveStatus: _useActiveStatus = (): void => {
             revalidateOnMount: true,
         },
     );
-
-    // const onBeforeUnload = React.useCallback(
-    //     async (event: BeforeUnloadEvent) => {
-    //         event.preventDefault();
-    //         await UserService.logout();
-    //     },
-    //     [],
-    // );
-
-    // React.useEffect(() => {
-    //     window.addEventListener("beforeunload", onBeforeUnload);
-
-    //     return () => {
-    //         window.removeEventListener("beforeunload", onBeforeUnload);
-    //     };
-    // }, [onBeforeUnload]);
 };
