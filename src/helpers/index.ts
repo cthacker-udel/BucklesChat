@@ -1,5 +1,5 @@
 export * from "./computeTodayDayDistance";
 export * from "./copyResponseHeadersToResponse";
-export * from "./millisecondsConverter";
+export * from "./numericalConverter";
 export * from "./renderTooltip";
 export * from "./setBackground";

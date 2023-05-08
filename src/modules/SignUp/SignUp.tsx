@@ -18,7 +18,7 @@ import type { ApiResponse } from "@/@types";
 import { Endpoints, TextConstants, ValidationConstants } from "@/assets";
 import Background from "@/assets/background/signup/bg.gif";
 import { Required } from "@/common";
-import { millisecondsConverter, renderTooltip } from "@/helpers";
+import { numericalConverter, renderTooltip } from "@/helpers";
 import { useLogger } from "@/hooks";
 import { useBackground } from "@/hooks/useBackground";
 
@@ -138,7 +138,7 @@ export const SignUp = (): JSX.Element => {
     } = useForm<FormValues>({
         criteriaMode: "all",
         defaultValues: FORM_DEFAULT_VALUES,
-        delayError: millisecondsConverter(500),
+        delayError: numericalConverter.seconds.toMilliseconds(0.5),
         mode: "onSubmit",
         reValidateMode: "onBlur",
     });

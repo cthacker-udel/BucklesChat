@@ -41,6 +41,9 @@ export const useActiveStatus = (): void => {
                 } else {
                     const { status } = currentStatus;
                     if (status === ActiveStatusType.OFFLINE) {
+                        console.log(
+                            "logging out due to status becoming offline",
+                        );
                         await UserService.logout();
                         router.push("/login");
                     }

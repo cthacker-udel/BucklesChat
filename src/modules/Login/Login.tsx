@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 import { useRouter } from "next/router";
 import React from "react";
 import { Button, Form, InputGroup, OverlayTrigger } from "react-bootstrap";
@@ -11,10 +12,10 @@ import {
 import { toast } from "react-toastify";
 
 import { ClientSideApi } from "@/@classes";
-import type { ApiResponse } from "@/@types";
+import type { ApiResponse, LoginResponse } from "@/@types";
 import { Endpoints, TextConstants } from "@/assets";
 import LoginBackground from "@/assets/background/login/bg.gif";
-import { renderTooltip } from "@/helpers";
+import { numericalConverter, renderTooltip } from "@/helpers";
 import { useBackground, useLogger } from "@/hooks";
 
 import styles from "./Login.module.css";
@@ -61,7 +62,7 @@ export const Login = ({
     const onSubmit: SubmitHandler<LoginFormValues> = React.useCallback(
         async (data: LoginFormValues, _event: unknown) => {
             const request = toast.promise(
-                ClientSideApi.post<ApiResponse<boolean>>(
+                ClientSideApi.post<ApiResponse<LoginResponse>>(
                     `${Endpoints.USER.BASE}${Endpoints.USER.LOGIN}`,
                     data,
                 ),
@@ -70,11 +71,26 @@ export const Login = ({
 
             const loginResult = await request;
 
-            const { data: isLoginSuccessful } = loginResult;
+            const {
+                data: { loggedIn, lockedUntil },
+            } = loginResult;
 
-            if (isLoginSuccessful) {
+            if (lockedUntil > 0) {
+                if (lockedUntil > 6000) {
+                    const minutes = numericalConverter.milliseconds.toMinutes(
+                        lockedUntil - Date.now(),
+                        1,
+                    );
+                    toast.error(`Wait ${minutes} minutes to log in.`);
+                } else {
+                    const seconds = numericalConverter.milliseconds.toSeconds(
+                        lockedUntil - Date.now(),
+                        1,
+                    );
+                    toast.error(`Wait ${seconds} seconds to log in.`);
+                }
+            } else if (loggedIn) {
                 toast.success("Login was a success!");
-                // eslint-disable-next-line @typescript-eslint/no-floating-promises -- disabled
                 router.push("dashboard");
             } else {
                 toast.error("Login failed!");
