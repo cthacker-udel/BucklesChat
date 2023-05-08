@@ -154,12 +154,12 @@ export class ServerSideApi {
         endpoint: string,
         body?: K,
         queryParameters?: { [key: string]: number | string },
-        headers?: { [key: string]: string },
+        headers?: IncomingHttpHeaders | { [key: string]: number | string },
         nextApiResponse?: NextApiResponse<T>,
     ): Promise<T> {
         const modifiedHeaders = {
             "Content-Type": "application/json",
-            Cookie: headers === undefined ? "" : headers.cookie,
+            Cookie: headers === undefined ? "" : (headers.cookie as string),
         };
         const queryString = queryParameters
             ? `${Object.entries(queryParameters)

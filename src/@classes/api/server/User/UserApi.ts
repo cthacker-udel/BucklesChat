@@ -621,12 +621,16 @@ export class UserApi extends ServerSideApi {
      * @param response - The client response
      */
     public static refreshUserState = async (
-        _request: NextApiRequest,
+        request: NextApiRequest,
         response: NextApiResponse,
     ): Promise<void> => {
         try {
             const userState = await super.put<ApiResponse<boolean>>(
                 `${Endpoints.USER.BASE}${Endpoints.USER.REFRESH_USER_STATE}`,
+                undefined,
+                undefined,
+                request.headers,
+                response,
             );
 
             response.send(userState);
