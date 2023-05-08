@@ -1,16 +1,17 @@
 /* eslint-disable unicorn/no-null -- disabled */
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 import { useRouter } from "next/router";
+import React from "react";
 import useSWR from "swr";
 
 import { UserService } from "@/@classes";
-import type { ActiveStatus } from "@/@types";
+import type { _useActiveStatus, ActiveStatus } from "@/@types";
 import { ActiveStatusType, Endpoints } from "@/assets";
 
 /**
  * Hook used for updating the user state (logged in, away, logged out) and also checking the expiration time of the user state
  */
-export const useActiveStatus = (): void => {
+export const useActiveStatus: _useActiveStatus = (): void => {
     const router = useRouter();
     useSWR<boolean, Error, string>(
         `${Endpoints.USER.BASE}${Endpoints.USER.REFRESH_USER_STATE}`,
@@ -55,4 +56,20 @@ export const useActiveStatus = (): void => {
             revalidateOnMount: true,
         },
     );
+
+    // const onBeforeUnload = React.useCallback(
+    //     async (event: BeforeUnloadEvent) => {
+    //         event.preventDefault();
+    //         await UserService.logout();
+    //     },
+    //     [],
+    // );
+
+    // React.useEffect(() => {
+    //     window.addEventListener("beforeunload", onBeforeUnload);
+
+    //     return () => {
+    //         window.removeEventListener("beforeunload", onBeforeUnload);
+    //     };
+    // }, [onBeforeUnload]);
 };
