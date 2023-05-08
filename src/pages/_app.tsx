@@ -7,7 +7,6 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import { SWRConfig } from "swr/_internal";
 
-import { UserService } from "@/@classes";
 import type { ApiResponse } from "@/@types";
 import { LoggerProvider } from "@/providers";
 
@@ -22,66 +21,46 @@ import { Layout } from "../common";
  * @param props.pageProps - The page props we are passing into the component
  * @returns The app component
  */
-const App = ({ Component, pageProps }: AppProps): JSX.Element => {
-    /**
-     * Refreshes the user state when the document is focused (aka the user clicks back on it)
-     */
-    const refreshStateOnFocus = React.useCallback(async () => {
-        await UserService.refreshState();
-    }, []);
+const App = ({ Component, pageProps }: AppProps): JSX.Element => (
+    <>
+        <SWRConfig
+            value={{
+                fetcher: async (resource: string, _init: any): Promise<any> => {
+                    const result = await fetch(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}api/${resource}`,
+                    );
 
-    React.useEffect(() => {
-        document.addEventListener("focus", refreshStateOnFocus);
+                    if (result.status === 401) {
+                        throw new Error("Invalid user");
+                    }
 
-        return () => {
-            document.removeEventListener("focus", refreshStateOnFocus);
-        };
-    }, [refreshStateOnFocus]);
-
-    return (
-        <>
-            <SWRConfig
-                value={{
-                    fetcher: async (
-                        resource: string,
-                        _init: any,
-                    ): Promise<any> => {
-                        const result = await fetch(
-                            `${process.env.NEXT_PUBLIC_BASE_URL}api/${resource}`,
-                        );
-
-                        if (result.status === 401) {
-                            throw new Error("Invalid user");
-                        }
-
-                        const convertedResult =
-                            (await result.json()) as ApiResponse;
-                        const { data } = convertedResult;
-                        return data;
-                    },
-                    provider: () => new Map(),
-                    refreshInterval: 3000,
-                }}
-            >
-                <LoggerProvider>
-                    <Layout>
-                        <Component {...pageProps} />
-                    </Layout>
-                </LoggerProvider>
-            </SWRConfig>
-            <ToastContainer
-                autoClose={5000}
-                closeOnClick
-                draggable
-                hideProgressBar={false}
-                newestOnTop={false}
-                pauseOnHover
-                position="top-right"
-                rtl={false}
-                theme="light"
-            />
-        </>
-    );
-};
+                    const convertedResult =
+                        (await result.json()) as ApiResponse;
+                    const { data } = convertedResult;
+                    return data;
+                },
+                provider: () => new Map(),
+                refreshInterval: 3000,
+            }}
+        >
+            <LoggerProvider>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </LoggerProvider>
+        </SWRConfig>
+        <ToastContainer
+            autoClose={5000}
+            closeOnClick
+            draggable
+            hideProgressBar={false}
+            newestOnTop={false}
+            pauseOnHover
+            position="top-right"
+            rtl={false}
+            theme="light"
+        />
+    </>
+);
 
 export { App as default };

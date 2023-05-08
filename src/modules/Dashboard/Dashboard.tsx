@@ -66,6 +66,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
         setShowUserInboxOffcanvas(false);
     }, []);
 
+    const refreshStateOnFocus = React.useCallback(async () => {
+        await UserService.refreshState();
+    }, []);
+
     const logout = React.useCallback(async () => {
         const loadingToast = toast.loading("Logging out...");
         const result = await UserService.logout();
@@ -88,6 +92,14 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
             });
         }
     }, [globalMutate, router]);
+
+    React.useEffect(() => {
+        document.addEventListener("focus", refreshStateOnFocus);
+
+        return () => {
+            document.removeEventListener("focus", refreshStateOnFocus);
+        };
+    }, [refreshStateOnFocus]);
 
     if (error) {
         router.push("/login");
