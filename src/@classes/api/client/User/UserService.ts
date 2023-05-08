@@ -88,6 +88,19 @@ export class UserService extends ClientSideApi {
     };
 
     /**
+     * Attempts to refresh the user state in the psql + redis database
+     *
+     * @returns Whether the state was refreshed
+     */
+    public static refreshState = async (): Promise<ApiResponse<boolean>> => {
+        const response = await super.get<ApiResponse<boolean>>(
+            `${Endpoints.USER.BASE}${Endpoints.USER.REFRESH_USER_STATE}`,
+        );
+
+        return response;
+    };
+
+    /**
      * Attempts to remove the logged in state from the redis database
      *
      * @returns Whether the state was cleared
