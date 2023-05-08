@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/no-null -- disabled */
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 import { useRouter } from "next/router";
-import React from "react";
 import useSWR from "swr";
 
 import { UserService } from "@/@classes";
