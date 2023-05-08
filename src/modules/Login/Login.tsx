@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-null -- disabled */
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 import { useRouter } from "next/router";
 import React from "react";
@@ -10,9 +11,10 @@ import {
     useForm,
 } from "react-hook-form";
 import { toast } from "react-toastify";
+import useSWR from "swr";
 
 import { ClientSideApi } from "@/@classes";
-import type { ApiResponse, LoginResponse } from "@/@types";
+import type { ApiResponse, LoginDiagnostics, LoginResponse } from "@/@types";
 import { Endpoints, TextConstants } from "@/assets";
 import LoginBackground from "@/assets/background/login/bg.gif";
 import { numericalConverter, renderTooltip } from "@/helpers";
@@ -56,6 +58,14 @@ export const Login = ({
         mode: "all",
         reValidateMode: "onChange",
     });
+
+    const { data: loginDiagnostics } = useSWR<LoginDiagnostics, Error, string>(
+        `${Endpoints.USER.BASE}${Endpoints.USER.LOGIN_DIAGNOSTICS}`,
+        null,
+        {
+            refreshInterval: 5000,
+        },
+    );
 
     const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
@@ -181,7 +191,8 @@ export const Login = ({
                     </span>
                     <div>
                         <span className={styles.login_users_online}>
-                            {numberOfUsersOnline}
+                            {loginDiagnostics?.totalOnline ??
+                                numberOfUsersOnline}
                         </span>
                         {
                             TextConstants.CONTENT.LOGIN
@@ -195,7 +206,7 @@ export const Login = ({
                     </span>
                     <div>
                         <span className={styles.login_users_online}>
-                            {numberOfUsers}
+                            {loginDiagnostics?.totalUsers ?? numberOfUsers}
                         </span>
                         {TextConstants.CONTENT.LOGIN.NUMBER_OF_USERS}
                     </div>
@@ -206,7 +217,7 @@ export const Login = ({
                     </span>
                     <div>
                         <span className={styles.login_users_messages_count}>
-                            {"11"}
+                            {loginDiagnostics?.totalMessages ?? 0}
                         </span>
                         <span className={styles.login_users_messages_sent_text}>
                             {

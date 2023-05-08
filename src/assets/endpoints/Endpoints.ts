@@ -50,6 +50,7 @@ export const Endpoints = {
         EDIT: "edit",
         IS_EMAIL_VALID: "isEmailValid",
         LOGIN: "login",
+        LOGIN_DIAGNOSTICS: "loginDiagnostics",
         LOGOUT: "logout",
         PING_STATE_EXPIRATION: "pingUserStateExpiration",
         REFRESH_USER_STATE: "refreshUserState",

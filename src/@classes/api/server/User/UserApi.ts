@@ -10,6 +10,7 @@ import type {
     ApiResponse,
     DashboardInformation,
     ExceptionLog,
+    LoginDiagnostics,
     User,
 } from "@/@types";
 import { Endpoints } from "@/assets";
@@ -374,6 +375,86 @@ export class UserApi extends ServerSideApi {
      *
      * @returns - The number of active users online
      */
+    public static usersOnlineServerSide = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const numberOfUsersOnline = await super.get<ApiResponse<number>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.USERS_ONLINE}`,
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.send(numberOfUsersOnline);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Returns the total # of users in the entire application
+     *
+     * @returns - The total number of users in the entire application
+     */
+    public static totalUsersServerSide = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const numberOfUsers = await super.get<ApiResponse<number>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.TOTAL_USERS}`,
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.send(numberOfUsers);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Returns the total number of active users online, by fetching the number of current keys in the redis session database
+     *
+     * @returns - The number of active users online
+     */
     public static usersOnline = async (): Promise<ApiResponse<number>> => {
         try {
             const numberOfUsersOnline = await super.get<ApiResponse<number>>(
@@ -446,18 +527,24 @@ export class UserApi extends ServerSideApi {
 
             response.send({ data: response.statusCode === 200 });
         } catch (error: unknown) {
+            const convertedError = error as Error;
             try {
-                const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
                     `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                     {
-                        id: v4.toString(),
+                        id: v4().toString(),
                         message: convertedError.message,
                         stackTrace: convertedError.stack,
                         timestamp: Date.now(),
                     },
                 );
-            } catch {}
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
         }
     };
 
@@ -486,18 +573,24 @@ export class UserApi extends ServerSideApi {
 
             response.send(isEmailValid);
         } catch (error: unknown) {
+            const convertedError = error as Error;
             try {
-                const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
                     `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                     {
-                        id: v4.toString(),
+                        id: v4().toString(),
                         message: convertedError.message,
                         stackTrace: convertedError.stack,
                         timestamp: Date.now(),
                     },
                 );
-            } catch {}
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
         }
     };
 
@@ -529,18 +622,24 @@ export class UserApi extends ServerSideApi {
 
             response.send(didConfirmEmail);
         } catch (error: unknown) {
+            const convertedError = error as Error;
             try {
-                const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
                     `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                     {
-                        id: v4.toString(),
+                        id: v4().toString(),
                         message: convertedError.message,
                         stackTrace: convertedError.stack,
                         timestamp: Date.now(),
                     },
                 );
-            } catch {}
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
         }
     };
 
@@ -564,18 +663,24 @@ export class UserApi extends ServerSideApi {
 
             response.send(clearStateResponse);
         } catch (error: unknown) {
+            const convertedError = error as Error;
             try {
-                const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
                     `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                     {
-                        id: v4.toString(),
+                        id: v4().toString(),
                         message: convertedError.message,
                         stackTrace: convertedError.stack,
                         timestamp: Date.now(),
                     },
                 );
-            } catch {}
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
         }
     };
 
@@ -599,18 +704,24 @@ export class UserApi extends ServerSideApi {
 
             response.send(userState);
         } catch (error: unknown) {
+            const convertedError = error as Error;
             try {
-                const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
                     `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                     {
-                        id: v4.toString(),
+                        id: v4().toString(),
                         message: convertedError.message,
                         stackTrace: convertedError.stack,
                         timestamp: Date.now(),
                     },
                 );
-            } catch {}
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
         }
     };
 
@@ -635,18 +746,67 @@ export class UserApi extends ServerSideApi {
 
             response.send(userState);
         } catch (error: unknown) {
+            const convertedError = error as Error;
             try {
-                const convertedError = error as Error;
                 await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
                     `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
                     {
-                        id: v4.toString(),
+                        id: v4().toString(),
                         message: convertedError.message,
                         stackTrace: convertedError.stack,
                         timestamp: Date.now(),
                     },
                 );
-            } catch {}
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Fetches the login diagnostics for login page
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static loginDiagnostics = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const loginDiagnostics = await super.get<
+                ApiResponse<LoginDiagnostics>
+            >(
+                `${Endpoints.USER.BASE}${Endpoints.USER.LOGIN_DIAGNOSTICS}`,
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.send(loginDiagnostics);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
         }
     };
 }
