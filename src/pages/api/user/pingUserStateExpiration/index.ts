@@ -1,3 +1,3 @@
 import { UserApi } from "@/@classes";
 
-export default UserApi;
+export default UserApi.pingUserStateExpiration;

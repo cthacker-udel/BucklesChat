@@ -13,35 +13,44 @@ import { ActiveStatusType, Endpoints } from "@/assets";
  */
 export const useActiveStatus = (): void => {
     const router = useRouter();
+    useSWR<boolean, Error, string>(
+        `${Endpoints.USER.BASE}${Endpoints.USER.REFRESH_USER_STATE}`,
+        null,
+        {
+            fallbackData: true,
+            refreshInterval: 50_000,
+            refreshWhenHidden: false,
+            refreshWhenOffline: false,
+        },
+    );
     useSWR<ActiveStatus, Error, string>(
         `${Endpoints.USER.BASE}${Endpoints.USER.PING_STATE_EXPIRATION}`,
         null,
         {
             errorRetryCount: 5,
+            fallbackData: {
+                status: ActiveStatusType.ONLINE,
+                timeLeft: 1,
+            },
             onError: () => {
                 router.push("/login");
             },
             onSuccess: async (currentStatus: ActiveStatus) => {
-                const { status } = currentStatus;
-                if (status === ActiveStatusType.OFFLINE) {
+                if (currentStatus === undefined) {
                     await UserService.logout();
                     router.push("/login");
+                } else {
+                    const { status } = currentStatus;
+                    if (status === ActiveStatusType.OFFLINE) {
+                        await UserService.logout();
+                        router.push("/login");
+                    }
                 }
             },
             refreshInterval: 10_000,
+            refreshWhenHidden: true,
+            revalidateOnFocus: true,
+            revalidateOnMount: true,
         },
     );
-
-    const unloadEffect = React.useCallback(async () => {
-        await UserService.clearState();
-        await UserService.logout();
-    }, []);
-
-    React.useEffect(() => {
-        window.addEventListener("beforeunload", unloadEffect);
-
-        return () => {
-            window.removeEventListener("beforeunload", unloadEffect);
-        };
-    }, [unloadEffect]);
 };

@@ -613,4 +613,36 @@ export class UserApi extends ServerSideApi {
             } catch {}
         }
     };
+
+    /**
+     * Refreshes the user state in the redis database, signalling the user is back online
+     *
+     * @param _request - The client request
+     * @param response - The client response
+     */
+    public static refreshUserState = async (
+        _request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const userState = await super.put<ApiResponse<boolean>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.REFRESH_USER_STATE}`,
+            );
+
+            response.send(userState);
+        } catch (error: unknown) {
+            try {
+                const convertedError = error as Error;
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4.toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } catch {}
+        }
+    };
 }
