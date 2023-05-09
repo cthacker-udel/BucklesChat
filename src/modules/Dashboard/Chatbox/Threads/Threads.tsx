@@ -121,7 +121,7 @@ export const Threads = ({
                                                 eachDirectMessageIndex: number,
                                             ) => (
                                                 <ThreadMessage
-                                                    key={`message_${eachDirectMessage.id}`}
+                                                    key={`message_${eachDirectMessage.thread}_${eachDirectMessage.threadOrder}`}
                                                     left={
                                                         eachDirectMessageIndex %
                                                             2 ===

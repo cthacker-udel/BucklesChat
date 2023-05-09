@@ -47,33 +47,14 @@ export const AddUserModal = ({
     }, []);
 
     const onSearch = React.useCallback(
-        (handleOrUsername: string, handleLookup: Map<string, string>) => {
+        (handleOrUsername: string, handleLookup: Map<string, number>) => {
             const friendList = document.querySelector("#friend_list");
             if (handleLookup.has(handleOrUsername) && friendList !== null) {
-                const foundUsername = handleLookup.get(handleOrUsername);
-
+                const foundId = handleLookup.get(handleOrUsername);
                 const foundDocuments = document.querySelectorAll(
-                    `#username_${foundUsername}`,
+                    `#userid_${foundId}`,
                 );
 
-                if (foundDocuments.length > 0) {
-                    foundDocuments[0]?.scrollIntoView({ behavior: "smooth" });
-                    foundDocuments[0]?.animate(
-                        [
-                            { borderColor: "green" },
-                            { borderColor: "rgba(0, 0, 0, 0.25)" },
-                        ],
-                        {
-                            duration: 1200,
-                            easing: "ease-in-out",
-                            fill: "forwards",
-                        },
-                    );
-                }
-            } else if (friendList !== null) {
-                const foundDocuments = document.querySelectorAll(
-                    `#username_${handleOrUsername}`,
-                );
                 if (foundDocuments.length > 0) {
                     foundDocuments[0]?.scrollIntoView({ behavior: "smooth" });
                     foundDocuments[0]?.animate(

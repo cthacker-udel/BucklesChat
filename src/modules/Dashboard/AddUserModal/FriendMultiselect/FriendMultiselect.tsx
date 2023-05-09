@@ -16,7 +16,7 @@ import styles from "./FriendMultiselect.module.css";
 type FriendMultiselectProperties = {
     onSearch: (
         _handleOrUsername: string,
-        _handleLookup: Map<string, string>,
+        _handleLookup: Map<string, number>,
     ) => void;
     onSelectFriend: (_id: number) => void;
     selectedFriends: Set<number>;
@@ -45,7 +45,7 @@ export const FriendMultiSelect = ({
 
     const router = useRouter();
 
-    const [handleLookup, setHandleLookup] = React.useState<Map<string, string>>(
+    const [handleLookup, setHandleLookup] = React.useState<Map<string, number>>(
         new Map(),
     );
 
@@ -112,17 +112,24 @@ export const FriendMultiSelect = ({
     React.useEffect(() => {
         if (availableFriends !== undefined) {
             for (const eachFriendInformation of availableFriends) {
-                if (eachFriendInformation.handle !== null) {
+                if (
+                    eachFriendInformation.handle !== null ||
+                    eachFriendInformation.username !== null
+                ) {
                     setHandleLookup((oldHandleLookup) => {
                         const clonedMap = new Map(oldHandleLookup);
                         if (
                             !clonedMap.has(
                                 eachFriendInformation.handle as unknown as string,
+                            ) ||
+                            !clonedMap.has(
+                                eachFriendInformation.username as unknown as string,
                             )
                         ) {
                             clonedMap.set(
-                                eachFriendInformation.handle as unknown as string,
-                                eachFriendInformation.username as unknown as string,
+                                (eachFriendInformation.handle as unknown as string) ??
+                                    eachFriendInformation.username,
+                                eachFriendInformation.id as unknown as number,
                             );
                         }
                         return clonedMap;
