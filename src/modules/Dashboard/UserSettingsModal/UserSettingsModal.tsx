@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string -- disabled */
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import { useRouter } from "next/router";
@@ -35,6 +36,18 @@ const FORM_DEFAULT_VALUES: ConfirmPasswordValues = {
     password: "",
 };
 
+type ExtraConfirmation = {
+    absolutelySure: boolean;
+    reallySure: boolean;
+    sure: boolean;
+};
+
+const DEFAULT_CONFIRMATION: ExtraConfirmation = {
+    absolutelySure: false,
+    reallySure: false,
+    sure: false,
+};
+
 /**
  * User settings modal, modal for editing the user settings
  *
@@ -48,7 +61,7 @@ export const UserSettingsModal = ({
     userSettingsModalOnClose,
 }: UserSettingsModalProperties): JSX.Element => {
     const router = useRouter();
-    const { control, formState, getValues, register } =
+    const { control, formState, getValues, register, reset } =
         useForm<ConfirmPasswordValues>({
             criteriaMode: "all",
             defaultValues: FORM_DEFAULT_VALUES,
@@ -65,6 +78,12 @@ export const UserSettingsModal = ({
         React.useState<boolean>(false);
     const [confirmChangePasswordButton, setConfirmChangePasswordButton] =
         React.useState<boolean>(false);
+    const [confirmDeleteAccountButton, setConfirmDeleteAccountButton] =
+        React.useState<ExtraConfirmation>({
+            absolutelySure: false,
+            reallySure: false,
+            sure: false,
+        });
 
     const [displayChangePasswordForm, setDisplayChangePasswordForm] =
         React.useState<boolean>(false);
@@ -72,6 +91,35 @@ export const UserSettingsModal = ({
     const [showPasswords, setShowPasswords] = React.useState<boolean>(false);
 
     const { errors } = formState;
+
+    const toggleNextSure = React.useCallback(() => {
+        setConfirmDeleteAccountButton(
+            (oldDeleteAccountState: ExtraConfirmation) => {
+                const cloned = { ...oldDeleteAccountState };
+                if (cloned.reallySure) {
+                    cloned.reallySure = false;
+                    cloned.absolutelySure = true;
+                    return cloned;
+                } else if (cloned.sure) {
+                    cloned.sure = false;
+                    cloned.reallySure = true;
+                    return cloned;
+                }
+                cloned.sure = true;
+                return cloned;
+            },
+        );
+    }, []);
+
+    const onCloseChangePasswordForm = React.useCallback(() => {
+        reset();
+        startTransition(() => {
+            setConfirmChangePasswordButton(false);
+            setDisplayChangePasswordForm(false);
+            setHoveringOverChangePassword(false);
+            setConfirmDeleteAccountButton(DEFAULT_CONFIRMATION);
+        });
+    }, [reset]);
 
     const onChangePassword = React.useCallback(async (): Promise<void> => {
         const { password } = getValues();
@@ -113,18 +161,17 @@ export const UserSettingsModal = ({
         }
     }, [errors, getValues, router]);
 
+    const onDeleteAccount = React.useCallback(async () => {
+        console.log("deleting account");
+    }, []);
+
     const passwordValue = useWatch({ control, name: "password" });
 
     return (
         <Modal
             contentClassName={styles.user_settings_modal_content}
             onHide={(): void => {
-                startTransition(() => {
-                    setHoveringOverChangePassword(false);
-                    setHoveringOverDeleteAccount(false);
-                    setConfirmChangePasswordButton(false);
-                    setDisplayChangePasswordForm(false);
-                });
+                onCloseChangePasswordForm();
                 userSettingsModalOnClose();
             }}
             show={showUserSettingsModal}
@@ -144,11 +191,11 @@ export const UserSettingsModal = ({
             <Modal.Body>
                 <div className={styles.user_settings_modal_body}>
                     <Button
-                        className={
+                        className={`${
                             displayChangePasswordForm
                                 ? styles.user_settings_change_password_button
                                 : ""
-                        }
+                        } ${styles.user_settings_change_password_base_button}`}
                         onClick={(): void => {
                             if (confirmChangePasswordButton) {
                                 startTransition(() => {
@@ -387,23 +434,59 @@ export const UserSettingsModal = ({
                                             title: "Confirm",
                                         })
                                     }
-                                    placement="right"
+                                    placement="bottom"
                                 >
                                     <Button variant="outline-success">
                                         <i className="fa-solid fa-check" />
+                                    </Button>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                    overlay={(
+                                        properties: OverlayInjectedProps,
+                                    ): JSX.Element =>
+                                        renderTooltip(properties, {
+                                            title: "Cancel",
+                                        })
+                                    }
+                                    placement="right"
+                                >
+                                    <Button
+                                        onClick={onCloseChangePasswordForm}
+                                        variant="outline-secondary"
+                                    >
+                                        <i className="fa-solid fa-xmark" />
                                     </Button>
                                 </OverlayTrigger>
                             </InputGroup>
                         </Form.Group>
                     )}
                     <Button
+                        className={
+                            styles.user_settings_modal_delete_account_button
+                        }
+                        onClick={async (): Promise<void> => {
+                            if (confirmDeleteAccountButton.absolutelySure) {
+                                await onDeleteAccount();
+                                onCloseChangePasswordForm();
+                            } else {
+                                toggleNextSure();
+                            }
+                        }}
                         onMouseEnter={(): void => {
                             setHoveringOverDeleteAccount(true);
                         }}
                         onMouseLeave={(): void => {
                             setHoveringOverDeleteAccount(false);
                         }}
-                        variant="outline-warning"
+                        variant={
+                            confirmDeleteAccountButton.sure
+                                ? "outline-primary"
+                                : confirmDeleteAccountButton.reallySure
+                                ? "outline-warning"
+                                : confirmDeleteAccountButton.absolutelySure
+                                ? "outline-danger"
+                                : "outline-secondary"
+                        }
                     >
                         <div
                             className={styles.user_settings_modal_option_button}
@@ -414,6 +497,19 @@ export const UserSettingsModal = ({
                                     hoveringOverDeleteAccount ? "fa-bounce" : ""
                                 } ${styles.delete_account_icon}`}
                             />
+                            {(confirmDeleteAccountButton.sure ||
+                                confirmDeleteAccountButton.reallySure ||
+                                confirmDeleteAccountButton.absolutelySure) && (
+                                <span className={styles.confirm_text}>
+                                    {confirmDeleteAccountButton.sure
+                                        ? "(Are you sure?)"
+                                        : confirmDeleteAccountButton.reallySure
+                                        ? "(Are you really sure?)"
+                                        : confirmDeleteAccountButton.absolutelySure
+                                        ? "(Are you absolutely sure?)"
+                                        : ""}
+                                </span>
+                            )}
                         </div>
                     </Button>
                 </div>
@@ -421,7 +517,7 @@ export const UserSettingsModal = ({
             <Modal.Footer className={styles.user_settings_modal_footer}>
                 <Button
                     className={styles.user_settings_close_button}
-                    onClick={userSettingsModalOnClose}
+                    onClick={onCloseChangePasswordForm}
                     variant="outline-secondary"
                 >
                     {"Close"}

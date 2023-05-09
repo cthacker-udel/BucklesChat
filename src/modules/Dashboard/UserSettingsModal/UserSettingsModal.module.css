@@ -54,6 +54,8 @@
     flex-direction: column;
     gap: 1em;
     padding: 1em;
+    min-height: 26.5vh;
+    justify-content: center;
 }
 
 .user_settings_modal_option_button {
@@ -84,6 +86,10 @@
     animation: change_password_button_anim 1s ease-in-out forwards;
 }
 
+.user_settings_change_password_base_button {
+    margin-top: 1.5em;
+}
+
 .change_password_form {
     opacity: 0%;
     animation-name: change_password_form_anim;
@@ -109,4 +115,8 @@
     flex-direction: row;
     gap: 1em;
     align-items: center;
+}
+
+.user_settings_modal_delete_account_button {
+    margin-top: auto;
 }
