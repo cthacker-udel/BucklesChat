@@ -1,5 +1,17 @@
+@keyframes change_password_button_anim {
+    0% {
+        opacity: 100%;
+    }
+    75% {
+        opacity: 0%;
+    }
+    100% {
+        position: absolute;
+    }
+}
+
 .user_settings_modal_content {
-    background-color: rgba(0, 0, 0, 0.65);
+    background-color: rgba(0, 0, 0, 0.85);
     border: 1px outset white;
     color: white;
 }
@@ -47,4 +59,21 @@
 
 .delete_account_icon {
     --fa-bounce-height: -0.4vh;
+}
+
+.user_settings_close_button {
+    font-family: "Dynapuff", sans-serif;
+}
+
+.confirm_text {
+    font-size: 0.75em;
+    align-self: center;
+}
+
+.user_settings_change_password_button {
+    animation: change_password_anim 1s ease-in-out;
+}
+
+.change_password_form {
+    transition: opacity 2s ease-in-out;
 }

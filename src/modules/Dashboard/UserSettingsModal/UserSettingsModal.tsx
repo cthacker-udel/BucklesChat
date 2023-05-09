@@ -1,11 +1,23 @@
 import React from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 
 import styles from "./UserSettingsModal.module.css";
+import { useForm } from "react-hook-form";
+import { numericalConverter } from "@/helpers";
 
 type UserSettingsModalProperties = {
     userSettingsModalOnClose: () => void;
     showUserSettingsModal: boolean;
+};
+
+type ConfirmPasswordValues = {
+    confirmPassword: string;
+    password: string;
+};
+
+const FORM_DEFAULT_VALUES: ConfirmPasswordValues = {
+    confirmPassword: "",
+    password: "",
 };
 
 /**
@@ -20,15 +32,38 @@ export const UserSettingsModal = ({
     showUserSettingsModal,
     userSettingsModalOnClose,
 }: UserSettingsModalProperties): JSX.Element => {
+    const [_isPending, startTransition] = React.useTransition();
+
+    const { register } = useForm<ConfirmPasswordValues>({
+        criteriaMode: "all",
+        defaultValues: FORM_DEFAULT_VALUES,
+        delayError: numericalConverter.seconds.toMilliseconds(0.5),
+        mode: "all",
+        reValidateMode: "onChange",
+    });
+
     const [hoveringOverChangePassword, setHoveringOverChangePassword] =
         React.useState<boolean>(false);
     const [hoveringOverDeleteAccount, setHoveringOverDeleteAccount] =
+        React.useState<boolean>(false);
+    const [confirmChangePasswordButton, setConfirmChangePasswordButton] =
+        React.useState<boolean>(false);
+
+    const [displayChangePasswordForm, setDisplayChangePasswordForm] =
         React.useState<boolean>(false);
 
     return (
         <Modal
             contentClassName={styles.user_settings_modal_content}
-            onHide={userSettingsModalOnClose}
+            onHide={(): void => {
+                startTransition(() => {
+                    setHoveringOverChangePassword(false);
+                    setHoveringOverDeleteAccount(false);
+                    setConfirmChangePasswordButton(false);
+                    setDisplayChangePasswordForm(false);
+                });
+                userSettingsModalOnClose();
+            }}
             show={showUserSettingsModal}
         >
             <Modal.Header
@@ -46,13 +81,29 @@ export const UserSettingsModal = ({
             <Modal.Body>
                 <div className={styles.user_settings_modal_body}>
                     <Button
+                        className={styles.user_settings_change_password_button}
+                        onClick={(): void => {
+                            if (confirmChangePasswordButton) {
+                                startTransition(() => {
+                                    setConfirmChangePasswordButton(false);
+                                    setDisplayChangePasswordForm(true);
+                                    setHoveringOverChangePassword(false);
+                                });
+                            } else {
+                                setConfirmChangePasswordButton(true);
+                            }
+                        }}
                         onMouseEnter={(): void => {
                             setHoveringOverChangePassword(true);
                         }}
                         onMouseLeave={(): void => {
                             setHoveringOverChangePassword(false);
                         }}
-                        variant="outline-secondary"
+                        variant={`${
+                            confirmChangePasswordButton
+                                ? "outline-danger"
+                                : "outline-secondary"
+                        }`}
                     >
                         <div
                             className={styles.user_settings_modal_option_button}
@@ -63,8 +114,30 @@ export const UserSettingsModal = ({
                                     hoveringOverChangePassword ? "fa-shake" : ""
                                 }`}
                             />
+                            {confirmChangePasswordButton && (
+                                <span className={styles.confirm_text}>
+                                    {"(Are you sure?)"}
+                                </span>
+                            )}
                         </div>
                     </Button>
+                    {displayChangePasswordForm && (
+                        <Form.Group
+                            className={styles.change_password_form}
+                            controlId="change_password_form"
+                            style={{
+                                opacity: displayChangePasswordForm
+                                    ? "100%"
+                                    : "0%",
+                            }}
+                        >
+                            <Form.Label>{"Change Password"}</Form.Label>
+                            <Form.Control
+                                type="text"
+                                {...register("password")}
+                            />
+                        </Form.Group>
+                    )}
                     <Button
                         onMouseEnter={(): void => {
                             setHoveringOverDeleteAccount(true);
@@ -89,6 +162,7 @@ export const UserSettingsModal = ({
             </Modal.Body>
             <Modal.Footer className={styles.user_settings_modal_footer}>
                 <Button
+                    className={styles.user_settings_close_button}
                     onClick={userSettingsModalOnClose}
                     variant="outline-secondary"
                 >
