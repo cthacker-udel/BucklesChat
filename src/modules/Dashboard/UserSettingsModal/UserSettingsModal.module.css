@@ -1,0 +1,50 @@
+.user_settings_modal_content {
+    background-color: rgba(0, 0, 0, 0.65);
+    border: 1px outset white;
+    color: white;
+}
+
+.user_settings_modal_title {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+
+.user_settings_modal_title_content {
+    font-family: "Dynapuff", sans-serif !important;
+    letter-spacing: 0.04vw;
+}
+
+.user_settings_modal_title > i {
+    align-self: center;
+}
+
+.user_settings_modal_header {
+    border-bottom: none;
+}
+
+.user_settings_modal_footer {
+    border-top: none;
+}
+
+.user_settings_modal_body {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1em;
+}
+
+.user_settings_modal_option_button {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    justify-content: center;
+}
+
+.user_settings_modal_option_button > i {
+    align-self: center;
+}
+
+.delete_account_icon {
+    --fa-bounce-height: -0.4vh;
+}

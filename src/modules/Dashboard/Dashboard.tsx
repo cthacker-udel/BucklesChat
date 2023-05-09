@@ -21,6 +21,7 @@ import styles from "./Dashboard.module.css";
 import { EditUserModal } from "./EditUserModal";
 import { Friend } from "./Friend/Friend";
 import { InboxOffcanvas } from "./InboxOffcanvas";
+import { UserSettingsModal } from "./UserSettingsModal";
 
 type DashboardProperties = {
     username?: string;
@@ -49,6 +50,8 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
     const [showEditModal, setShowEditModal] = React.useState<boolean>(false);
     const [showAddUserModal, setShowAddUserModal] =
         React.useState<boolean>(false);
+    const [showUserSettingsModal, setShowUserSettingsModal] =
+        React.useState<boolean>(false);
     const [showUserInboxOffcanvas, setShowUserInboxOffcanvas] =
         React.useState<boolean>(false);
 
@@ -60,6 +63,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
 
     const addUserModalOnClose = React.useCallback(() => {
         setShowAddUserModal(false);
+    }, []);
+
+    const userSettingsModalOnClose = React.useCallback(() => {
+        setShowUserSettingsModal(false);
     }, []);
 
     const userInboxOffcanvasOnClose = React.useCallback(() => {
@@ -217,6 +224,24 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                 variant="secondary"
                             >
                                 <i className="fa-solid fa-right-from-bracket" />
+                            </Button>
+                            <Button
+                                className={styles.dashboard_user_settings}
+                                onClick={(): void => {
+                                    setShowUserSettingsModal(true);
+                                }}
+                                style={{
+                                    opacity: hoveringOverProfilePicture ? 1 : 0,
+                                    right: hoveringOverProfilePicture
+                                        ? "6vw"
+                                        : "1vw",
+                                    top: hoveringOverProfilePicture
+                                        ? "-2vw"
+                                        : "1vw",
+                                }}
+                                variant="primary"
+                            >
+                                <i className="fa-solid fa-cog" />
                             </Button>
                         </div>
                         <div className={styles.dashboard_user_info}>
@@ -461,6 +486,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                 addUserModalOnClose={addUserModalOnClose}
                 showAddUserModal={showAddUserModal}
                 username={username ?? ""}
+            />
+            <UserSettingsModal
+                showUserSettingsModal={showUserSettingsModal}
+                userSettingsModalOnClose={userSettingsModalOnClose}
             />
             <InboxOffcanvas
                 onClose={userInboxOffcanvasOnClose}
