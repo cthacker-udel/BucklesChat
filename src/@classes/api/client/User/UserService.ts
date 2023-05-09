@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent -- disabled */
-import type { ApiResponse, User } from "@/@types";
+import type { ApiResponse, ChangePasswordRequest, User } from "@/@types";
 import { Endpoints, RegexConstants } from "@/assets";
 
 import { ClientSideApi } from "../../ClientSideApi";
@@ -109,6 +109,24 @@ export class UserService extends ClientSideApi {
         const response = await super.delete<ApiResponse<boolean>>(
             `${Endpoints.USER.BASE}${Endpoints.USER.CLEAR_USER_STATE}`,
         );
+
+        return response;
+    };
+
+    /**
+     * Changes the user's password to the password supplied
+     *
+     * @param newPassword - The new password the user is setting their password as
+     */
+    public static changePassword = async (
+        newPassword: string,
+    ): Promise<ApiResponse<boolean>> => {
+        const response = await super.post<
+            ApiResponse<boolean>,
+            ChangePasswordRequest
+        >(`${Endpoints.USER.BASE}${Endpoints.USER.CHANGE_PASSWORD}`, {
+            newPassword,
+        });
 
         return response;
     };

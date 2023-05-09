@@ -95,11 +95,13 @@
 .change_password_form_control {
     background: transparent;
     border-color: rgba(128, 128, 128, 0.5);
+    color: white;
 }
 
 .change_password_form_control:focus {
     background: transparent;
     border-color: rgba(128, 128, 128, 0.5);
+    color: white;
 }
 
 .change_password_label {

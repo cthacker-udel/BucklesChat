@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 import type {
     ActiveStatus,
     ApiResponse,
+    ChangePasswordRequest,
     DashboardInformation,
     ExceptionLog,
     LoginDiagnostics,
@@ -788,6 +789,60 @@ export class UserApi extends ServerSideApi {
             );
 
             response.send(loginDiagnostics);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Changes the user password
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static changePassword = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const { newPassword } = JSON.parse(
+                request.body,
+            ) as ChangePasswordRequest;
+            if (newPassword === undefined) {
+                throw new Error("Must supply new password to change password");
+            }
+
+            const result = await super.post<
+                ApiResponse<boolean>,
+                ChangePasswordRequest
+            >(
+                `${Endpoints.USER.BASE}${Endpoints.USER.CHANGE_PASSWORD}`,
+                {
+                    newPassword,
+                },
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.send(result);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {

@@ -42,6 +42,7 @@ export const Endpoints = {
     USER: {
         BASE: "user/",
         BULK_DASHBOARD: "bulkDashboardInformation",
+        CHANGE_PASSWORD: "changePassword",
         CLEAR_USER_STATE: "clearUserState",
         CONFIRM_EMAIL: "confirmEmail",
         DASHBOARD: "dashboardInformation",

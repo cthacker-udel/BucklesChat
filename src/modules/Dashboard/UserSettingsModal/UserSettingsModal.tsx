@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
+/* eslint-disable @typescript-eslint/indent -- disabled */
+import { useRouter } from "next/router";
 import React from "react";
 import {
     Button,
@@ -7,8 +10,12 @@ import {
     OverlayTrigger,
 } from "react-bootstrap";
 import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "react-toastify";
+import { Key } from "ts-key-enum";
 
+import { UserService } from "@/@classes";
+import { RegexConstants, TextConstants, ValidationConstants } from "@/assets";
 import { numericalConverter, renderTooltip } from "@/helpers";
 
 import styles from "./UserSettingsModal.module.css";
@@ -40,15 +47,17 @@ export const UserSettingsModal = ({
     showUserSettingsModal,
     userSettingsModalOnClose,
 }: UserSettingsModalProperties): JSX.Element => {
-    const [isPending, startTransition] = React.useTransition();
+    const router = useRouter();
+    const { control, formState, getValues, register } =
+        useForm<ConfirmPasswordValues>({
+            criteriaMode: "all",
+            defaultValues: FORM_DEFAULT_VALUES,
+            delayError: numericalConverter.seconds.toMilliseconds(0.5),
+            mode: "all",
+            reValidateMode: "onChange",
+        });
 
-    const { register } = useForm<ConfirmPasswordValues>({
-        criteriaMode: "all",
-        defaultValues: FORM_DEFAULT_VALUES,
-        delayError: numericalConverter.seconds.toMilliseconds(0.5),
-        mode: "all",
-        reValidateMode: "onChange",
-    });
+    const [isPending, startTransition] = React.useTransition();
 
     const [hoveringOverChangePassword, setHoveringOverChangePassword] =
         React.useState<boolean>(false);
@@ -61,6 +70,50 @@ export const UserSettingsModal = ({
         React.useState<boolean>(false);
 
     const [showPasswords, setShowPasswords] = React.useState<boolean>(false);
+
+    const { errors } = formState;
+
+    const onChangePassword = React.useCallback(async (): Promise<void> => {
+        const { password } = getValues();
+
+        if (Object.keys(errors).length === 0) {
+            const changingPasswordToast = toast.loading("Changing password...");
+
+            const changePasswordResult = await UserService.changePassword(
+                password,
+            );
+
+            const { data: changeResult } = changePasswordResult;
+
+            if (changeResult) {
+                toast.update(changingPasswordToast, {
+                    autoClose: 1000,
+                    isLoading: false,
+                    render: "Successfully changed password",
+                    type: "success",
+                });
+                await UserService.logout();
+                router.push("/login");
+            } else {
+                toast.update(changingPasswordToast, {
+                    autoClose: 1000,
+                    isLoading: false,
+                    render: "Failed to change password",
+                    type: "error",
+                });
+            }
+        } else {
+            const { password: passwordError } = errors;
+            if (passwordError === undefined) {
+                const { confirmPassword: confirmPasswordError } = errors;
+                toast.error(confirmPasswordError?.message, { autoClose: 1000 });
+            } else {
+                toast.error(passwordError.message, { autoClose: 1000 });
+            }
+        }
+    }, [errors, getValues, router]);
+
+    const passwordValue = useWatch({ control, name: "password" });
 
     return (
         <Modal
@@ -142,6 +195,14 @@ export const UserSettingsModal = ({
                         <Form.Group
                             className={styles.change_password_form}
                             controlId="change_password_form"
+                            onKeyDown={async (
+                                event: React.KeyboardEvent<HTMLDivElement>,
+                            ): Promise<void> => {
+                                const { key } = event;
+                                if (key === Key.Enter) {
+                                    await onChangePassword();
+                                }
+                            }}
                         >
                             <Form.Label>{"Change Password"}</Form.Label>
                             <InputGroup>
@@ -151,7 +212,105 @@ export const UserSettingsModal = ({
                                     }
                                     placeholder="New Password"
                                     type={showPasswords ? "text" : "password"}
-                                    {...register("password")}
+                                    {...register("password", {
+                                        maxLength: {
+                                            message:
+                                                TextConstants.VALIDATION.INVALID
+                                                    .SIGN_UP.PASSWORD
+                                                    .MAX_LENGTH,
+                                            value: ValidationConstants.SIGN_UP
+                                                .FORM.PASSWORD.MAX_LENGTH,
+                                        },
+                                        minLength: {
+                                            message:
+                                                TextConstants.VALIDATION.INVALID
+                                                    .SIGN_UP.PASSWORD
+                                                    .MIN_LENGTH,
+                                            value: ValidationConstants.SIGN_UP
+                                                .FORM.PASSWORD.MIN_LENGTH,
+                                        },
+                                        required: {
+                                            message:
+                                                TextConstants.VALIDATION.INVALID
+                                                    .SIGN_UP.CONFIRM_PASSWORD
+                                                    .REQUIRED,
+                                            value: ValidationConstants.SIGN_UP
+                                                .FORM.CONFIRM_PASSWORD.REQUIRED,
+                                        },
+                                        validate: {
+                                            containsDigit: (
+                                                password: string,
+                                            ) => {
+                                                const result =
+                                                    RegexConstants.CONTAINS_DIGIT.test(
+                                                        password,
+                                                    );
+                                                return result
+                                                    ? true
+                                                    : TextConstants.VALIDATION
+                                                          .INVALID.SIGN_UP
+                                                          .PASSWORD
+                                                          .CONTAINS_DIGIT;
+                                            },
+                                            containsLowercase: (
+                                                password: string,
+                                            ) => {
+                                                const result =
+                                                    RegexConstants.CONTAINS_LOWERCASE.test(
+                                                        password,
+                                                    );
+
+                                                return result
+                                                    ? true
+                                                    : TextConstants.VALIDATION
+                                                          .INVALID.SIGN_UP
+                                                          .PASSWORD
+                                                          .CONTAINS_LOWERCASE;
+                                            },
+                                            containsSpaces: (
+                                                password: string,
+                                            ) => {
+                                                const result =
+                                                    RegexConstants.NO_SPACES.test(
+                                                        password,
+                                                    );
+
+                                                return result
+                                                    ? TextConstants.VALIDATION
+                                                          .INVALID.SIGN_UP
+                                                          .PASSWORD.NO_SPACES
+                                                    : true;
+                                            },
+                                            containsUppercase: (
+                                                password: string,
+                                            ) => {
+                                                const result =
+                                                    RegexConstants.CONTAINS_UPPERCASE.test(
+                                                        password,
+                                                    );
+
+                                                return result
+                                                    ? true
+                                                    : TextConstants.VALIDATION
+                                                          .INVALID.SIGN_UP
+                                                          .PASSWORD
+                                                          .CONTAINS_UPPERCASE;
+                                            },
+                                            noSymbols: (password: string) => {
+                                                const result =
+                                                    RegexConstants.NO_SYMBOLS.test(
+                                                        password,
+                                                    );
+
+                                                return result
+                                                    ? TextConstants.VALIDATION
+                                                          .INVALID.SIGN_UP
+                                                          .PASSWORD
+                                                          .CONTAINS_SYMBOL
+                                                    : true;
+                                            },
+                                        },
+                                    })}
                                 />
                                 <Form.Control
                                     className={
@@ -159,7 +318,32 @@ export const UserSettingsModal = ({
                                     }
                                     placeholder="Re-type"
                                     type={showPasswords ? "text" : "password"}
-                                    {...register("confirmPassword")}
+                                    {...register("confirmPassword", {
+                                        required: {
+                                            message:
+                                                TextConstants.VALIDATION.INVALID
+                                                    .SIGN_UP.CONFIRM_PASSWORD
+                                                    .REQUIRED,
+                                            value: ValidationConstants.SIGN_UP
+                                                .FORM.CONFIRM_PASSWORD.REQUIRED,
+                                        },
+                                        validate: {
+                                            sameAsPassword: (
+                                                confirmPasswordValue: string,
+                                            ) => {
+                                                const result =
+                                                    confirmPasswordValue ===
+                                                    passwordValue;
+
+                                                return result
+                                                    ? true
+                                                    : TextConstants.VALIDATION
+                                                          .INVALID.SIGN_UP
+                                                          .CONFIRM_PASSWORD
+                                                          .MATCHING;
+                                            },
+                                        },
+                                    })}
                                 />
                                 <OverlayTrigger
                                     overlay={(
