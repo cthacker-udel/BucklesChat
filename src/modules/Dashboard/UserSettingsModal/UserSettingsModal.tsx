@@ -1,9 +1,17 @@
 import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import {
+    Button,
+    Form,
+    InputGroup,
+    Modal,
+    OverlayTrigger,
+} from "react-bootstrap";
+import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
+import { useForm } from "react-hook-form";
+
+import { numericalConverter, renderTooltip } from "@/helpers";
 
 import styles from "./UserSettingsModal.module.css";
-import { useForm } from "react-hook-form";
-import { numericalConverter } from "@/helpers";
 
 type UserSettingsModalProperties = {
     userSettingsModalOnClose: () => void;
@@ -32,7 +40,7 @@ export const UserSettingsModal = ({
     showUserSettingsModal,
     userSettingsModalOnClose,
 }: UserSettingsModalProperties): JSX.Element => {
-    const [_isPending, startTransition] = React.useTransition();
+    const [isPending, startTransition] = React.useTransition();
 
     const { register } = useForm<ConfirmPasswordValues>({
         criteriaMode: "all",
@@ -51,6 +59,8 @@ export const UserSettingsModal = ({
 
     const [displayChangePasswordForm, setDisplayChangePasswordForm] =
         React.useState<boolean>(false);
+
+    const [showPasswords, setShowPasswords] = React.useState<boolean>(false);
 
     return (
         <Modal
@@ -81,7 +91,11 @@ export const UserSettingsModal = ({
             <Modal.Body>
                 <div className={styles.user_settings_modal_body}>
                     <Button
-                        className={styles.user_settings_change_password_button}
+                        className={
+                            displayChangePasswordForm
+                                ? styles.user_settings_change_password_button
+                                : ""
+                        }
                         onClick={(): void => {
                             if (confirmChangePasswordButton) {
                                 startTransition(() => {
@@ -98,6 +112,9 @@ export const UserSettingsModal = ({
                         }}
                         onMouseLeave={(): void => {
                             setHoveringOverChangePassword(false);
+                        }}
+                        style={{
+                            opacity: isPending ? "0%" : "100%",
                         }}
                         variant={`${
                             confirmChangePasswordButton
@@ -125,17 +142,74 @@ export const UserSettingsModal = ({
                         <Form.Group
                             className={styles.change_password_form}
                             controlId="change_password_form"
-                            style={{
-                                opacity: displayChangePasswordForm
-                                    ? "100%"
-                                    : "0%",
-                            }}
                         >
                             <Form.Label>{"Change Password"}</Form.Label>
-                            <Form.Control
-                                type="text"
-                                {...register("password")}
-                            />
+                            <InputGroup>
+                                <Form.Control
+                                    className={
+                                        styles.change_password_form_control
+                                    }
+                                    placeholder="New Password"
+                                    type={showPasswords ? "text" : "password"}
+                                    {...register("password")}
+                                />
+                                <Form.Control
+                                    className={
+                                        styles.change_password_form_control
+                                    }
+                                    placeholder="Re-type"
+                                    type={showPasswords ? "text" : "password"}
+                                    {...register("confirmPassword")}
+                                />
+                                <OverlayTrigger
+                                    overlay={(
+                                        properties: OverlayInjectedProps,
+                                    ): JSX.Element =>
+                                        renderTooltip(properties, {
+                                            title: showPasswords
+                                                ? "Hide"
+                                                : "Show",
+                                        })
+                                    }
+                                    placement="top"
+                                >
+                                    <Button
+                                        onClick={(): void => {
+                                            setShowPasswords(
+                                                (oldValue: boolean) =>
+                                                    !oldValue,
+                                            );
+                                        }}
+                                        variant={`${
+                                            showPasswords
+                                                ? "outline-success"
+                                                : "outline-warning"
+                                        }`}
+                                    >
+                                        <i
+                                            className={`fa-solid ${
+                                                showPasswords
+                                                    ? "fa-eye-slash"
+                                                    : "fa-eye"
+                                            } fa-xs`}
+                                        />
+                                    </Button>
+                                </OverlayTrigger>
+                                <OverlayTrigger
+                                    overlay={(
+                                        properties: OverlayInjectedProps,
+                                    ): JSX.Element =>
+                                        renderTooltip(properties, {
+                                            title: "Confirm",
+                                        })
+                                    }
+                                    placement="right"
+                                >
+                                    <Button variant="outline-success">
+                                        <i className="fa-solid fa-check" />
+                                    </Button>
+                                </OverlayTrigger>
+                            </InputGroup>
                         </Form.Group>
                     )}
                     <Button
