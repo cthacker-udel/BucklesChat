@@ -1,6 +1,3 @@
-/* eslint-disable func-call-spacing -- disabled */
-/* eslint-disable capitalized-comments -- disabled for now */
-/* eslint-disable multiline-comment-style -- disabled for now */
 /* eslint-disable unicorn/no-null -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 
