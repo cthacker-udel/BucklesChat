@@ -38,8 +38,9 @@ type LoginProperties = {
 };
 
 /**
+ * The login page, where the user attempts to login into their account
  *
- * @returns
+ * @returns The login page, which handles throttling, and signing the user in, setting cookies, etc
  */
 export const Login = ({
     numberOfUsersOnline,
