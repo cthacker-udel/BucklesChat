@@ -19,6 +19,7 @@ type PendingMessageProperties = {
 };
 
 /**
+ * @deprecated Removed due to direct messaging automatically creating thread with user
  * Represents a message that has not been replied to, and is a result of a direct message with the user
  *
  * @param props - The properties of the Pending Message that are passed in from InboxOffCanvas
