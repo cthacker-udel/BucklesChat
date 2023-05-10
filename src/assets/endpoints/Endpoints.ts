@@ -42,6 +42,7 @@ export const Endpoints = {
     NOTIFICATION: {
         ALL_NOTIFICATIONS: "notifications",
         BASE: "notification/",
+        REMOVE: "remove",
     },
     USER: {
         BASE: "user/",

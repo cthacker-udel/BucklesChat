@@ -13,6 +13,55 @@ import { ServerSideApi } from "../../ServerSideApi";
  */
 export class NotificationApi extends ServerSideApi {
     /**
+     * Removes a notification from the database
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static removeNotification = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const notificationId = request.query.notificationId;
+
+            if (notificationId === undefined) {
+                throw new Error(
+                    "Must send notification id when removing notification",
+                );
+            }
+
+            const removeResult = await super.delete<ApiResponse<boolean>>(
+                `${Endpoints.NOTIFICATION.BASE}${Endpoints.NOTIFICATION.REMOVE}?notificationId=${notificationId}`,
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.json(removeResult);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
      * Fetches all notifications from the database for the user requesting them
      *
      * @param request - The client request

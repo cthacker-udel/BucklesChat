@@ -13,7 +13,7 @@ import type { DashboardInformation } from "@/@types";
 import { Endpoints } from "@/assets";
 import Background from "@/assets/background/dashboard/bg.gif";
 import placeholderPfp from "@/assets/placeholder/pfp.jpg";
-import { useActiveStatus, useBackground } from "@/hooks";
+import { useActiveStatus, useBackground, useNotifications } from "@/hooks";
 
 import { AddUserModal } from "./AddUserModal";
 import { ChatBox } from "./Chatbox";
@@ -34,6 +34,7 @@ type DashboardProperties = {
  */
 export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
     useBackground(Background, { noOptions: true });
+    useNotifications();
     useActiveStatus();
     const { mutate: globalMutate } = useSWRConfig();
     const { data, mutate, error, isLoading } = useSWR<
