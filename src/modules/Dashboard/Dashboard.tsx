@@ -244,6 +244,24 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                             >
                                 <i className="fa-solid fa-cog" />
                             </Button>
+                            <Button
+                                className={styles.dashboard_application_info}
+                                onClick={(): void => {
+                                    setShowUserSettingsModal(true);
+                                }}
+                                style={{
+                                    bottom: hoveringOverProfilePicture
+                                        ? "-2vw"
+                                        : "1vw",
+                                    opacity: hoveringOverProfilePicture ? 1 : 0,
+                                    right: hoveringOverProfilePicture
+                                        ? "6vw"
+                                        : "1vw",
+                                }}
+                                variant="info"
+                            >
+                                <i className="fa-solid fa-info" />
+                            </Button>
                         </div>
                         <div className={styles.dashboard_user_info}>
                             <div className={styles.dashboard_user_handle}>

@@ -140,7 +140,7 @@
 }
 
 .dashboard_user_info_edit_user {
-    transition: right 1s ease-in-out, opacity 1s ease-in;
+    transition: bottom 1s ease-in-out, right 1s ease-in-out, opacity 1s ease-in;
     border-radius: 2em;
     position: absolute;
     right: 1vw;
@@ -194,11 +194,11 @@
 }
 
 .dashboard_user_logout {
-    transition: bottom 1s ease-in-out, right 1s ease-in-out, opacity 1s ease-in;
+    transition: right 1s ease-in-out, opacity 1s ease-in;
     border-radius: 2em;
     position: absolute;
     right: 1vw;
-    bottom: 1vw;
+    top: 1vw;
     opacity: 100%;
     height: 2.5vw;
     width: 2.5vw;
@@ -216,7 +216,21 @@
     border-radius: 2em;
     position: absolute;
     right: 1vw;
-    top: 1vw;
+    bottom: 1vw;
+    opacity: 100%;
+    height: 2.5vw;
+    width: 2.5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dashboard_application_info {
+    transition: bottom 1s ease-in-out, right 1s ease-in-out, opacity 1s ease-in;
+    border-radius: 2em;
+    position: absolute;
+    right: 1vw;
+    bottom: 1vw;
     opacity: 100%;
     height: 2.5vw;
     width: 2.5vw;
