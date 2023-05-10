@@ -137,7 +137,6 @@ export class MessageService extends ClientSideApi {
         receiver: number,
         content: string,
     ): Promise<ApiResponse<boolean>> => {
-        console.log("sending dm", receiver, content);
         if (receiver === undefined || content.length === 0) {
             return { data: false };
         }

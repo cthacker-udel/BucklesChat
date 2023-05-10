@@ -39,6 +39,10 @@ export const Endpoints = {
             MESSAGES: "messages",
         },
     },
+    NOTIFICATION: {
+        ALL_NOTIFICATIONS: "notifications",
+        BASE: "notification/",
+    },
     USER: {
         BASE: "user/",
         BULK_DASHBOARD: "bulkDashboardInformation",

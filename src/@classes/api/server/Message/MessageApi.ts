@@ -565,7 +565,6 @@ export class MessageApi extends ServerSideApi {
         response: NextApiResponse,
     ): Promise<void> => {
         try {
-            console.log("sending dm");
             const messagePayload = JSON.parse(request.body) as DmPayload;
 
             if (
