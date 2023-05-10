@@ -9,6 +9,7 @@ import type { ChatRoom } from "@/@types";
 import { Endpoints } from "@/assets";
 import { renderTooltip } from "@/helpers";
 
+import { AddChatModal } from "./AddChatModal";
 import styles from "./Chat.module.css";
 import { ChatRoomForm } from "./ChatRoomForm";
 import { ChatRoomToggle } from "./ChatRoomToggle";
@@ -28,6 +29,8 @@ export const Chat = (): JSX.Element => {
 
     const router = useRouter();
     const [activeChat, setActiveChat] = React.useState<string>("-1");
+    const [showAddChatModal, setShowAddChatModal] =
+        React.useState<boolean>(false);
 
     const onChatRoomFormClose = React.useCallback(() => {
         setActiveChat("");
@@ -35,6 +38,10 @@ export const Chat = (): JSX.Element => {
 
     const onChatRoomOpen = React.useCallback((name: string) => {
         setActiveChat(name);
+    }, []);
+
+    const toggleAddChatModal = React.useCallback(() => {
+        setShowAddChatModal((oldValue) => !oldValue);
     }, []);
 
     if (allChatRoomsError !== undefined) {
@@ -66,10 +73,17 @@ export const Chat = (): JSX.Element => {
                 }
                 placement="bottom"
             >
-                <Button variant="outline-secondary">
+                <Button
+                    onClick={toggleAddChatModal}
+                    variant="outline-secondary"
+                >
                     <i className="fa-solid fa-plus" />
                 </Button>
             </OverlayTrigger>
+            <AddChatModal
+                addChatModalOnClose={toggleAddChatModal}
+                showAddChatModal={showAddChatModal}
+            />
         </div>
     );
 };
