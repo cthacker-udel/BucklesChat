@@ -16,6 +16,7 @@ import placeholderPfp from "@/assets/placeholder/pfp.jpg";
 import { useActiveStatus, useBackground, useNotifications } from "@/hooks";
 
 import { AddUserModal } from "./AddUserModal";
+import { ApplicationInfoModal } from "./ApplicationInfoModal";
 import { ChatBox } from "./Chatbox";
 import styles from "./Dashboard.module.css";
 import { EditUserModal } from "./EditUserModal";
@@ -53,6 +54,8 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
         React.useState<boolean>(false);
     const [showUserSettingsModal, setShowUserSettingsModal] =
         React.useState<boolean>(false);
+    const [showApplicationInfoModal, setShowApplicationInfoModal] =
+        React.useState<boolean>(false);
     const [showUserInboxOffcanvas, setShowUserInboxOffcanvas] =
         React.useState<boolean>(false);
 
@@ -68,6 +71,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
 
     const userSettingsModalOnClose = React.useCallback(() => {
         setShowUserSettingsModal(false);
+    }, []);
+
+    const applicationInfoModalOnClose = React.useCallback(() => {
+        setShowApplicationInfoModal(false);
     }, []);
 
     const userInboxOffcanvasOnClose = React.useCallback(() => {
@@ -247,7 +254,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                             <Button
                                 className={styles.dashboard_application_info}
                                 onClick={(): void => {
-                                    setShowUserSettingsModal(true);
+                                    setShowApplicationInfoModal(true);
                                 }}
                                 style={{
                                     bottom: hoveringOverProfilePicture
@@ -513,6 +520,10 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
             <InboxOffcanvas
                 onClose={userInboxOffcanvasOnClose}
                 showUserInboxOffcanvas={showUserInboxOffcanvas}
+            />
+            <ApplicationInfoModal
+                onClose={applicationInfoModalOnClose}
+                showApplicationInfoModal={showApplicationInfoModal}
             />
         </>
     );
