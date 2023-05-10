@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string -- disabled */
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 /* eslint-disable @typescript-eslint/indent -- disabled */
 import { useRouter } from "next/router";
@@ -442,7 +441,10 @@ export const UserSettingsModal = ({
                                     }
                                     placement="bottom"
                                 >
-                                    <Button variant="outline-success">
+                                    <Button
+                                        onClick={onChangePassword}
+                                        variant="outline-success"
+                                    >
                                         <i className="fa-solid fa-check" />
                                     </Button>
                                 </OverlayTrigger>
