@@ -59,7 +59,7 @@ export const ChatBox = ({
                         usernameProfilePictureUrl={usernameProfilePictureUrl}
                     />
                 </Tab.Pane>
-                <Tab.Pane eventKey="chats">
+                <Tab.Pane className={styles.chats_tab_pane} eventKey="chats">
                     <Chat />
                 </Tab.Pane>
             </Tab.Content>

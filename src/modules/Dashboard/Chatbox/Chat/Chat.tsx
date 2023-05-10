@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-floating-promises -- disabled */
 import { useRouter } from "next/router";
 import React from "react";
+import { Button, OverlayTrigger } from "react-bootstrap";
+import type { OverlayInjectedProps } from "react-bootstrap/esm/Overlay";
 import useSWR from "swr";
 
 import type { ChatRoom } from "@/@types";
 import { Endpoints } from "@/assets";
+import { renderTooltip } from "@/helpers";
 
 import styles from "./Chat.module.css";
 import { ChatRoomForm } from "./ChatRoomForm";
@@ -57,6 +60,16 @@ export const Chat = (): JSX.Element => {
                     />
                 </div>
             ))}
+            <OverlayTrigger
+                overlay={(properties: OverlayInjectedProps): JSX.Element =>
+                    renderTooltip(properties, { title: "Create Chat" })
+                }
+                placement="bottom"
+            >
+                <Button variant="outline-secondary">
+                    <i className="fa-solid fa-plus" />
+                </Button>
+            </OverlayTrigger>
         </div>
     );
 };
