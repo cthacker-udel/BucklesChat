@@ -162,7 +162,13 @@ export const UserSettingsModal = ({
     }, [errors, getValues, router]);
 
     const onDeleteAccount = React.useCallback(async () => {
-        console.log("deleting account");
+        const { data: didDeleteAccount } = await UserService.deleteUser();
+
+        if (didDeleteAccount) {
+            toast.success("Successfully deleted!");
+        } else {
+            toast.error("Failed to delete account (Try again later).");
+        }
     }, []);
 
     const passwordValue = useWatch({ control, name: "password" });

@@ -864,4 +864,45 @@ export class UserApi extends ServerSideApi {
             }
         }
     };
+
+    /**
+     * Deletes the user from the database
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static deleteUser = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const result = await super.delete<ApiResponse<boolean>>(
+                `${Endpoints.USER.BASE}${Endpoints.USER.DELETE_USER}`,
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.send(result);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
 }

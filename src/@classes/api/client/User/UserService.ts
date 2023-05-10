@@ -130,4 +130,16 @@ export class UserService extends ClientSideApi {
 
         return response;
     };
+
+    /**
+     * Deletes the user from the database, removing all records of their interaction within the app
+     * from the database as well (messages, threads, etc)
+     */
+    public static deleteUser = async (): Promise<ApiResponse<boolean>> => {
+        const response = await super.delete<ApiResponse<boolean>>(
+            `${Endpoints.USER.BASE}${Endpoints.USER.DELETE_USER}`,
+        );
+
+        return response;
+    };
 }

@@ -46,6 +46,7 @@ export const Endpoints = {
         CLEAR_USER_STATE: "clearUserState",
         CONFIRM_EMAIL: "confirmEmail",
         DASHBOARD: "dashboardInformation",
+        DELETE_USER: "deleteUser",
         DETAILS: "details",
         DOES_EXIST: "doesUsernameExist",
         EDIT: "edit",
