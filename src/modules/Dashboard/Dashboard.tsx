@@ -239,7 +239,7 @@ export const Dashboard = ({ username }: DashboardProperties): JSX.Element => {
                                         ? "-2vw"
                                         : "1vw",
                                 }}
-                                variant="primary"
+                                variant="light"
                             >
                                 <i className="fa-solid fa-cog" />
                             </Button>
