@@ -118,7 +118,8 @@ export const UserSettingsModal = ({
             setHoveringOverChangePassword(false);
             setConfirmDeleteAccountButton(DEFAULT_CONFIRMATION);
         });
-    }, [reset]);
+        userSettingsModalOnClose();
+    }, [reset, userSettingsModalOnClose]);
 
     const onChangePassword = React.useCallback(async (): Promise<void> => {
         const { password } = getValues();
@@ -177,7 +178,6 @@ export const UserSettingsModal = ({
             contentClassName={styles.user_settings_modal_content}
             onHide={(): void => {
                 onCloseChangePasswordForm();
-                userSettingsModalOnClose();
             }}
             show={showUserSettingsModal}
         >
