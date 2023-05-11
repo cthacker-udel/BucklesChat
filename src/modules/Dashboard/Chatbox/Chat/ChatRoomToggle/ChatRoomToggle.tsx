@@ -65,8 +65,9 @@ export const ChatRoomToggle = ({
                     <span>{"Messages"}</span>
                 </div>
                 <div>
-                    {chatRoomStats?.lastUpdate?.toLocaleString() ??
-                        "Not Updated"}
+                    {chatRoomStats.lastUpdate === undefined
+                        ? "Not Updated"
+                        : new Date(chatRoomStats?.lastUpdate).toLocaleString()}
                 </div>
                 <div className={styles.chat_room_stats_multiple_elements}>
                     <i className="fa-solid fa-user fa-xs" />

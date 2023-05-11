@@ -1,6 +1,7 @@
 .chat_room_list {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 0.5em;
     height: 100%;
+    justify-content: end;
 }
