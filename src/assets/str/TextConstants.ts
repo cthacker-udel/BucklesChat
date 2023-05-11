@@ -48,6 +48,24 @@ export const TextConstants = {
                     REQUIRED: "Message is required",
                 },
             },
+            CREATE_CHAT: {
+                DESCRIPTION: {
+                    MAX_LENGTH: `Description must be at most ${ValidationConstants.CREATE_CHAT.DESCRIPTION.MAX_LENGTH} characters.`,
+                    REQUIRED: `Description ${
+                        ValidationConstants.CREATE_CHAT.DESCRIPTION.REQUIRED
+                            ? "is"
+                            : "is not"
+                    } required.`,
+                },
+                NAME: {
+                    MAX_LENGTH: `Name must be at most ${ValidationConstants.CREATE_CHAT.NAME.MAX_LENGTH} characters.`,
+                    REQUIRED: `Name ${
+                        ValidationConstants.CREATE_CHAT.NAME.REQUIRED
+                            ? "is"
+                            : "is not"
+                    } required.`,
+                },
+            },
             EDIT_MODAL: {
                 DATE_OF_BIRTH: {
                     NO_100_PLUS:

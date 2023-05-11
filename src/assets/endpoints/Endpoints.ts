@@ -25,6 +25,7 @@ export const Endpoints = {
             ADD_MESSAGE: "add/message",
             ALL: "all",
             BASE: "message/chatroom/",
+            CREATE: "create",
             MESSAGES: "messages",
             STATS: "stats",
         },

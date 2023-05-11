@@ -3,3 +3,9 @@
     border: 1px outset white;
     color: white;
 }
+
+.add_chat_modal_form {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}

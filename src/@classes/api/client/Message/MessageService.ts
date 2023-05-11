@@ -4,6 +4,7 @@ import type {
     AddMessageToThreadPayload,
     ApiResponse,
     ChatRoomMessage,
+    CreateChatRoomDto,
     CreateThreadPayload,
     DirectMessage,
     DmPayload,
@@ -150,5 +151,30 @@ export class MessageService extends ClientSideApi {
         );
 
         return sendDmRequest;
+    };
+
+    /**
+     * Creates a chat room in the database
+     *
+     * @param name - The name of the chat room
+     * @param description - The description of the chatroom
+     */
+    public static createChatRoom = async (
+        name: string,
+        description?: string,
+    ): Promise<ApiResponse<boolean>> => {
+        if (name === undefined) {
+            return { data: false };
+        }
+
+        const createChatRoomResponse = await super.post<
+            ApiResponse<boolean>,
+            CreateChatRoomDto
+        >(
+            `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.CREATE}`,
+            { description, name },
+        );
+
+        return createChatRoomResponse;
     };
 }

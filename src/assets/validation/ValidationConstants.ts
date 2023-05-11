@@ -7,6 +7,16 @@ export const ValidationConstants = {
             REQUIRED: true,
         },
     },
+    CREATE_CHAT: {
+        DESCRIPTION: {
+            MAX_LENGTH: 256,
+            REQUIRED: false,
+        },
+        NAME: {
+            MAX_LENGTH: 128,
+            REQUIRED: true,
+        },
+    },
     EDIT_MODAL: {
         DATE_OF_BIRTH: {
             REQUIRED: false,
