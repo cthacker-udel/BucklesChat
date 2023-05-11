@@ -9,6 +9,7 @@ import type {
     ChatRoom,
     ChatRoomMessage,
     ChatRoomStats,
+    CreateChatRoomDto,
     CreateThreadPayload,
     DirectMessage,
     DmPayload,
@@ -593,6 +594,59 @@ export class MessageApi extends ServerSideApi {
             );
 
             response.send(dmSendResponse);
+        } catch (error: unknown) {
+            const convertedError = error as Error;
+            try {
+                await ClientSideApi.post<ApiResponse<string>, ExceptionLog>(
+                    `${Endpoints.LOGGER.BASE}${Endpoints.LOGGER.EXCEPTION}`,
+                    {
+                        id: v4().toString(),
+                        message: convertedError.message,
+                        stackTrace: convertedError.stack,
+                        timestamp: Date.now(),
+                    },
+                );
+            } finally {
+                response.status(500);
+                response.json({
+                    apiError: { code: 500, message: (error as Error).message },
+                    data: false,
+                });
+            }
+        }
+    };
+
+    /**
+     * Creates a chat room in the database
+     *
+     * @param request - The client request
+     * @param response - The client response
+     */
+    public static createChatRoom = async (
+        request: NextApiRequest,
+        response: NextApiResponse,
+    ): Promise<void> => {
+        try {
+            const { description, name } = JSON.parse(
+                request.body,
+            ) as CreateChatRoomDto;
+
+            if (name === undefined) {
+                throw new Error("Must supply name when creating chat room");
+            }
+
+            const createChatRoomResponse = await super.post<
+                ApiResponse<boolean>,
+                CreateChatRoomDto
+            >(
+                `${Endpoints.MESSAGE.CHATROOM.BASE}${Endpoints.MESSAGE.CHATROOM.CREATE}`,
+                { description, name },
+                undefined,
+                request.headers,
+                response,
+            );
+
+            response.json(createChatRoomResponse);
         } catch (error: unknown) {
             const convertedError = error as Error;
             try {
