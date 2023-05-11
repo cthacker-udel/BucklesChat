@@ -111,6 +111,7 @@ export const AddChatModal = ({
                     <Form.Group controlId="chat_name">
                         <Form.Label>{"Name"}</Form.Label>
                         <Form.Control
+                            className={styles.add_chat_form_control}
                             isInvalid={dirtyFields.name && Boolean(errors.name)}
                             isValid={dirtyFields.name && !errors.name}
                             type="text"
@@ -141,6 +142,7 @@ export const AddChatModal = ({
                         <Form.Label>{"Description"}</Form.Label>
                         <Form.Control
                             as="textarea"
+                            className={styles.add_chat_form_control}
                             isInvalid={
                                 dirtyFields.description &&
                                 Boolean(errors.description)
