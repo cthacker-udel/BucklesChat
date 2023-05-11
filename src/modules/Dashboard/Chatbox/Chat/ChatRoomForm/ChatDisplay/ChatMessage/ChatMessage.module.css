@@ -1,7 +1,7 @@
 .chat_message_item {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 1em;
     background: transparent;
     color: white;
@@ -10,8 +10,19 @@
     border-color: rgba(255, 255, 255, 0.25);
 }
 
+.chat_message_content {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
 .chat_message_pfp {
     width: 2vw;
     height: 2vw;
     border-radius: 2em;
+}
+
+.chat_message_created_date {
+    color: rgba(128, 128, 128, 0.75);
+    font-size: 0.75em;
 }

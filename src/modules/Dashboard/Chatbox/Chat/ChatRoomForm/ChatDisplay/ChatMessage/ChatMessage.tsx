@@ -20,12 +20,14 @@ export const ChatMessage = ({
     senderProfilePictureUrl,
 }: ChatRoomMessageProperties): JSX.Element => (
     <ListGroup.Item className={styles.chat_message_item} variant="light">
-        <Image
-            alt={`${sender}'s profile picture`}
-            className={styles.chat_message_pfp}
-            src={senderProfilePictureUrl ?? placeholderPfp.src}
-        />
-        <span className={styles.chat_message_content}>{content}</span>
+        <div className={styles.chat_message_content}>
+            <Image
+                alt={`${sender}'s profile picture`}
+                className={styles.chat_message_pfp}
+                src={senderProfilePictureUrl ?? placeholderPfp.src}
+            />
+            <span className={styles.chat_message_content}>{content}</span>
+        </div>
         <span className={styles.chat_message_created_date}>
             {createdAt === undefined
                 ? new Date().toLocaleString()
