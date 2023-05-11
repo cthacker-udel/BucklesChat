@@ -10,14 +10,34 @@ import { NotificationType } from "@/assets";
 export const processNotification = (
     notification: FetchedNotification,
 ): string => {
-    if (notification.type === NotificationType.SENDING_MESSAGE) {
-        return `Received message from ${
-            notification.senderHandle ?? notification.senderUsername
-        }`;
-    } else if (notification.type === NotificationType.SENDING_FRIEND_REQUEST) {
-        return `Received friend request from ${
-            notification.senderHandle ?? notification.senderUsername
-        }`;
+    switch (notification.type) {
+        case NotificationType.SENDING_MESSAGE: {
+            return `Received message from ${
+                notification.senderHandle ?? notification.senderUsername
+            }`;
+        }
+        case NotificationType.SENDING_FRIEND_REQUEST: {
+            return `Received friend request from ${
+                notification.senderHandle ?? notification.senderUsername
+            }`;
+        }
+        case NotificationType.ACCEPTED_FRIEND_REQUEST: {
+            return `${
+                notification.senderHandle ?? notification.senderHandle
+            } accepted your friend request`;
+        }
+        case NotificationType.REJECTED_FRIEND_REQUEST: {
+            return `${
+                notification.senderHandle ?? notification.senderHandle
+            } rejected your friend request`;
+        }
+        case NotificationType.REMOVED_FRIEND: {
+            return `${
+                notification.senderHandle ?? notification.senderHandle
+            } removed you as a friend`;
+        }
+        default: {
+            return "";
+        }
     }
-    return "";
 };

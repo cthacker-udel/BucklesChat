@@ -219,18 +219,18 @@ export class FriendApi extends ServerSideApi {
                 request.body,
             ) as FriendRequestPayload;
 
-            if (requestPayload.userIdTo === undefined) {
+            if (requestPayload.userIdFrom === undefined) {
                 throw new Error("Must send usernames to reject requests");
             }
 
-            const { userIdTo: usernameTo } = requestPayload;
+            const { userIdFrom: usernameTo } = requestPayload;
             const sendResult = await super.post<
                 ApiResponse<boolean>,
                 FriendRequestPayload
             >(
                 `${Endpoints.FRIEND.BASE}${Endpoints.FRIEND.REJECT_REQUEST}`,
                 {
-                    userIdTo: usernameTo,
+                    userIdFrom: usernameTo,
                 },
                 undefined,
                 request.headers as { [key: string]: string },

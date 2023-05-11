@@ -89,14 +89,14 @@ export const AddUserModal = ({
             const foundUser = document.querySelector(
                 `#userid_${currentUserId}`,
             ) as unknown as HTMLElement;
-            if (eachResult.data) {
+            if (eachResult.data && foundUser !== null) {
                 toast.success(
                     `Successfully sent a friend request to ${
                         foundUser.dataset.handle ?? foundUser.dataset.username
                     }`,
                     { autoClose: 3000 },
                 );
-            } else {
+            } else if (foundUser !== null) {
                 toast.error(
                     `Failed to send a friend request to ${
                         foundUser.dataset.handle ?? foundUser.dataset.username
