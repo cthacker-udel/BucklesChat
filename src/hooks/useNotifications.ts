@@ -28,7 +28,7 @@ export const useNotifications = (): void => {
         const unsubscribe = toast.onChange(async (payload: ToastItem) => {
             const { data, status } = payload;
             const { notificationId } = data as ToastNotificationData;
-            if (status === "added") {
+            if (status === "added" && notificationId !== undefined) {
                 await NotificationService.removeNotification(notificationId);
             }
         });

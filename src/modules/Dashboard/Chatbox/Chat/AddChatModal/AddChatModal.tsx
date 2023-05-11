@@ -48,6 +48,12 @@ export const AddChatModal = ({
 
     const { dirtyFields, errors, isDirty, isValid, isValidating } = formState;
 
+    const closeForm = React.useCallback(() => {
+        reset();
+        clearErrors();
+        addChatModalOnClose();
+    }, [addChatModalOnClose, clearErrors, reset]);
+
     const createChat = React.useCallback(async () => {
         if (
             isValid &&
@@ -70,6 +76,7 @@ export const AddChatModal = ({
                     render: "Successfully added chat!",
                     type: "success",
                 });
+                closeForm();
             } else {
                 toast.update(creatingChatToast, {
                     autoClose: 1000,
@@ -79,13 +86,7 @@ export const AddChatModal = ({
                 });
             }
         }
-    }, [errors, getValues, isDirty, isValid, isValidating]);
-
-    const closeForm = React.useCallback(() => {
-        reset();
-        clearErrors();
-        addChatModalOnClose();
-    }, [addChatModalOnClose, clearErrors, reset]);
+    }, [closeForm, errors, getValues, isDirty, isValid, isValidating]);
 
     return (
         <Modal
@@ -97,10 +98,10 @@ export const AddChatModal = ({
                 {"Add Chat"}
             </Modal.Header>
             <Modal.Body>
-                <Form
+                <div
                     className={styles.add_chat_modal_form}
                     onKeyDown={async (
-                        event: React.KeyboardEvent<HTMLFormElement>,
+                        event: React.KeyboardEvent<HTMLDivElement>,
                     ): Promise<void> => {
                         const { key } = event;
                         if (key === Key.Enter) {
@@ -168,13 +169,15 @@ export const AddChatModal = ({
                             })}
                         />
                     </Form.Group>
-                </Form>
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={closeForm} variant="outline-secondary">
                     {"Cancel"}
                 </Button>
-                <Button variant="outline-success">{"Create"}</Button>
+                <Button onClick={createChat} variant="outline-success">
+                    {"Create"}
+                </Button>
             </Modal.Footer>
         </Modal>
     );
