@@ -74,8 +74,9 @@ export const Chat = (): JSX.Element => {
                 placement="bottom"
             >
                 <Button
+                    className={styles.chat_add_button}
                     onClick={toggleAddChatModal}
-                    variant="outline-secondary"
+                    variant="outline-primary"
                 >
                     <i className="fa-solid fa-plus" />
                 </Button>
